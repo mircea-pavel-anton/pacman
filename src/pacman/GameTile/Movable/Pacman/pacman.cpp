@@ -66,14 +66,12 @@ void Pacman::initText() {
     text.setString(
         "Player " + std::to_string(index) + "\nScore: 0"
     );
-    if (index == 1) {
-        text.setPosition({
-            X_OFFSET + TILE_SIZE * MAP_WIDTH + 20.f,
-            Y_OFFSET,
-        });
-    } else {
-        text.setPosition({ 20.f, Y_OFFSET });
-    }
+    const float extra_offset = (X_OFFSET - text.getGlobalBounds().width ) / 2;
+    const float x_offset = X_OFFSET + TILE_SIZE * MAP_WIDTH;
+    text.setPosition({
+        x_offset * (index - 1) + extra_offset,
+        Y_OFFSET + TILE_SIZE,
+    });
 }
 
 void Pacman::interact(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
