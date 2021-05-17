@@ -114,6 +114,15 @@ void Game::initMap() {
                 case '^':
                     tile = new Wall(pos, line.at(i));
                     break;
+                case '*':
+                    tile = new Food(pos);
+                    break;
+                case '0':
+                    tile = new PowerPellet(pos);
+                    break;
+                case 'f':
+                    tile = new Fruit(pos);
+                    break;
                 default: 
                     tile = nullptr;
             }
