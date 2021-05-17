@@ -3,7 +3,7 @@
 		{
 			"type": "shell",
 			"label": "Build-Debug",
-			"command": "make debug",
+			"command": "make build-debug",
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
@@ -15,7 +15,7 @@
 		{
 			"type": "shell",
 			"label": "Build-Release",
-			"command": "make release",
+			"command": "make build-release",
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
