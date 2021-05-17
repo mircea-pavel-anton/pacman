@@ -30,4 +30,6 @@
 *.exe
 *.out
 *.app
-pacman
+
+# ignore the build directory
+build
