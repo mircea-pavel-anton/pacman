@@ -9,9 +9,9 @@ BUILD_DIR		:= build/
 DEBUG_DIR		:= $(BUILD_DIR)/debug
 RELEASE_DIR		:= $(BUILD_DIR)/release
 
-run-debug: build-debug execute-debug
+debug: build-debug execute-debug
 
-run-release: build-release execute-release
+release: build-release execute-release
 
 build-debug: compile-debug link-debug
 
