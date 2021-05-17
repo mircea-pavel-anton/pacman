@@ -22,6 +22,9 @@ class Movable : public GameTile {
     virtual ~Movable();
     Movable &operator=(const Movable &); // Assignment operator
 
+
+    // Get the direction in which this tile is moving.
+    sf::Vector2i getDirection() { return direction; }
   protected:
     // ---------------- MEMBERS ----------------
     // The tile that was previously under this movable object.
