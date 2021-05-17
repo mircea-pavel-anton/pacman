@@ -4,10 +4,9 @@ image: gcc
 build:
   stage: build
   before_script:
-    - apt update && apt -y install make
+    - apt update && apt -y install make libsfml-dev
   script:
-    - make prerequisites
-    - make build
+    - make release
   artifacts:
     paths:
-      - pacman
+      - build/release/bin/pacman
