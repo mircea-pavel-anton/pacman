@@ -3,6 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../GameTile/game_tile.hpp"
+#include "../config.hpp"
+
 class Game {
 
 public:
@@ -28,10 +31,11 @@ protected:
 private:
     // ---------------- MEMBERS ---------------- //
     sf::RenderWindow *window;
-
+    GameTile *map[MAP_WIDTH][MAP_HEIGHT];
 
     // ---------------- METHODS ---------------- //
     void initWindow(); // intialize the RenderWindow.
+    void initMap();
 
 }; //class Game
 
