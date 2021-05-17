@@ -2,11 +2,27 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "Build",
-			"command": "make build",
+			"label": "Build-Debug",
+			"command": "make debug",
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Build-Release",
+			"command": "make release",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
 		},
 		{
 			"type": "shell",
@@ -14,7 +30,7 @@
 			"command": "make clean",
 			"options": {
 				"cwd": "${workspaceFolder}"
-			},
+			}
 		}
 	],
 	"version": "2.0.0"

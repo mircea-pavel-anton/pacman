@@ -8,13 +8,34 @@
 			"name": "Debug",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/pacman",
+			"program": "${workspaceFolder}/build/debug/bin/pacman",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
-			"preLaunchTask": "Build",   // runs `make build`
-			"postDebugTask": "Cleanup", // runs `make clean`
+			"preLaunchTask": "Build-Debug", // runs `make debug`
 			"miDebuggerPath": "/usr/bin/gdb"
-		}
+		},
+		{
+			"name": "Release",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/release/bin/pacman",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"preLaunchTask": "Build-Release", // runs `make release`
+			"miDebuggerPath": "/usr/bin/gdb"
+		},
+		{
+			"name": "Clean",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"preLaunchTask": "Cleanup",		// runs `make clean'
+			"miDebuggerPath": "/usr/bin/gdb"
+		},
 	]
 }
