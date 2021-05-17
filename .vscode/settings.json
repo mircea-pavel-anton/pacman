@@ -5,6 +5,7 @@
     "README.md": true,
     ".gitlab-ci.yml": true,
     "Makefile": true,
-    ".vscode": true
+    ".vscode": true,
+    ".gitignore": true
   }
 }
