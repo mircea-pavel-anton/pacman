@@ -57,6 +57,9 @@ protected:
     // states and movement directions.
     void updateAnimation() override;
 
+    // Makes sure to update the @text variable with the latest @score value.
+    void updateScore();
+
     // Updates the current direction with the value of next_direction
     // IF such a thing is possible.
     void updateMovementDirection(GameTile *[MAP_WIDTH][MAP_HEIGHT]) override;

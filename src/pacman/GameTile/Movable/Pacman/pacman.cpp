@@ -63,7 +63,9 @@ void Pacman::initText() {
     text.setFillColor(sf::Color::Yellow);
     text.setStyle(sf::Text::Regular);
 
-    text.setString("Score: 0");
+    text.setString(
+        "Player " + std::to_string(index) + "\nScore: 0"
+    );
     if (index == 1) {
         text.setPosition({
             X_OFFSET + TILE_SIZE * MAP_WIDTH + 20.f,
@@ -160,6 +162,7 @@ void Pacman::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][M
 
     // Interact with the tile Pacman is currently on top of.
     interact(_map);
+    updateScore();
 
     // Place Pacman down onto the map at the new position.
     _map[map_pos.x][map_pos.y] = this;
@@ -229,3 +232,8 @@ void Pacman::toDeadState() {
     loadTextures();
 }
 
+void Pacman::updateScore() {
+    text.setString(
+        "Player " + std::to_string(index) + "\nScore: " + std::to_string(score)
+    );
+}
