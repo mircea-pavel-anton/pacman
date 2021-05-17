@@ -6,7 +6,7 @@ build:
   before_script:
     - apt update && apt -y install make libsfml-dev
   script:
-    - make release
+    - make build-release
   artifacts:
     paths:
       - build/release/bin/pacman
