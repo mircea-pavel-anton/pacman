@@ -5,7 +5,7 @@
 
 class Edible : public GameTile {
 
-  public:
+public:
     Edible();
     Edible(const Edible &); // copy constructor
     virtual ~Edible();
@@ -25,7 +25,7 @@ class Edible : public GameTile {
     // Gets the number of points gained by eating this tile.
     int getScoreModifier() { return score_modifier; }
 
-  protected:
+protected:
     int score_modifier;
 
 };
