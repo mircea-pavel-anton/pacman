@@ -168,6 +168,11 @@ void Pacman::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][M
     updateSprite();
 }
 
+void Pacman::render(sf::RenderTarget *_target) const {
+    _target->draw(sprite);
+    _target->draw(text);
+}
+
 void Pacman::checkWindowCollisions(const sf::RenderTarget *_target) {
     const sf::Vector2u window_size = _target->getSize();
     const sf::Vector2f size = {

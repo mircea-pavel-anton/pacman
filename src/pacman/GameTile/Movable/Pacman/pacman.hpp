@@ -15,6 +15,7 @@ public:
     Pacman &operator=(const Pacman&); // assignment operator
 
     void update(const sf::RenderTarget *, GameTile *[MAP_WIDTH][MAP_HEIGHT]) override;
+    void render(sf::RenderTarget *) const override;
 
     // Ghosts can "walk" on top of Pacman to kill him.
     inline bool isWalkable() const override { return true; }
