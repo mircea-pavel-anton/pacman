@@ -2,3 +2,4 @@
 #include "Wall/wall.hpp"
 #include "Edible/edible.hpp"
 #include "Edible/Food/food.hpp"
+#include "Edible/Fruit/fruit.hpp"
