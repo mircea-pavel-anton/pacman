@@ -44,7 +44,10 @@ void GameTile::updateSprite() {
     frame_counter = (frame_counter + 1) % 60;
 
     // Update on-screen position
-    sprite.setPosition(position);
+    sprite.setPosition({
+        position.x + X_OFFSET,
+        position.y + Y_OFFSET,
+    });
 }
 
 void GameTile::render(sf::RenderTarget *_target) const { _target->draw(sprite); }
