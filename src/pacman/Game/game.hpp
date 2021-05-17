@@ -2,8 +2,10 @@
 #define GAME_HPP
 
 #include <SFML/Graphics.hpp>
+#include <fstream>
+#include <iostream>
 
-#include "../GameTile/game_tile.hpp"
+#include "../GameTile/__barrel__.hpp"
 #include "../config.hpp"
 
 class Game {
