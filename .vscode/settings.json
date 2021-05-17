@@ -1,0 +1,10 @@
+{
+  "files.exclude": {
+    "LICENSE": true,
+    "build": true,
+    "README.md": true,
+    ".gitlab-ci.yml": true,
+    "Makefile": true,
+    ".vscode": true
+  }
+}
