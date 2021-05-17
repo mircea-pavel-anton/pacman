@@ -205,12 +205,14 @@ void Pacman::collideWithObjects(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
 
     // If the tile Pacman is currently moving into is NOT walkable,
     // go back to the previous tile.
-    const GameTile *tile = _map[current_position.x][current_position.y];
-    if (tile != nullptr && tile->isWalkable() == false) {
-        position = {
-            round(position.x / TILE_SIZE) * TILE_SIZE,
-            round(position.y / TILE_SIZE) * TILE_SIZE
-        };
+    GameTile *tile = _map[current_position.x][current_position.y];
+    if (tile != nullptr) {
+        if (tile->isWalkable() == false || dynamic_cast<Pacman*>(tile) != nullptr) {
+            position = {
+                round(position.x / TILE_SIZE) * TILE_SIZE,
+                round(position.y / TILE_SIZE) * TILE_SIZE
+            };
+        }
     }
 }
 
