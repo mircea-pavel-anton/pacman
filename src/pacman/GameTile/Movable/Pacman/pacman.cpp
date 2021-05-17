@@ -81,6 +81,7 @@ void Pacman::interact(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
         Edible *edible = (Edible*)old_tile;
         score += edible->getScoreModifier();
         edible->toEatenState();
+        updateScore();
     }
     // TODO interact with power pellet
     // TODO interact with ghost
@@ -162,7 +163,6 @@ void Pacman::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][M
 
     // Interact with the tile Pacman is currently on top of.
     interact(_map);
-    updateScore();
 
     // Place Pacman down onto the map at the new position.
     _map[map_pos.x][map_pos.y] = this;
