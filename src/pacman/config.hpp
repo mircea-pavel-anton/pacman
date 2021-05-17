@@ -17,4 +17,6 @@ static const int WINDOW_FRAMERATE = 60; // window framerate, in Hz.
 // Movement speed, in pixels/frame.
 static const float SPEED = 1;
 
+static const std::string WINDOW_TITLE = "Pacman";
+
 #endif //CONFIG_HPP
