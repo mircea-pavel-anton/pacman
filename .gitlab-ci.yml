@@ -5,8 +5,8 @@ build:
   stage: build
   before_script:
     - apt update && apt -y install make
-    - make dependencies
   script:
+    - make prerequisites
     - make build
   artifacts:
     paths:
