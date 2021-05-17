@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <random>
 
-#include "./edible.hpp"
+#include "../edible.hpp"
 
 class Fruit : public Edible {
 

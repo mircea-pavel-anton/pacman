@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "edible.hpp"
+#include "../edible.hpp"
 
 class PowerPellet : public Edible {
 
