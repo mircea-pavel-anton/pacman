@@ -5,10 +5,8 @@
 
 typedef struct RNG {
   public:
-    RNG() : RNG(0, 100) {};
-    RNG(const int min, const int max);
-
-    int get();
+    RNG();
+    int get(const int, const int);
 
     RNG &operator=(const RNG &_rng);
 
