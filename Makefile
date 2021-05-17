@@ -47,8 +47,3 @@ clean:
 	@ printf "Removing binary..."
 	@ rm $(BIN) >> /dev/null 2> /dev/null || true
 	@ echo "\033[1;32mDone\033[1;0m"
-
-prerequisites:
-	@ printf "Installing dependencies... "
-	@ sudo apt install libsfml-dev -y >> /dev/null 2> /dev/null
-	@ echo "\033[1;32mDone\033[1;0m"
