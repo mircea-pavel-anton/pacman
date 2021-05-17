@@ -34,10 +34,13 @@ private:
     // ---------------- MEMBERS ---------------- //
     sf::RenderWindow *window;
     GameTile *map[MAP_WIDTH][MAP_HEIGHT];
+    sf::Text title;
+    sf::Font font;
 
     // ---------------- METHODS ---------------- //
     void initWindow(); // intialize the RenderWindow.
     void initMap();
+    void initTitle();
 
 }; //class Game
 

@@ -43,6 +43,7 @@ void Game::render() const {
     // Clear the old frame from the window.
     window->clear();
 
+    window->draw(title);
     // Render every game tile.
     for (auto &row : map) {
         for (auto &tile : row) {
@@ -68,6 +69,8 @@ void Game::initWindow() {
     window = new sf::RenderWindow(videoMode, WINDOW_TITLE, style);
     window->setFramerateLimit(WINDOW_FRAMERATE);
     window->setVerticalSyncEnabled(true);
+
+    initTitle();
 
     // Show the window.
     window->setVisible(true);   
@@ -118,4 +121,23 @@ void Game::initMap() {
         }
         line_count++;
     }
+}
+
+void Game::initTitle() {
+    font = sf::Font();
+
+    if (font.loadFromFile("res/fonts/emulogic.ttf") == false) {
+        std::cout << "ERROR: Unable to load font file." << std::endl;
+        abort();
+    }
+
+    title.setFont(font);
+    title.setString(WINDOW_TITLE);
+    title.setCharacterSize(26.f);
+    title.setLetterSpacing(1.25);
+    title.setFillColor(sf::Color::Yellow);
+    title.setPosition({
+        (WINDOW_WIDTH - title.getGlobalBounds().width ) /2,
+        (Y_OFFSET - title.getGlobalBounds().height ) / 2,
+    });
 }
