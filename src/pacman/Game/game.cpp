@@ -123,6 +123,12 @@ void Game::initMap() {
                 case 'f':
                     tile = new Fruit(pos);
                     break;
+                case 'O': 
+                    tile = new Pacman(pos);
+                    break;
+                case 'o': 
+                    tile = new Pacman(pos);
+                    break;
                 default: 
                     tile = nullptr;
             }
