@@ -32,7 +32,7 @@ execute-debug:
 
 build-release: compile-release link-release
 
-build-release:
+compile-release:
 	@ mkdir -p $(RELEASE_DIR)/bin
 	@ mkdir -p $(RELEASE_DIR)/temp
 	@ printf "Compiling source code... "
