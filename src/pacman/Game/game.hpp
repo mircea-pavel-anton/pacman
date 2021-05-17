@@ -22,6 +22,7 @@ public:
     // Returns whether or not the RenderWindow is open, i.e. if
     // the game is currently running.
     bool isRunning() const;
+
 protected:
 
 private:
@@ -31,6 +32,7 @@ private:
 
     // ---------------- METHODS ---------------- //
     void initWindow(); // intialize the RenderWindow.
-};
+
+}; //class Game
 
 #endif //GAME_HPP
