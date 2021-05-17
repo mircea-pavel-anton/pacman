@@ -6,6 +6,8 @@
 
 #include "../config.hpp"
 
+static const std::string EMPTY_TEXTURE = "res/sprites/empty.png";
+
 class GameTile {
 
 public:
