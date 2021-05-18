@@ -33,3 +33,6 @@
 
 # ignore the build directory
 build
+
+# performance logger generated files
+*.csv
