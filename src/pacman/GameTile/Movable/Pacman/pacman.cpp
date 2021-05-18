@@ -75,6 +75,8 @@ void Pacman::initText() {
 }
 
 void Pacman::interact(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
+    PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::interact");
+
     if ( dynamic_cast<Edible*>(old_tile) != nullptr ) {
         Edible *edible = (Edible*)old_tile;
         score += edible->getScoreModifier();
@@ -83,9 +85,13 @@ void Pacman::interact(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
     }
     // TODO interact with power pellet
     // TODO interact with ghost
+
+    PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
 }
 
 void Pacman::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
+    PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::updateMovementDirection");
+
     const sf::Vector2i map_position = getMapPosition();
 
     // Pacman can only change directions when fully inside a tile.
@@ -107,6 +113,8 @@ void Pacman::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
 
     // Update the animations to reflect the direction change.
     updateAnimation();
+
+    PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::updateMovementDirection");
 }
 
 void Pacman::updateAnimation() {
@@ -131,6 +139,8 @@ void Pacman::updateAnimation() {
 }
 
 void Pacman::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
+    PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::update");
+
     if (is_dead) {
         updateSprite();
         return;
@@ -167,14 +177,22 @@ void Pacman::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][M
 
     // Update the sprite to reflect the position change.
     updateSprite();
+
+    PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::update");
 }
 
 void Pacman::render(sf::RenderTarget *_target) const {
+    PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::render");
+ 
     _target->draw(sprite);
     _target->draw(text);
+ 
+    PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::render");
 }
 
 void Pacman::checkWindowCollisions(const sf::RenderTarget *_target) {
+    PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::checkWindowCollisions");
+
     const sf::Vector2u window_size = _target->getSize();
     const sf::Vector2f size = {
         sprite.getGlobalBounds().width,
@@ -194,9 +212,13 @@ void Pacman::checkWindowCollisions(const sf::RenderTarget *_target) {
     } else if (position.y + size.y > window_size.y) {
         position.y = window_size.y - size.y;
     }
+
+    PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::checkWindowCollisions");
 }
 
 void Pacman::collideWithObjects(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
+    PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::collideWithObjects");
+
     // Get the coordinates for the next tile.
     const sf::Vector2i delta = {
         (direction.x > 0) ? 1 : 0,
@@ -215,6 +237,8 @@ void Pacman::collideWithObjects(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
             };
         }
     }
+
+    PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::collideWithObjects");
 }
 
 void Pacman::checkCollisions(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {

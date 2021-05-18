@@ -1,8 +1,6 @@
 #ifndef WALL_HPP
 #define WALL_HPP
 
-#include <SFML/Graphics.hpp>
-
 #include "../game_tile.hpp"
 
 class Wall : public GameTile {
@@ -23,6 +21,7 @@ public:
     bool isWalkable() const override { return false; }
 
 private:
+    char type;
     std::map<const char, const std::string> texture_map = {
         // Regular walls, found inside the map
         { '1', "res/sprites/Walls/left-top.png" },

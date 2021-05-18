@@ -15,9 +15,14 @@ Game::~Game() {
             if (tile != nullptr) delete tile;
         }
     }
+
+    // Write all the collected metrics to a CSV file.
+    PerfLogger::getInstance()->commit();
 }
 
 void Game::pollEvents() const {
+    PerfLogger::getInstance()->startJob("Game::pollEvents");
+
     sf::Event event;
 
     while (window->pollEvent(event)) {
@@ -26,20 +31,28 @@ void Game::pollEvents() const {
             window->close();
         }
     }
+
+    PerfLogger::getInstance()->stopJob("Game::pollEvents");
 }
 
 void Game::update() {
+    PerfLogger::getInstance()->startJob("Game::Update");
+
     pollEvents();
-    
+
     // Delete the map
     for (auto &row : map) {
         for (auto &tile : row) {
             if (tile != nullptr) tile->update(window, map);
         }
     }
+
+    PerfLogger::getInstance()->stopJob("Game::Update");
 }
 
 void Game::render() const {
+    PerfLogger::getInstance()->startJob("Game::Render");
+
     // Clear the old frame from the window.
     window->clear();
 
@@ -53,6 +66,8 @@ void Game::render() const {
 
     // Display the newly rendered frame onto the window.
     window->display();
+
+    PerfLogger::getInstance()->stopJob("Game::Render");
 }
 
 bool Game::isRunning() const {
@@ -61,6 +76,8 @@ bool Game::isRunning() const {
 }
 
 void Game::initWindow() {
+    PerfLogger::getInstance()->startJob("Game::initWindow");
+
     // Create a 4:3 non-resizeable window.
     const sf::VideoMode videoMode = sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT);
     const sf::Uint32 style = sf::Style::Close | sf::Style::Titlebar;
@@ -73,13 +90,19 @@ void Game::initWindow() {
     initTitle();
 
     // Show the window.
-    window->setVisible(true);   
+    window->setVisible(true);
+
+    PerfLogger::getInstance()->stopJob("Game::initWindow");
 }
 
 void Game::initMap() {
+    PerfLogger::getInstance()->startJob("Game::initMap");
+
     std::ifstream file("res/maps/default.map", std::ios::binary);
     std::string line;
     int line_count = 0;
+    std::vector<Ghost*> ghosts1, ghosts2;
+    std::vector<Pacman*> pacmans;
 
     if (!file.is_open()) {
         std::cout << "ERROR: Cannot find map file" << std::endl;
@@ -123,11 +146,37 @@ void Game::initMap() {
                 case 'f':
                     tile = new Fruit(pos);
                     break;
-                case 'O': 
+                case 'O':
                     tile = new Pacman(pos);
+                    pacmans.push_back((Pacman*)(tile));
                     break;
-                case 'o': 
+                case 'o':
                     tile = new Pacman(pos);
+                    pacmans.push_back((Pacman*)(tile));
+                    break;
+                case 'b':
+                    tile = new Blinky(pos);
+                    ghosts1.push_back((Blinky*)(tile));
+                    break;
+                case 'B':
+                    tile = new Blinky(pos);
+                    ghosts2.push_back((Blinky*)(tile));
+                    break;
+                case 'c':
+                    tile = new Clyde(pos);
+                    ghosts1.push_back((Clyde*)(tile));
+                    break;
+                case 'C':
+                    tile = new Clyde(pos);
+                    ghosts2.push_back((Clyde*)(tile));
+                    break;
+                case 'p':
+                    tile = new Pinky(pos);
+                    ghosts1.push_back((Pinky*)(tile));
+                    break;
+                case 'P':
+                    tile = new Pinky(pos);
+                    ghosts2.push_back((Pinky*)(tile));
                     break;
                 default: 
                     tile = nullptr;
@@ -136,9 +185,23 @@ void Game::initMap() {
         }
         line_count++;
     }
+    for (auto g : ghosts1) {
+        if (g != nullptr && pacmans.front() != nullptr) {
+            g->setChasing(pacmans.front());
+        }
+    }
+    for (auto g : ghosts2) {
+        if (g != nullptr && pacmans.front() != nullptr && pacmans.front() != pacmans.back()) {
+             g->setChasing(pacmans.back());
+        }
+    }
+
+    PerfLogger::getInstance()->stopJob("Game::initMap");
 }
 
 void Game::initTitle() {
+    PerfLogger::getInstance()->startJob("Game::initTitle");
+
     font = sf::Font();
 
     if (font.loadFromFile("res/fonts/emulogic.ttf") == false) {
@@ -155,4 +218,6 @@ void Game::initTitle() {
         (WINDOW_WIDTH - title.getGlobalBounds().width ) /2,
         (Y_OFFSET - title.getGlobalBounds().height ) / 2,
     });
+
+    PerfLogger::getInstance()->stopJob("Game::initTitle");
 }

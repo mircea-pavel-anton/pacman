@@ -15,7 +15,31 @@ Edible &Edible::operator=(const Edible &_other) {
 }
 
 void Edible::update(const sf::RenderTarget *, GameTile *[MAP_WIDTH][MAP_HEIGHT]) {
+    switch (score_modifier) {
+        case 0: // Power Pellet
+            PerfLogger::getInstance()->startJob("PowerPellet::update");
+            break;
+        case 5: // Food
+            PerfLogger::getInstance()->startJob("Food::update");
+            break;
+        case 100: // Fruit
+            PerfLogger::getInstance()->startJob("Fruit::update");
+            break;
+    }
+
     updateSprite();
+
+    switch (score_modifier) {
+        case 0: // Power Pellet
+            PerfLogger::getInstance()->stopJob("PowerPellet::update");
+            break;
+        case 5: // Food
+            PerfLogger::getInstance()->stopJob("Food::update");
+            break;
+        case 100: // Fruit
+            PerfLogger::getInstance()->stopJob("Fruit::update");
+            break;
+    }
 };
 
 void Edible::toEatenState() {

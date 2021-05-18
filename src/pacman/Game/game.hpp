@@ -1,10 +1,6 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <SFML/Graphics.hpp>
-#include <fstream>
-#include <iostream>
-
 #include "../GameTile/__barrel__.hpp"
 #include "../config.hpp"
 
@@ -27,8 +23,6 @@ public:
     // Returns whether or not the RenderWindow is open, i.e. if
     // the game is currently running.
     bool isRunning() const;
-
-protected:
 
 private:
     // ---------------- MEMBERS ---------------- //
