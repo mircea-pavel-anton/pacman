@@ -1,6 +1,11 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
+// Common libraries used in most if not all source files
+#include "PerfLogger/performance_logger.hpp"
+#include <SFML/Graphics.hpp>
+#include <iostream>
+
 static const int MAP_WIDTH = 28;       // game map width, in tiles.
 static const int MAP_HEIGHT = 31;      // game map height, in tiles.
 static const float TILE_SIZE = 22;     // tile size, in pixels.
