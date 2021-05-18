@@ -1,8 +1,6 @@
 #ifndef PINKY_HPP
 #define PINKY_HPP
 
-#include <SFML/Graphics.hpp>
-
 #include "../ghost.hpp"
 
 class Pinky : public Ghost {

@@ -1,8 +1,6 @@
 #ifndef GHOST_HPP
 #define GHOST_HPP
 
-#include <SFML/Graphics.hpp>
-
 #include "../../../RNG/rng.hpp"
 #include "../movable.hpp"
 #include "../Pacman/pacman.hpp"

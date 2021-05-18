@@ -1,8 +1,6 @@
 #ifndef BLINKY_HPP
 #define BLINKY_HPP
 
-#include <SFML/Graphics.hpp>
-
 #include "../ghost.hpp"
 
 class Blinky : public Ghost {

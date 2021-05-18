@@ -1,8 +1,6 @@
 #ifndef PACMAN_HPP
 #define PACMAN_HPP
 
-#include <SFML/Graphics.hpp>
-
 #include "../movable.hpp"
 #include "../../../config.hpp"
 #include "../../Edible/__barrel__.hpp"

@@ -1,8 +1,6 @@
 #ifndef CLYDE_HPP
 #define CLYDE_HPP
 
-#include <SFML/Graphics.hpp>
-
 #include "../ghost.hpp"
 
 class Clyde : public Ghost {

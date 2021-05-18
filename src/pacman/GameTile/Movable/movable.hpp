@@ -1,7 +1,6 @@
 #ifndef MOVABLE_HPP
 #define MOVABLE_HPP
 
-#include <SFML/Graphics.hpp>
 #include <math.h>
 
 #include "../../config.hpp"

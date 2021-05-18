@@ -1,9 +1,6 @@
 #ifndef GAME_TILE_HPP
 #define GAME_TILE_HPP
 
-#include <SFML/Graphics.hpp>
-#include <iostream>
-
 #include "../config.hpp"
 
 static const std::string EMPTY_TEXTURE = "res/sprites/empty.png";
