@@ -36,7 +36,7 @@ compile-release:
 	@ mkdir -p $(RELEASE_DIR)/bin
 	@ mkdir -p $(RELEASE_DIR)/temp
 	@ printf "Compiling source code... "
-	@ cd $(RELEASE_DIR)/temp/ && $(CXX) $(FLAGS) $(DEBUG_FLAGS) $(SRC)
+	@ cd $(RELEASE_DIR)/temp/ && $(CXX) $(FLAGS) $(RELEASE_FLAGS) $(SRC)
 	@ echo "\033[1;32mDone\033[1;0m"
 
 link-release:
