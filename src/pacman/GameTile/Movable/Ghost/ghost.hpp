@@ -35,7 +35,7 @@ class Ghost : public Movable {
     bool isScared() const { return state == GhostStates::Frightened; };
     bool isChasing() const { return state == GhostStates::Chasing; };
     bool isDead() const { return state == GhostStates::Dead; };
-
+    std::string getName() const { return name; }
   protected:
     // ---------------- MEMBERS ----------------
     // The pacman that this ghost will be using to calculate the
