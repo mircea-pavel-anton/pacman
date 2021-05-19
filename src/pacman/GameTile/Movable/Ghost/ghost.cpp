@@ -6,6 +6,7 @@ Ghost::Ghost(const std::string &_name, const sf::Vector2f &_position) {
     position = _position;
     name = _name;
     textures_root_dir = "res/sprites/Ghost/" + name + "/";
+    resetTimers();
 
     initSprite();
     initTrail();

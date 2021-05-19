@@ -100,6 +100,8 @@ protected:
 
     inline void resetTimers() {
         scared_timer = SCARED_DURATION;
+        chase_timer = CHASE_DURATION;
+        scatter_timer = SCATTER_DURATION;
     }
 
     // Returns the coordinates of the tile that this ghost is chasing.
