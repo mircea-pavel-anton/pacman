@@ -33,7 +33,7 @@ void Ghost::initVars() {
     // The scared timer is calculated in terms of frames,
     // not seconds. As such, we need to calculate it like se:
     // timer = seconds * FPS
-    scared_timer = 20 * WINDOW_FRAMERATE / TILE_SIZE;
+    scared_timer = SCARED_DURATION;
 
     textures_root_dir = "res/sprites/Ghost/" + name + "/";
     // Load a default texture
@@ -101,9 +101,9 @@ void Ghost::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
     // fully entered into a new tile.
     const sf::Vector2i map_position = getMapPosition();
     if (position.x != map_position.x * TILE_SIZE || position.y != map_position.y * TILE_SIZE) {
-            PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
-            return;
-        }
+        PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
+        return;
+    }
 
     switch (state) {
         case GhostStates::Frightened:
@@ -115,7 +115,7 @@ void Ghost::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
 
             // When the countdown reaches 0, the ghost
             // is no longer frightened.
-            if (scared_timer == 0) toChaseState();
+            if (scared_timer <= 0) toChaseState();
             break;
 
         case GhostStates::Dead:
@@ -169,7 +169,7 @@ void Ghost::toChaseState() {
 void Ghost::toFrightenedState() {
     state = GhostStates::Frightened;
 
-    // Any state change turns the ghost around 180 degrees.
+    // This state change turns the ghost around 180 degrees.
     direction = -direction;
 
     // Change the animation frames.
