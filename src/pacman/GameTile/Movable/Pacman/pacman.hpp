@@ -4,6 +4,9 @@
 #include "../movable.hpp"
 #include "../../../config.hpp"
 #include "../../Edible/__barrel__.hpp"
+#include "../Ghost/ghost.hpp"
+
+class Ghost;
 
 class Pacman : public Movable {
   

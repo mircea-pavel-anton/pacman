@@ -77,14 +77,26 @@ void Pacman::initText() {
 void Pacman::interact(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
     PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::interact");
 
+    if (dynamic_cast<PowerPellet*>(old_tile) != nullptr) {
+        PowerPellet *pellet = (PowerPellet*)old_tile;
+        if (pellet->isEaten() == false) {
+            for (int i = 0; i < MAP_WIDTH; i++) {
+                for (int j = 0; j < MAP_HEIGHT; j++) {
+                    if (dynamic_cast<Ghost*>(_map[i][j])) {
+                        ((Ghost*)_map[i][j])->toFrightenedState();
+                    }
+                }
+            }
+            pellet->toEatenState();
+        }
+    }
+
     if ( dynamic_cast<Edible*>(old_tile) != nullptr ) {
         Edible *edible = (Edible*)old_tile;
         score += edible->getScoreModifier();
         edible->toEatenState();
         updateScore();
     }
-    // TODO interact with power pellet
-    // TODO interact with ghost
 
     PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
 }
