@@ -6,7 +6,10 @@
 class Inky : public Ghost {
 
 public:
-    Inky(const sf::Vector2f &_position) : Ghost("Inky", _position) {};
+    Inky(const sf::Vector2f &_position) : Ghost("Inky", _position) {
+        scatter_position = {0, MAP_HEIGHT};
+        toScatterState();
+    };
 
 protected:
     sf::Vector2i getChasePosition() override {

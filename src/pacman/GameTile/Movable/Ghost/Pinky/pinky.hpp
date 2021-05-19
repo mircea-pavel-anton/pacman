@@ -6,7 +6,10 @@
 class Pinky : public Ghost {
 
 public:
-    Pinky(const sf::Vector2f &_position) : Ghost("Pinky", _position) {};
+    Pinky(const sf::Vector2f &_position) : Ghost("Pinky", _position) {
+        scatter_position = {0, 0};
+        toScatterState();
+    };
 
 protected:
     sf::Vector2i getChasePosition() override {

@@ -6,7 +6,10 @@
 class Clyde : public Ghost {
 
 public:
-    Clyde(const sf::Vector2f &_position) : Ghost("Clyde", _position) {};
+    Clyde(const sf::Vector2f &_position) : Ghost("Clyde", _position) {
+        scatter_position = {MAP_WIDTH, 0};
+        toScatterState();
+    };
 
 protected:
     sf::Vector2i getChasePosition() override {

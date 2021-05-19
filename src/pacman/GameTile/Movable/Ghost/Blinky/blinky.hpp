@@ -6,7 +6,10 @@
 class Blinky : public Ghost {
 
 public:
-    Blinky(const sf::Vector2f &_position) : Ghost("Blinky", _position) {};
+    Blinky(const sf::Vector2f &_position) : Ghost("Blinky", _position) {
+        scatter_position = {MAP_WIDTH, MAP_HEIGHT};
+        toScatterState();
+    };
 
 protected:
     sf::Vector2i getChasePosition() override {
