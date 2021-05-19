@@ -28,12 +28,8 @@ void Ghost::initVars() {
     Movable::initVars();
 
     chasing = {};
-    state = GhostStates::Chasing;
     rng = RNG();
-    // The scared timer is calculated in terms of frames,
-    // not seconds. As such, we need to calculate it like se:
-    // timer = seconds * FPS
-    scared_timer = SCARED_DURATION;
+    resetTimers();
 
     textures_root_dir = "res/sprites/Ghost/" + name + "/";
     // Load a default texture
@@ -111,7 +107,7 @@ void Ghost::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
             direction = frightened(_map);
 
             // Decrese the scared countdown.
-            scared_timer --;
+            scared_timer--;
 
             // When the countdown reaches 0, the ghost
             // is no longer frightened.
@@ -128,12 +124,31 @@ void Ghost::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
             if (getMapPosition() == home_position) toChaseState();
             break;
 
-        case GhostStates::Chasing:
-        default:
+        case GhostStates::Scatter:
+            // If the ghost has been killed, then it rushes back
+            // to the ghost house
+            direction = chase(_map, scatter_position);
+
+            // Decrese the scared countdown.
+            scatter_timer--;
+
+            // When the countdown reaches 0, the ghost
+            // is no longer scattering.
+            if (scatter_timer <= 0) toChaseState();
+            break;
+
+        case GhostStates::Chase:
             // Under regular conditions, the ghost is in chase mode.
             // During chase mode, a special position is chosen for 
             // each particular ghost to chase.
             direction = chase(_map, getChasePosition());
+
+            // Decrese the scared countdown.
+            chase_timer--;
+
+            // When the countdown reaches 0, the ghost
+            // is no longer scattering.
+            if (chase_timer <= 0) toChaseState();
             break;
     }
 
@@ -149,6 +164,8 @@ void Ghost::render(sf::RenderTarget *_target) const {
 
 void Ghost::toDeadState() {
     state = GhostStates::Dead;
+    std::cout << name << ": dead" << std::endl;
+    resetTimers();
 
     // Change the animation frames.
     textures_root_dir = "res/sprites/Ghost/dead/";
@@ -156,9 +173,11 @@ void Ghost::toDeadState() {
 }
 
 void Ghost::toChaseState() {
-    state = GhostStates::Chasing;
+    state = GhostStates::Chase;
+    std::cout << name << ": chasing" << std::endl;
+    resetTimers();
 
-    // Any state change turns the ghost around 180 degrees.
+    // This state change turns the ghost around 180 degrees.
     direction = -direction;
 
     // Change the animation frames.
@@ -168,12 +187,27 @@ void Ghost::toChaseState() {
 
 void Ghost::toFrightenedState() {
     state = GhostStates::Frightened;
+    std::cout << name << ": frightened" << std::endl;
+    resetTimers();
 
     // This state change turns the ghost around 180 degrees.
     direction = -direction;
 
     // Change the animation frames.
     textures_root_dir = "res/sprites/Ghost/frightened/";
+    loadTextures();
+}
+
+void Ghost::toScatterState() {
+    state = GhostStates::Scatter;
+    std::cout << name << ": scatter" << std::endl;
+    resetTimers();
+
+    // This state change turns the ghost around 180 degrees.
+    direction = -direction;
+
+    // Change the animation frames.
+    textures_root_dir = "res/sprites/Ghost/" + name + "/";
     loadTextures();
 }
 

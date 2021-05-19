@@ -7,11 +7,11 @@
 
 class Pacman;
 
-enum GhostStates { Frightened, Dead, Chasing };
+enum GhostStates { Frightened, Dead, Chase, Scatter };
 
 class Ghost : public Movable {
 
-  public:
+public:
     Ghost(const std::string &, const sf::Vector2f &); // default constructor
     Ghost(const Ghost&); // copy constructor
     Ghost &operator=(const Ghost&); // assignment operator
@@ -30,13 +30,15 @@ class Ghost : public Movable {
     void toDeadState();
     void toFrightenedState();
     void toChaseState();
+    void toScatterState();
 
     // Random accessors
     bool isScared() const { return state == GhostStates::Frightened; };
-    bool isChasing() const { return state == GhostStates::Chasing; };
+    bool isChasing() const { return state == GhostStates::Chase; };
     bool isDead() const { return state == GhostStates::Dead; };
     std::string getName() const { return name; }
-  protected:
+
+protected:
     // ---------------- MEMBERS ----------------
     // The pacman that this ghost will be using to calculate the
     // target that it will be chasing.
@@ -49,11 +51,12 @@ class Ghost : public Movable {
     GhostStates state;
 
     // A timer used to get out of the scared state after a given number of seconds.
-    int scared_timer;
+    int scared_timer, chase_timer, scatter_timer;
 
     // The coordinates of the tile the ghost will go to when killed.
     // Right in front of the ghost house.
     const sf::Vector2i home_position = {13, 11};
+    sf::Vector2i scatter_position;
     
     // The name of the ghost.
     std::string name;
@@ -94,6 +97,10 @@ class Ghost : public Movable {
 
     // Checks whether or not the given direction is a valid move for the ghost.
     bool canMove(GameTile *[MAP_WIDTH][MAP_HEIGHT], const sf::Vector2i &) const;
+
+    inline void resetTimers() {
+        scared_timer = SCARED_DURATION;
+    }
 
     // Returns the coordinates of the tile that this ghost is chasing.
     virtual sf::Vector2i getChasePosition() = 0;
