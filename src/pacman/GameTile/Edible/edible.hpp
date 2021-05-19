@@ -5,6 +5,8 @@
 
 class Edible : public GameTile {
 
+enum EdibleState { Active, Eaten };
+
 public:
     Edible();
     Edible(const Edible &); // copy constructor
@@ -24,8 +26,9 @@ public:
 
     // Gets the number of points gained by eating this tile.
     int getScoreModifier() { return score_modifier; }
-
+    bool isEaten() { return state == EdibleState::Eaten; }
 protected:
+    EdibleState state;
     int score_modifier;
 
 };

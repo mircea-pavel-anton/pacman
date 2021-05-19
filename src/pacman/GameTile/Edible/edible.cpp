@@ -3,6 +3,7 @@
 Edible::Edible() {
     textures_root_dir = "res/sprites/Edibles/";
     score_modifier = 0;
+    state = EdibleState::Active;
 }
 Edible::Edible(const Edible &_edible) { *this = _edible; }
 Edible::~Edible() { /* nothing to do here */ }
@@ -49,6 +50,7 @@ void Edible::toEatenState() {
     // Once eaten, it should no longer display anything, so we
     // load an empty sprite.
     texture_paths = { EMPTY_TEXTURE };
+    state = EdibleState::Eaten;
 
     loadTextures();
 }
