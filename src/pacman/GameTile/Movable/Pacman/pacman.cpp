@@ -98,6 +98,17 @@ void Pacman::interact(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
         updateScore();
     }
 
+    if (dynamic_cast<Ghost*>(old_tile) != nullptr) {
+        Ghost *ghost = dynamic_cast<Ghost*>(old_tile);
+        if (ghost->isScared()) {
+            ghost->toDeadState();
+            score += 200;
+        }
+        if (ghost->isDead() == false && ghost->isScared() == false) {
+            toDeadState();
+        }
+    }
+
     PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
 }
 
@@ -160,6 +171,7 @@ void Pacman::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][M
 
     if (is_dead) {
         updateSprite();
+        PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::update");
         return;
     }
 
@@ -267,6 +279,18 @@ void Pacman::toDeadState() {
     is_dead = true;
     texture_paths = {
         textures_root_dir + "dead_1.png",
+        textures_root_dir + "dead_2.png",
+        textures_root_dir + "dead_3.png",
+        textures_root_dir + "dead_4.png",
+        textures_root_dir + "dead_5.png",
+        textures_root_dir + "dead_6.png",
+        textures_root_dir + "dead_7.png",
+        textures_root_dir + "dead_8.png",
+        textures_root_dir + "dead_9.png",
+        textures_root_dir + "dead_10.png",
+        textures_root_dir + "dead_11.png",
+        textures_root_dir + "dead_12.png",
+        textures_root_dir + "dead_13.png",
     };
     loadTextures();
 }
