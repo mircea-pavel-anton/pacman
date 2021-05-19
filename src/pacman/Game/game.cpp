@@ -178,6 +178,14 @@ void Game::initMap() {
                     tile = new Pinky(pos);
                     ghosts2.push_back((Pinky*)(tile));
                     break;
+                case 'i':
+                    tile = new Inky(pos);
+                    ghosts1.push_back((Inky*)(tile));
+                    break;
+                case 'I':
+                    tile = new Inky(pos);
+                    ghosts2.push_back((Inky*)(tile));
+                    break;
                 default: 
                     tile = nullptr;
             }
@@ -187,12 +195,24 @@ void Game::initMap() {
     }
     for (auto g : ghosts1) {
         if (g != nullptr && pacmans.front() != nullptr) {
-            g->setChasing(pacmans.front());
+            g->addChasing(pacmans.front());
+            if (g->getName() == "Inky") {
+                for (auto b : ghosts1) {
+                    if (b->getName() == "Blinky")
+                        g->addChasing(b);
+                }
+            }
         }
     }
     for (auto g : ghosts2) {
         if (g != nullptr && pacmans.front() != nullptr && pacmans.front() != pacmans.back()) {
-             g->setChasing(pacmans.back());
+             g->addChasing(pacmans.back());
+            if (g->getName() == "Inky") {
+                for (auto b : ghosts1) {
+                    if (b->getName() == "Blinky")
+                        g->addChasing(b);
+                }
+            }
         }
     }
 
