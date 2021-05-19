@@ -100,9 +100,11 @@ void Ghost::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
     // Only calculate a new movement direction once the ghost has
     // fully entered into a new tile.
     const sf::Vector2i map_position = getMapPosition();
-    if (position.x != map_position.x * TILE_SIZE) return;
-    if (position.y != map_position.y * TILE_SIZE) return;
-    
+    if (position.x != map_position.x * TILE_SIZE || position.y != map_position.y * TILE_SIZE) {
+            PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
+            return;
+        }
+
     switch (state) {
         case GhostStates::Frightened:
             // Pick the next direction randomly.
@@ -296,9 +298,8 @@ sf::Vector2i Ghost::chase(GameTile *_map[MAP_WIDTH][MAP_HEIGHT], const sf::Vecto
 
     // Return the direction that gets the ghost closest to the
     // destination tile.
-    return best_direction;
-
     PerfLogger::getInstance()->stopJob("Ghost::" + name + "::chase");
+    return best_direction;
 }
 
 void Ghost::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {

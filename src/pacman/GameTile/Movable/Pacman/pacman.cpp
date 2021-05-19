@@ -95,8 +95,10 @@ void Pacman::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
     const sf::Vector2i map_position = getMapPosition();
 
     // Pacman can only change directions when fully inside a tile.
-    if (position.x != map_position.x * TILE_SIZE) return;
-    if (position.y != map_position.y * TILE_SIZE) return;
+    if (position.x != map_position.x * TILE_SIZE || position.y != map_position.y * TILE_SIZE) {
+        PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::updateMovementDirection");
+        return;
+    }
 
     // Get the coordinates of the tile pacman is trying to enter.
     const sf::Vector2i tile_position = map_position + next_direction;
@@ -105,7 +107,10 @@ void Pacman::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
     const GameTile *tile = _map[tile_position.x][tile_position.y];
 
     // if it is not walkable, return and don't change the current direction.
-    if (tile != nullptr && tile->isWalkable() == false) return;
+    if (tile != nullptr && tile->isWalkable() == false) {
+        PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::updateMovementDirection");
+        return;
+    }
 
     // If we got here, it means that the tile is walkable and it's ok
     // to change our movement direction.
