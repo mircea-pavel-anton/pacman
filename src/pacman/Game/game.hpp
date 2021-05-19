@@ -11,7 +11,7 @@ public:
     ~Game();
 
     // Listen for events on the RenderWindow.
-    void pollEvents() const;
+    void pollEvents();
 
     // Update all the game elements.
     // Game logic takes place here.
@@ -30,6 +30,7 @@ private:
     GameTile *map[MAP_WIDTH][MAP_HEIGHT];
     sf::Text title;
     sf::Font font;
+    bool pause = false;
 
     // ---------------- METHODS ---------------- //
     void initWindow(); // intialize the RenderWindow.

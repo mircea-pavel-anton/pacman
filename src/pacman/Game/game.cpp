@@ -20,7 +20,7 @@ Game::~Game() {
     PerfLogger::getInstance()->commit();
 }
 
-void Game::pollEvents() const {
+void Game::pollEvents() {
     PerfLogger::getInstance()->startJob("Game::pollEvents");
 
     sf::Event event;
@@ -30,44 +30,53 @@ void Game::pollEvents() const {
         if (event.type == sf::Event::Closed) {
             window->close();
         }
+        
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Space) {
+                pause = !pause;
+            }
+        }
     }
 
     PerfLogger::getInstance()->stopJob("Game::pollEvents");
 }
 
 void Game::update() {
-    PerfLogger::getInstance()->startJob("Game::Update");
-
     pollEvents();
+    if (!pause) {
+        PerfLogger::getInstance()->startJob("Game::Update");
 
-    // Delete the map
-    for (auto &row : map) {
-        for (auto &tile : row) {
-            if (tile != nullptr) tile->update(window, map);
+        // Delete the map
+        for (auto &row : map) {
+            for (auto &tile : row) {
+                if (tile != nullptr) tile->update(window, map);
+            }
         }
-    }
 
-    PerfLogger::getInstance()->stopJob("Game::Update");
+        PerfLogger::getInstance()->stopJob("Game::Update");
+    }
 }
 
 void Game::render() const {
-    PerfLogger::getInstance()->startJob("Game::Render");
+    if (!pause) {
+        PerfLogger::getInstance()->startJob("Game::Render");
 
-    // Clear the old frame from the window.
-    window->clear();
+        // Clear the old frame from the window.
+        window->clear();
 
-    window->draw(title);
-    // Render every game tile.
-    for (auto &row : map) {
-        for (auto &tile : row) {
-            if (tile != nullptr) tile->render(window);
+        window->draw(title);
+        // Render every game tile.
+        for (auto &row : map) {
+            for (auto &tile : row) {
+                if (tile != nullptr) tile->render(window);
+            }
         }
+
+        // Display the newly rendered frame onto the window.
+        window->display();
+
+        PerfLogger::getInstance()->stopJob("Game::Render");
     }
-
-    // Display the newly rendered frame onto the window.
-    window->display();
-
-    PerfLogger::getInstance()->stopJob("Game::Render");
 }
 
 bool Game::isRunning() const {
