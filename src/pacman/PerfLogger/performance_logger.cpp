@@ -47,7 +47,6 @@ void PerfLogger::startJob(const std::string &job_name) {
 
     auto iterator = start_times.find(job_name);
     if (iterator == start_times.end()) {
-        std::cout << "Job \"" << job_name << "\" started" << std::endl;
         start_times[job_name] = start; 
     } else {
         std::cout << "ERROR: Job \"" << job_name << "\" was already started!" << std::endl;
@@ -64,7 +63,6 @@ void PerfLogger::stopJob(const std::string &job_name) {
     } else {
         auto duration = duration_cast<microseconds>(stop - start_times[job_name]);
         durations[job_name].push_back(duration.count());
-        std::cout << "Job \"" << job_name << "\" ended and logged." << std::endl;
         start_times.erase(iterator);
     }
 }
