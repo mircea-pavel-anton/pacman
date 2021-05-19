@@ -10,14 +10,27 @@ PerfLogger::~PerfLogger() { /* nothing to do here */ }
 
 void PerfLogger::commit() {
     std::ofstream csv("performance.csv");
+    std::vector<std::vector<int64_t>> master_vector;
 
+    // Write the column titles to the file
     for (auto &entry : durations) {
-        csv << entry.first << "; ";
+        csv << entry.first << ",";
+        master_vector.push_back(entry.second);
+    }
+    csv << std::endl;
 
-        for (int metric : entry.second) {
-            csv << metric << "; ";
+    // Get the max size of a vector.
+    long unsigned int max_size = 0;
+    for (auto &vector : master_vector) {
+        if (vector.size() > max_size) max_size = vector.size();
+    }
+
+    // Add one element from each vector on each line.
+    for (long unsigned int i = 0; i < max_size; i++) {
+        for (auto &vector : master_vector) {
+            if (vector.size() > i) csv << vector.at(i);
+            csv << ",";
         }
-
         csv << std::endl;
     }
 
