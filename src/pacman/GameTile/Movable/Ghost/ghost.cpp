@@ -14,7 +14,7 @@ Ghost::Ghost(const std::string &_name, const sf::Vector2f &_position) {
 Ghost::Ghost(const Ghost &_ghost) { *this = _ghost; }
 Ghost &Ghost::operator=(const Ghost &_other) {
     this->Movable::operator=(_other);
-    pacman = _other.pacman;
+    chasing = _other.chasing;
     state = _other.state;
     scared_timer = _other.scared_timer;
     textures_root_dir = _other.textures_root_dir;
@@ -27,7 +27,7 @@ Ghost &Ghost::operator=(const Ghost &_other) {
 void Ghost::initVars() {
     Movable::initVars();
 
-    pacman = nullptr;
+    chasing = {};
     state = GhostStates::Chasing;
     rng = RNG();
     // The scared timer is calculated in terms of frames,
