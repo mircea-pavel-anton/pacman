@@ -12,16 +12,17 @@ static const float TILE_SIZE = 22;     // tile size, in pixels.
 
 static const int WINDOW_HEIGHT = 900;  // window height, in pixels.
 static const int WINDOW_WIDTH = 1200;  // window widthm in pixels.
+static const int WINDOW_FRAMERATE = 60; // window framerate, in Hz.
+static const std::string WINDOW_TITLE = "Pacman";
 
 // offset values used to center the map on the window.
 static const float X_OFFSET = ( WINDOW_WIDTH - MAP_WIDTH * TILE_SIZE ) / 2;
 static const float Y_OFFSET = ( WINDOW_HEIGHT - MAP_HEIGHT * TILE_SIZE ) / 2;
 
-static const int WINDOW_FRAMERATE = 60; // window framerate, in Hz.
-
 // Movement speed, in pixels/frame.
 static const float SPEED = 1;
 
-static const std::string WINDOW_TITLE = "Pacman";
+const int SCARED_DURATION = 20 * WINDOW_FRAMERATE / TILE_SIZE;
+
 
 #endif //CONFIG_HPP
