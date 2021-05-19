@@ -4,19 +4,41 @@
 #include "../ghost.hpp"
 
 class Pinky : public Ghost {
-  public:
+
+public:
     Pinky(const sf::Vector2f &_position) : Ghost("Pinky", _position) {};
 
-  protected:
+protected:
     sf::Vector2i getChasePosition() override {
-        sf::Vector2i target = pacman->getMapPosition() + 4 * pacman->getDirection();
+        if (chasing.empty()) {
+            std::cout << "ERROR: " + name + " has no target!" << std::endl;
+            return home_position;
+        }
 
-        if (target.x < 0.f) target.x = 0.f;
-        if (target.y < 0.f) target.y = 0.f;
-        if (target.x > MAP_WIDTH) target.y = MAP_WIDTH;
-        if (target.y > MAP_HEIGHT) target.y = MAP_HEIGHT;
+        Movable *target = nullptr;
 
-        return target;
+        if (chasing.size() == 1) {
+            target = chasing.front();
+        } else {
+            int distance = 9999;
+            sf::Vector2i delta = {0, 0};
+            for (auto &t : chasing) {
+                delta = t->getMapPosition() - getMapPosition();
+                int t_distance = delta.x * delta.x + delta.y * delta.y;
+                if (distance > t_distance) {
+                    distance = t_distance;
+                    target = t;
+                }
+            }
+        }
+    
+        // Pinky always targets the tile 4 tiles in front of who he is chasing;
+        sf::Vector2i target_tile = target->getMapPosition() + 4 * target->getDirection();
+        // if (target_tile.x < 0.f) target_tile.x = 0.f;
+        // if (target_tile.y < 0.f) target_tile.y = 0.f;
+        // if (target_tile.x > MAP_WIDTH) target_tile.y = MAP_WIDTH;
+        // if (target_tile.y > MAP_HEIGHT) target_tile.y = MAP_HEIGHT;
+        return target_tile;
     }
 };
 
