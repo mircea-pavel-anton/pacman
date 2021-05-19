@@ -24,7 +24,7 @@ class Ghost : public Movable {
     inline bool isWalkable() const override { return true; }
 
     // Set the Pacman that this ghost will chase.
-    void setChasing(Pacman *_pacman) { pacman = _pacman; }
+    void addChasing(Movable *_target) { chasing.push_back(_target); }
 
     // State-Changing methods
     void toDeadState();
@@ -40,7 +40,7 @@ class Ghost : public Movable {
     // ---------------- MEMBERS ----------------
     // The pacman that this ghost will be using to calculate the
     // target that it will be chasing.
-    Pacman *pacman;
+    std::vector<Movable*> chasing;
 
     // A simple random number generator.
     RNG rng;
