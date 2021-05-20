@@ -165,7 +165,7 @@ void Ghost::render(sf::RenderTarget *_target) const {
 
 void Ghost::toDeadState() {
     state = GhostStates::Dead;
-    std::cout << name << ": dead" << std::endl;
+    speed = SPEED;
     resetTimers();
 
     // Change the animation frames.
@@ -175,7 +175,7 @@ void Ghost::toDeadState() {
 
 void Ghost::toChaseState() {
     state = GhostStates::Chase;
-    std::cout << name << ": chasing" << std::endl;
+    speed = SPEED;
     resetTimers();
 
     // This state change turns the ghost around 180 degrees.
@@ -188,20 +188,20 @@ void Ghost::toChaseState() {
 
 void Ghost::toFrightenedState() {
     state = GhostStates::Frightened;
-    std::cout << name << ": frightened" << std::endl;
+    speed = 0.5 * SPEED;
     resetTimers();
-
-    // This state change turns the ghost around 180 degrees.
-    direction = -direction;
-
     // Change the animation frames.
     textures_root_dir = "res/sprites/Ghost/frightened/";
     loadTextures();
+    updateAnimation();
+
+    // This state change turns the ghost around 180 degrees.
+    direction = -direction;
 }
 
 void Ghost::toScatterState() {
     state = GhostStates::Scatter;
-    std::cout << name << ": scatter" << std::endl;
+    speed = SPEED;
     resetTimers();
 
     // This state change turns the ghost around 180 degrees.
