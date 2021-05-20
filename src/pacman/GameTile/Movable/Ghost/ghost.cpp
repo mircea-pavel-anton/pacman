@@ -82,8 +82,8 @@ void Ghost::updateAnimation() {
 
 void Ghost::updateTrail() {
     trail_position = {
-        getChasePosition().x * TILE_SIZE,
-        getChasePosition().y * TILE_SIZE,
+        scatter_position.x * TILE_SIZE,
+        scatter_position.y * TILE_SIZE,
     };
     trail.setPosition({
         trail_position.x + X_OFFSET,
@@ -104,7 +104,6 @@ void Ghost::updateMovementDirection(std::vector<GameTile*> _map[MAP_WIDTH][MAP_H
 
     // There are 2 corridors in which the ghosts are not allowed to
     // move up or down. Above the ghost house and in pacmans spawn spot.
-    std::cout << "Pos: x= " << map_position.x << ", y=" << map_position.y  << std::endl;
     if ((map_position.y == 23 || map_position.y == 11) && (map_position.x > 10 && map_position.x < 17)) {
         if (direction == Directions::Left || direction == Directions::Right) {
             PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
