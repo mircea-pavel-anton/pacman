@@ -197,20 +197,15 @@ void Pacman::update(const sf::RenderTarget *_target, std::vector<GameTile*> _map
         position.x + direction.x * speed,   // X axis
         position.y + direction.y * speed    // Y axis
     };
-    std::cout << "direction changed!" << std::endl;
     // Check for collisions with other objects, and undo the position
     // change if necessary.
     checkCollisions(_target, _map);
-    std::cout << "collisions checked!" << std::endl;
 
     // Interact with the tile Pacman is currently on top of.
     interact(_map);
-    std::cout << "interacted!" << std::endl;
 
     // Place Pacman down onto the map at the new position.
     map_pos = getMapPosition();
-    std::cout << "Map position: " << map_pos.x << ", " << map_pos.y << std::endl;
-    std::cout << "Vecsize: " << _map[map_pos.x][map_pos.y].size() << std::endl;
     _map[map_pos.x][map_pos.y].push_back(this);
 
     // Update the sprite to reflect the position change.
