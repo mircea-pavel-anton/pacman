@@ -3,8 +3,6 @@
 
 #include "../config.hpp"
 
-static const std::string EMPTY_TEXTURE = "res/sprites/empty.png";
-
 class GameTile {
 
 public:
@@ -16,7 +14,7 @@ public:
 
     // Perform any backend logic required for this tile here,
     // such as window/object collisions, animation updates etc.
-    virtual void update(const sf::RenderTarget *, std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]) = 0;
+    virtual void update(const sf::RenderTarget *, vec3pGT&) = 0;
 
     // Whether or not other tiles can walk on top of this tile.
     virtual bool isWalkable() const = 0;

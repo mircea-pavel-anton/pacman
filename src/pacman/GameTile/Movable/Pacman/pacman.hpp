@@ -15,7 +15,7 @@ public:
     Pacman(const Pacman&); // copy constructor
     Pacman &operator=(const Pacman&); // assignment operator
 
-    void update(const sf::RenderTarget *, std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]) override;
+    void update(const sf::RenderTarget *, vec3pGT&) override;
     void render(sf::RenderTarget *) const override;
 
     // Ghosts can "walk" on top of Pacman to kill him.
@@ -43,7 +43,7 @@ protected:
 
     // ---------------- METHODS ----------------
     // Handles interactions with tiles that PacMan is currently on top of.
-    void interact(std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]);
+    void interact(vec3pGT&);
 
     // Listens for keyboard events in order to change the movement direction.
     void pollEvents();
@@ -63,10 +63,10 @@ protected:
 
     // Updates the current direction with the value of next_direction
     // IF such a thing is possible.
-    void updateMovementDirection(std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]) override;
+    void updateMovementDirection(vec3pGT&) override;
 
     // A wrapper method that calls all the other collision detection methods.
-    void checkCollisions(const sf::RenderTarget *, std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]);
+    void checkCollisions(const sf::RenderTarget *, vec3pGT&);
 
     // Checks if the sprite is currently colliding with the window itself.
     // Doesn't let the sprite get off-screen.
@@ -74,7 +74,7 @@ protected:
 
     // Checks if the sprite is currently colliding with any other object on
     // the game map, such as walls, pellets, fruits or ghosts.
-    void collideWithObjects(std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]);
+    void collideWithObjects(vec3pGT&);
 
 private:
     static int counter;

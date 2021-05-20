@@ -20,7 +20,7 @@ Wall &Wall::operator=(const Wall &_other) {
     return *this;
 }
 
-void Wall::update(const sf::RenderTarget *_target, std::vector<GameTile*> map[MAP_WIDTH][MAP_HEIGHT]) {
+void Wall::update(const sf::RenderTarget *_target, vec3pGT &_map) {
     PerfLogger::getInstance()->startJob("Wall::" + std::to_string(type) + "::update");
     updateSprite();
     PerfLogger::getInstance()->stopJob("Wall::" + std::to_string(type) + "::update");

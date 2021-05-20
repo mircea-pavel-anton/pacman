@@ -9,10 +9,10 @@ Game::~Game() {
         delete window;
     }
 
-    // Delete the map
-    for (auto &arr : map) {
-        for (auto &vec : arr) {
-            for (GameTile *tile : vec) {
+    // Delete every tile on the map.
+    for (vec2pGT &vec2 : map) {
+        for (vec1pGT &vec1 : vec2) {
+            for (GameTile *tile : vec1) {
                 if (tile != nullptr) delete tile;
             }
         }
@@ -48,10 +48,10 @@ void Game::update() {
     if (!pause) {
         PerfLogger::getInstance()->startJob("Game::Update");
 
-        // Delete the map
-        for (auto &arr : map) {
-            for (auto &vec : arr) {
-                for (GameTile *tile : vec) {
+        // Call the update method on every map tile.
+        for (vec2pGT &vec2 : map) {
+            for (vec1pGT &vec1 : vec2) {
+                for (GameTile *tile : vec1) {
                     if (tile != nullptr) {
                         tile->update(window, map);
                     }
@@ -70,11 +70,11 @@ void Game::render() const {
         // Clear the old frame from the window.
         window->clear();
 
-        window->draw(title);
+        window->draw(title); // Render the title at the top of the screen.
         // Render every game tile.
-        for (auto &arr : map) {
-            for (auto &vec : arr) {
-                for (GameTile *tile : vec) {
+        for (const vec2pGT &vec2 : map) {
+            for (const vec1pGT &vec1 : vec2) {
+                for (GameTile *tile : vec1) {
                     if (tile != nullptr) tile->render(window);
                 }
             }
@@ -116,7 +116,7 @@ void Game::initMap() {
     PerfLogger::getInstance()->startJob("Game::initMap");
 
     std::ifstream file("res/maps/default.map", std::ios::binary);
-    std::string line;
+    std::string line= "";
     int line_count = 0;
     std::vector<Ghost*> ghosts1, ghosts2;
     std::vector<Pacman*> pacmans;
@@ -126,13 +126,9 @@ void Game::initMap() {
         abort();
     }
 
-    while (std::getline(file, line)) {
-        if (line.length() != MAP_WIDTH) {
-            std::cout << "ERROR: Unable to parse map. Invalid dimensions." << std::endl;
-            abort();
-        }
-        
-        for (int i = 0; i < MAP_WIDTH; i++) {
+    while (std::getline(file, line)) {        
+        vec2pGT temp = {};
+        for (long unsigned int i = 0; i < line.size(); i++) {
             const sf::Vector2f pos = {
                 i * TILE_SIZE,           // x axis coordinate
                 line_count * TILE_SIZE   // y axis coordinate
@@ -206,8 +202,9 @@ void Game::initMap() {
                 default: 
                     tile = nullptr;
             }
-            map[i][line_count] = {tile};
+            temp.push_back( {tile} );
         }
+        map.push_back(temp);
         line_count++;
     }
     for (auto g : ghosts1) {

@@ -15,7 +15,7 @@ public:
 
     // Walls have nothing to update.
     // We just update the sprite to get the desired animation.
-    void update(const sf::RenderTarget *, std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]) override;
+    void update(const sf::RenderTarget *, vec3pGT&) override;
 
     // No character can walk over a wall tile.
     bool isWalkable() const override { return false; }

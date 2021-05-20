@@ -15,7 +15,7 @@ public:
 
     // Edibles have nothing to update.
     // We just update the sprite to get the desired animation.
-    void update(const sf::RenderTarget *, std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]) override;
+    void update(const sf::RenderTarget *, vec3pGT&) override;
 
     // Every character can walk over a edible tile.
     inline bool isWalkable() const override { return true; }

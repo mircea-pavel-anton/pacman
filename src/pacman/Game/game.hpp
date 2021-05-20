@@ -29,7 +29,7 @@ public:
 private:
     // ---------------- MEMBERS ---------------- //
     sf::RenderWindow *window;
-    std::vector<GameTile*> map[MAP_WIDTH][MAP_HEIGHT];
+    vec3pGT map;
     sf::Text title;
     sf::Font font;
     bool pause = false;

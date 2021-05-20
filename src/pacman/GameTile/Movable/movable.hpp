@@ -37,7 +37,7 @@ class Movable : public GameTile {
     virtual void initVars();
 
     // Movement-related methods
-    virtual void updateMovementDirection(std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]) = 0;
+    virtual void updateMovementDirection(vec3pGT&) = 0;
     virtual void updateAnimation() = 0;
 }; //Movable
 

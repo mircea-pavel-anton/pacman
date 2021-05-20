@@ -91,7 +91,7 @@ void Ghost::updateTrail() {
     });
 }
 
-void Ghost::updateMovementDirection(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT]) {
+void Ghost::updateMovementDirection(vec3pGT &_map) {
     PerfLogger::getInstance()->startJob("Ghost::" + name + "::updateMovementDirection");
 
     // Only calculate a new movement direction once the ghost has
@@ -111,6 +111,7 @@ void Ghost::updateMovementDirection(std::vector<GameTile*> _map[MAP_WIDTH][MAP_H
         }
     }
 
+    sf::Vector2i next_direction = chase(_map, getChasePosition());
     switch (state) {
         case GhostStates::Frightened:
             // Pick the next direction randomly.
@@ -162,7 +163,6 @@ void Ghost::updateMovementDirection(std::vector<GameTile*> _map[MAP_WIDTH][MAP_H
             break;
     }
 
-    updateAnimation();
 
     PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
 }
@@ -221,7 +221,7 @@ void Ghost::toScatterState() {
     loadTextures();
 }
 
-bool Ghost::canMove(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT], const sf::Vector2i &_dir) const {
+bool Ghost::canMove(vec3pGT &_map, const sf::Vector2i &_dir) const {
     PerfLogger::getInstance()->startJob("Ghost::" + name + "::canMove");
 
     // Ghosts cannot turn around 180 degrees
@@ -230,16 +230,11 @@ bool Ghost::canMove(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT], const sf
         return false;
     }
 
+    // Get the coordinates of the vector the ghost is trying to enter.
     sf::Vector2i new_position = getMapPosition() + _dir;
-    // Just in case something goes wrong and the algorithm tries
-    // to go outside of the map somehow
-    if (new_position.x < 0 || new_position.x > MAP_WIDTH || 
-        new_position.y < 0 || new_position.y > MAP_HEIGHT) {
-        PerfLogger::getInstance()->stopJob("Ghost::" + name + "::canMove");
-        return false;
-    }
 
-    std::vector<GameTile*> vector = _map[new_position.x][new_position.y];
+    // If ANY tile within that vector is not walkable, then we abort.
+    vec1pGT &vector = _map[new_position.y][new_position.x];
     for (GameTile *tile : vector) {
         if (tile != nullptr && tile->isWalkable() == false) {
             PerfLogger::getInstance()->stopJob("Ghost::" + name + "::canMove");
@@ -250,7 +245,7 @@ bool Ghost::canMove(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT], const sf
     return true;
 }
 
-sf::Vector2i Ghost::frightened(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT]) {
+sf::Vector2i Ghost::frightened(vec3pGT &_map) {
     PerfLogger::getInstance()->startJob("Ghost::" + name + "::frightened");
 
     // When frightened, a ghost will randomly pick a new direction
@@ -277,7 +272,7 @@ sf::Vector2i Ghost::frightened(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT
     return available_directions.at(rng.get(0, available_directions.size() - 1));
 }
 
-int Ghost::rankMove(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT], const sf::Vector2i &_dest, const sf::Vector2i &_dir) const {
+int Ghost::rankMove(vec3pGT &_map, const sf::Vector2i &_dest, const sf::Vector2i &_dir) const {
     PerfLogger::getInstance()->startJob("Ghost::" + name + "::rankMove");
 
     // Ghosts cannot turn around 180 degrees.
@@ -286,17 +281,10 @@ int Ghost::rankMove(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT], const sf
         return 9999;
     }
 
+    // Get the coordinates of the vector the ghost is trying to enter.
     sf::Vector2i new_position = getMapPosition() + _dir;
-    // Just in case something goes wrong and the algorithm tries
-    // to go outside of the map somehow.
-    if (new_position.x < 0 || new_position.x > MAP_WIDTH || 
-        new_position.y < 0 || new_position.y > MAP_HEIGHT) {
-        PerfLogger::getInstance()->stopJob("Ghost::" + name + "::rankMove");
-        return 9999;
-    }
-
-    // If the tile is not walkable, abort.
-    std::vector<GameTile*> vector = _map[new_position.x][new_position.y];
+    // If ANY tile in the vector is not walkable, abort.
+    vec1pGT &vector = _map[new_position.y][new_position.x];
     for (GameTile *tile : vector) {
         if (tile != nullptr && tile->isWalkable() == false) {
             PerfLogger::getInstance()->stopJob("Ghost::" + name + "::rankMove");
@@ -312,7 +300,7 @@ int Ghost::rankMove(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT], const sf
     return (deltaX * deltaX) + (deltaY * deltaY);
 }
 
-sf::Vector2i Ghost::chase(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT], const sf::Vector2i &_destination) const {
+sf::Vector2i Ghost::chase(vec3pGT &_map, const sf::Vector2i &_destination) const {
     PerfLogger::getInstance()->startJob("Ghost::" + name + "::chase");
 
     // When chasing, a ghost will pick the available tile that gets
@@ -350,14 +338,13 @@ sf::Vector2i Ghost::chase(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT], co
     return best_direction;
 }
 
-void Ghost::update(const sf::RenderTarget *_target, std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT]) {
+void Ghost::update(const sf::RenderTarget *_target, vec3pGT &_map) {
     PerfLogger::getInstance()->startJob("Ghost::" + name + "::update");
 
     // Replace the Ghost tile with the tile that was previously there.
     sf::Vector2i map_pos = getMapPosition();
-    std::vector<GameTile*> &vector = _map[map_pos.x][map_pos.y];
+    vec1pGT &vector = _map[map_pos.y][map_pos.x];
     vector.erase( std::remove(vector.begin(), vector.end(), this) );
-
 
     // Update the position of the ghost.
     updateMovementDirection(_map);
@@ -368,7 +355,7 @@ void Ghost::update(const sf::RenderTarget *_target, std::vector<GameTile*> _map[
 
     // Place the Ghost down onto the map at the new position.
     map_pos = getMapPosition();
-    _map[map_pos.x][map_pos.y].push_back(this);
+    _map[map_pos.y][map_pos.x].push_back(this);
 
     // Update the sprite to reflect the position change.
     updateSprite();

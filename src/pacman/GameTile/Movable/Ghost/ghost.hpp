@@ -16,7 +16,7 @@ public:
     Ghost(const Ghost&); // copy constructor
     Ghost &operator=(const Ghost&); // assignment operator
 
-    void update(const sf::RenderTarget *, std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]) override;
+    void update(const sf::RenderTarget *, vec3pGT&) override;
     void render(sf::RenderTarget *) const override;
 
     // Ghosts can walk through other ghosts.
@@ -79,24 +79,24 @@ protected:
     void updateAnimation() override;
 
     // Update the ghosts movement direction based on the current state.
-    void updateMovementDirection(std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]) override;
+    void updateMovementDirection(vec3pGT&) override;
 
     // Given a pair of coordinates for the destination tile and the game map,
     // this method computes the direction that would get the ghost the
     // closest to the destination.
-    sf::Vector2i chase(std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT], const sf::Vector2i &) const;
+    sf::Vector2i chase(vec3pGT&, const sf::Vector2i &) const;
 
     // Ranks a move in terms of how close it gets the ghost to the given
     // destination tile.
     // This is used for the path finding algorithm implemented for the
     // ghosts in order to classify a given move as better or worse.
-    int rankMove(std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT], const sf::Vector2i&, const sf::Vector2i&) const;
+    int rankMove(vec3pGT&, const sf::Vector2i&, const sf::Vector2i&) const;
 
     // Returns a random valid move for the ghost to take.
-    sf::Vector2i frightened(std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]);
+    sf::Vector2i frightened(vec3pGT&);
 
     // Checks whether or not the given direction is a valid move for the ghost.
-    bool canMove(std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT], const sf::Vector2i &) const;
+    bool canMove(vec3pGT&, const sf::Vector2i &) const;
 
     inline void resetTimers() {
         scared_timer = SCARED_DURATION;
