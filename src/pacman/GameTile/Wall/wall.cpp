@@ -7,6 +7,7 @@ Wall::Wall(const sf::Vector2f &_position, const char &_type) {
     // Food is not animated.
     // It has the same texture every frame.
     type = _type;
+    textures_root_dir = "res/sprites/Walls/";
     texture_paths = { texture_map[_type] };
 
     initSprite();
@@ -19,7 +20,7 @@ Wall &Wall::operator=(const Wall &_other) {
     return *this;
 }
 
-void Wall::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
+void Wall::update(const sf::RenderTarget *_target, std::vector<GameTile*> map[MAP_WIDTH][MAP_HEIGHT]) {
     PerfLogger::getInstance()->startJob("Wall::" + std::to_string(type) + "::update");
     updateSprite();
     PerfLogger::getInstance()->stopJob("Wall::" + std::to_string(type) + "::update");

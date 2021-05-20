@@ -16,7 +16,7 @@ public:
 
     // Perform any backend logic required for this tile here,
     // such as window/object collisions, animation updates etc.
-    virtual void update(const sf::RenderTarget *, GameTile *[MAP_WIDTH][MAP_HEIGHT]) = 0;
+    virtual void update(const sf::RenderTarget *, std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]) = 0;
 
     // Whether or not other tiles can walk on top of this tile.
     virtual bool isWalkable() const = 0;

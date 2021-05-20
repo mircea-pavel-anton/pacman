@@ -1,6 +1,8 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <vector>
+
 #include "../GameTile/__barrel__.hpp"
 #include "../config.hpp"
 
@@ -27,7 +29,7 @@ public:
 private:
     // ---------------- MEMBERS ---------------- //
     sf::RenderWindow *window;
-    GameTile *map[MAP_WIDTH][MAP_HEIGHT];
+    std::vector<GameTile*> map[MAP_WIDTH][MAP_HEIGHT];
     sf::Text title;
     sf::Font font;
     bool pause = false;

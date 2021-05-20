@@ -74,45 +74,52 @@ void Pacman::initText() {
     });
 }
 
-void Pacman::interact(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
+void Pacman::interact(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT]) {
     PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::interact");
 
-    if (dynamic_cast<PowerPellet*>(old_tile) != nullptr) {
-        PowerPellet *pellet = (PowerPellet*)old_tile;
-        if (pellet->isEaten() == false) {
-            for (int i = 0; i < MAP_WIDTH; i++) {
-                for (int j = 0; j < MAP_HEIGHT; j++) {
-                    if (dynamic_cast<Ghost*>(_map[i][j])) {
-                        ((Ghost*)_map[i][j])->toFrightenedState();
+    sf::Vector2i map_pos = getMapPosition();
+    std::vector<GameTile*> vector = _map[map_pos.x][map_pos.y];
+    for (GameTile *tile : vector) {
+        if (dynamic_cast<PowerPellet*>(tile) != nullptr) {
+            PowerPellet *pellet = (PowerPellet*)tile;
+            if (pellet->isEaten() == false) {
+                for (int i = 0; i < MAP_WIDTH; i++) {
+                    for (int j = 0; j < MAP_HEIGHT; j++) {
+                        for (GameTile *t : _map[i][j]) {
+                            if (dynamic_cast<Ghost*>(t) != nullptr) {
+                                ((Ghost*)t)->toFrightenedState();
+                            }
+                        }
                     }
                 }
+                pellet->toEatenState();
             }
-            pellet->toEatenState();
         }
-    }
 
-    if ( dynamic_cast<Edible*>(old_tile) != nullptr ) {
-        Edible *edible = (Edible*)old_tile;
-        score += edible->getScoreModifier();
-        edible->toEatenState();
-        updateScore();
-    }
+        if (dynamic_cast<Edible*>(tile) != nullptr) {
+            Edible *edible = (Edible*)tile;
+            score += edible->getScoreModifier();
+            edible->toEatenState();
+            updateScore();
+        }
 
-    if (dynamic_cast<Ghost*>(old_tile) != nullptr) {
-        Ghost *ghost = dynamic_cast<Ghost*>(old_tile);
-        if (ghost->isScared()) {
-            ghost->toDeadState();
-            score += 200;
+        if (dynamic_cast<Ghost*>(tile) != nullptr) {
+            Ghost *ghost = dynamic_cast<Ghost*>(tile);
+            if (ghost->isScared()) {
+                ghost->toDeadState();
+                score += 200;
+            }
+            if (ghost->isDead() == false && ghost->isScared() == false) {
+                toDeadState();
+            }
         }
-        if (ghost->isDead() == false && ghost->isScared() == false) {
-            toDeadState();
-        }
+
     }
 
     PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
 }
 
-void Pacman::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
+void Pacman::updateMovementDirection(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT]) {
     PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::updateMovementDirection");
 
     const sf::Vector2i map_position = getMapPosition();
@@ -123,16 +130,17 @@ void Pacman::updateMovementDirection(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
         return;
     }
 
-    // Get the coordinates of the tile pacman is trying to enter.
+    // Get the coordinates of the vector pacman is trying to enter.
     const sf::Vector2i tile_position = map_position + next_direction;
 
-    // Get a reference to that tile.
-    const GameTile *tile = _map[tile_position.x][tile_position.y];
-
-    // if it is not walkable, return and don't change the current direction.
-    if (tile != nullptr && tile->isWalkable() == false) {
-        PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::updateMovementDirection");
-        return;
+    // If ANY tile in that vector is not walkable, then pacman cannot enter the vector
+    // so we return without updating the direction, since it was invalid.
+    std::vector<GameTile*> vector = _map[tile_position.x][tile_position.y];
+    for (GameTile *tile : vector) {
+        if (tile != nullptr && tile->isWalkable() == false) {
+            PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::updateMovementDirection");
+            return;
+        }
     }
 
     // If we got here, it means that the tile is walkable and it's ok
@@ -166,7 +174,7 @@ void Pacman::updateAnimation() {
     loadTextures();
 }
 
-void Pacman::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
+void Pacman::update(const sf::RenderTarget *_target, std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT]) {
     PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::update");
 
     if (is_dead) {
@@ -180,7 +188,8 @@ void Pacman::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][M
 
     // Replace the Pacman tile with the tile that was previously there.
     sf::Vector2i map_pos = getMapPosition();
-    _map[map_pos.x][map_pos.y] = old_tile;
+    std::vector<GameTile*> &vector = _map[map_pos.x][map_pos.y];
+    vector.erase( std::remove(vector.begin(), vector.end(), this) );
 
     // Update the position of pacman.
     updateMovementDirection(_map);
@@ -188,21 +197,21 @@ void Pacman::update(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][M
         position.x + direction.x * speed,   // X axis
         position.y + direction.y * speed    // Y axis
     };
-
+    std::cout << "direction changed!" << std::endl;
     // Check for collisions with other objects, and undo the position
     // change if necessary.
     checkCollisions(_target, _map);
-
-    // Get a copy of the REFERENCE of the tile that Pacman is currently
-    // on top of.
-    map_pos = getMapPosition();
-    old_tile = _map[map_pos.x][map_pos.y];
+    std::cout << "collisions checked!" << std::endl;
 
     // Interact with the tile Pacman is currently on top of.
     interact(_map);
+    std::cout << "interacted!" << std::endl;
 
     // Place Pacman down onto the map at the new position.
-    _map[map_pos.x][map_pos.y] = this;
+    map_pos = getMapPosition();
+    std::cout << "Map position: " << map_pos.x << ", " << map_pos.y << std::endl;
+    std::cout << "Vecsize: " << _map[map_pos.x][map_pos.y].size() << std::endl;
+    _map[map_pos.x][map_pos.y].push_back(this);
 
     // Update the sprite to reflect the position change.
     updateSprite();
@@ -245,7 +254,7 @@ void Pacman::checkWindowCollisions(const sf::RenderTarget *_target) {
     PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::checkWindowCollisions");
 }
 
-void Pacman::collideWithObjects(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
+void Pacman::collideWithObjects(std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT]) {
     PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::collideWithObjects");
 
     // Get the coordinates for the next tile.
@@ -257,20 +266,23 @@ void Pacman::collideWithObjects(GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
 
     // If the tile Pacman is currently moving into is NOT walkable,
     // go back to the previous tile.
-    GameTile *tile = _map[current_position.x][current_position.y];
-    if (tile != nullptr) {
-        if (tile->isWalkable() == false || dynamic_cast<Pacman*>(tile) != nullptr) {
-            position = {
-                round(position.x / TILE_SIZE) * TILE_SIZE,
-                round(position.y / TILE_SIZE) * TILE_SIZE
-            };
+    std::vector<GameTile*> vector = _map[current_position.x][current_position.y];
+    for (GameTile *tile : vector) {
+        if (tile != nullptr) {
+            if (tile->isWalkable() == false || dynamic_cast<Pacman*>(tile) != nullptr) {
+                position = {
+                    round(position.x / TILE_SIZE) * TILE_SIZE,
+                    round(position.y / TILE_SIZE) * TILE_SIZE
+                };
+                PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::collideWithObjects");
+                return;
+            }
         }
     }
-
     PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::collideWithObjects");
 }
 
-void Pacman::checkCollisions(const sf::RenderTarget *_target, GameTile *_map[MAP_WIDTH][MAP_HEIGHT]) {
+void Pacman::checkCollisions(const sf::RenderTarget *_target, std::vector<GameTile*> _map[MAP_WIDTH][MAP_HEIGHT]) {
     checkWindowCollisions(_target);
     collideWithObjects(_map);
 }

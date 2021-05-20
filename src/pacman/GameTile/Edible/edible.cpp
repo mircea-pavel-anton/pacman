@@ -15,7 +15,7 @@ Edible &Edible::operator=(const Edible &_other) {
     return *this;
 }
 
-void Edible::update(const sf::RenderTarget *, GameTile *[MAP_WIDTH][MAP_HEIGHT]) {
+void Edible::update(const sf::RenderTarget *, std::vector<GameTile*> map[MAP_WIDTH][MAP_HEIGHT]) {
     switch (score_modifier) {
         case 0: // Power Pellet
             PerfLogger::getInstance()->startJob("PowerPellet::update");

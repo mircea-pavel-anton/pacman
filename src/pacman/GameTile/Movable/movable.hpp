@@ -26,11 +26,6 @@ class Movable : public GameTile {
     sf::Vector2i getDirection() { return direction; }
   protected:
     // ---------------- MEMBERS ----------------
-    // The tile that was previously under this movable object.
-    // This is used when updating the map, such that after this
-    // movable passes over a tile, it can be placed back.
-    GameTile *old_tile = nullptr;
-
     // The direction in which the character is moving now.
     sf::Vector2i direction;
 
@@ -42,7 +37,7 @@ class Movable : public GameTile {
     virtual void initVars();
 
     // Movement-related methods
-    virtual void updateMovementDirection(GameTile *[MAP_WIDTH][MAP_HEIGHT]) = 0;
+    virtual void updateMovementDirection(std::vector<GameTile*>[MAP_WIDTH][MAP_HEIGHT]) = 0;
     virtual void updateAnimation() = 0;
 }; //Movable
 

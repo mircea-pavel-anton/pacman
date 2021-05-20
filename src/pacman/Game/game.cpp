@@ -10,9 +10,11 @@ Game::~Game() {
     }
 
     // Delete the map
-    for (auto &row : map) {
-        for (auto &tile : row) {
-            if (tile != nullptr) delete tile;
+    for (auto &arr : map) {
+        for (auto &vec : arr) {
+            for (GameTile *tile : vec) {
+                if (tile != nullptr) delete tile;
+            }
         }
     }
 
@@ -47,9 +49,13 @@ void Game::update() {
         PerfLogger::getInstance()->startJob("Game::Update");
 
         // Delete the map
-        for (auto &row : map) {
-            for (auto &tile : row) {
-                if (tile != nullptr) tile->update(window, map);
+        for (auto &arr : map) {
+            for (auto &vec : arr) {
+                for (GameTile *tile : vec) {
+                    if (tile != nullptr) {
+                        tile->update(window, map);
+                    }
+                }
             }
         }
 
@@ -66,9 +72,11 @@ void Game::render() const {
 
         window->draw(title);
         // Render every game tile.
-        for (auto &row : map) {
-            for (auto &tile : row) {
-                if (tile != nullptr) tile->render(window);
+        for (auto &arr : map) {
+            for (auto &vec : arr) {
+                for (GameTile *tile : vec) {
+                    if (tile != nullptr) tile->render(window);
+                }
             }
         }
 
@@ -198,7 +206,7 @@ void Game::initMap() {
                 default: 
                     tile = nullptr;
             }
-            map[i][line_count] = tile;
+            map[i][line_count] = {tile};
         }
         line_count++;
     }
