@@ -1,6 +1,6 @@
 CXX				:= g++
 FLAGS			:= -std=c++17 -c
-DEBUG_FLAGS		:= -g -Wall
+DEBUG_FLAGS		:= -g3 -Wall
 RELEASE_FLAGS	:= -O3
 LIBS			:= -lsfml-graphics -lsfml-window -lsfml-system
 SRC				:= $(shell find "$(shell pwd)" -name \*.cpp)
