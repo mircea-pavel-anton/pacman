@@ -33,9 +33,9 @@ public:
     void toScatterState() { next_state = GhostStates::Scatter; };
 
     // Random accessors
-    bool isScared() const { return state == GhostStates::Frightened; };
-    bool isChasing() const { return state == GhostStates::Chase; };
-    bool isDead() const { return state == GhostStates::Dead; };
+    bool isScared() const { return next_state == GhostStates::Frightened; };
+    bool isChasing() const { return next_state == GhostStates::Chase; };
+    bool isDead() const { return next_state == GhostStates::Dead; };
     std::string getName() const { return name; }
 
 protected:
@@ -115,9 +115,6 @@ protected:
         if (state == GhostStates::Frightened) {
             frightened_timer--; return;
         }
-        std::cout << name << " scatter timer: " << scatter_timer << std::endl;
-        std::cout << name << " chase timer: " << chase_timer << std::endl;
-        std::cout << name << " frightened timer: " << frightened_timer << std::endl;
     }
 
     // Returns the coordinates of the tile that this ghost is chasing.
