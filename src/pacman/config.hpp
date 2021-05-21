@@ -28,12 +28,12 @@ static const float X_OFFSET = ( WINDOW_WIDTH - MAP_WIDTH * TILE_SIZE ) / 2;
 static const float Y_OFFSET = ( WINDOW_HEIGHT - MAP_HEIGHT * TILE_SIZE ) / 2;
 
 // Movement speed, in pixels/frame.
-static const float SPEED = 1;
+static const float SPEED = 2;
 
 // Default durations for ghost states.
 const int SCARED_DURATION = 5 * WINDOW_FRAMERATE / TILE_SIZE;
 const int CHASE_DURATION = 30 * WINDOW_FRAMERATE / TILE_SIZE;
-const int SCATTER_DURATION = 10 * WINDOW_FRAMERATE / TILE_SIZE;
+const int SCATTER_DURATION = 5 * WINDOW_FRAMERATE / TILE_SIZE;
 const int HURT_DURATION = 2 * WINDOW_FRAMERATE / TILE_SIZE;
 
 static const std::string EMPTY_TEXTURE = "res/sprites/empty.png";
