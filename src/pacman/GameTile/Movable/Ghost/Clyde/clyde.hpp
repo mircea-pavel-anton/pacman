@@ -8,7 +8,6 @@ class Clyde : public Ghost {
 public:
     Clyde(const sf::Vector2f &_position) : Ghost("Clyde", _position) {
         scatter_position = {0, MAP_HEIGHT};
-        toScatterState();
     };
 
 protected:
@@ -42,7 +41,7 @@ protected:
         // Once he gets within 8 tiles of it, he will run back to
         // his spawn point.
         if (distance >= 64) return chasing.front()->getMapPosition();
-        return home_position;
+        return scatter_position;
     }
 };
 
