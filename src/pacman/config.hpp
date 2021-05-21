@@ -28,7 +28,7 @@ static const float X_OFFSET = ( WINDOW_WIDTH - MAP_WIDTH * TILE_SIZE ) / 2;
 static const float Y_OFFSET = ( WINDOW_HEIGHT - MAP_HEIGHT * TILE_SIZE ) / 2;
 
 // Movement speed, in pixels/frame.
-static const float SPEED = 2;
+static const float SPEED = 1;
 
 // Default durations for ghost states.
 const int SCARED_DURATION = 5 * WINDOW_FRAMERATE / TILE_SIZE;
