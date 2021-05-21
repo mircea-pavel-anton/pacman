@@ -34,6 +34,7 @@ static const float SPEED = 1;
 const int SCARED_DURATION = 5 * WINDOW_FRAMERATE / TILE_SIZE;
 const int CHASE_DURATION = 30 * WINDOW_FRAMERATE / TILE_SIZE;
 const int SCATTER_DURATION = 10 * WINDOW_FRAMERATE / TILE_SIZE;
+const int HURT_DURATION = 2 * WINDOW_FRAMERATE / TILE_SIZE;
 
 static const std::string EMPTY_TEXTURE = "res/sprites/empty.png";
 

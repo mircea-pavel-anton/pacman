@@ -31,7 +31,8 @@ void Pacman::initVars() {
 
     // Init score
     score = 0;
-    is_dead = false;
+    state = next_state = PacmanState::Chasing;
+    resetTimer();
     textures_root_dir = "res/sprites/Pacman" + std::to_string(index) + "/";
 
     // Load a default texture
@@ -77,6 +78,12 @@ void Pacman::initText() {
 void Pacman::interact(vec3pGT &_map) {
     PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::interact");
 
+    // When pacman is hurt, he can't interact with the map.
+    if (state == PacmanState::Hurt) {
+        PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
+        return;
+    }
+
     sf::Vector2i map_pos = getMapPosition();
     vec1pGT &vector = _map[map_pos.y][map_pos.x];
     for (GameTile *tile : vector) {
@@ -108,15 +115,50 @@ void Pacman::interact(vec3pGT &_map) {
             if (ghost->isScared()) {
                 ghost->toDeadState();
                 score += 200;
+                updateScore();
+                PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
+                return;
             }
             if (ghost->isDead() == false && ghost->isScared() == false) {
                 toDeadState();
+                PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
+                return;
             }
         }
 
     }
 
     PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
+}
+
+void Pacman::updateState() {
+    // if an external state switch occured, aka if pacman was hurt by a ghost
+    if (state != next_state) {
+        switch (next_state) {
+            case PacmanState::Hurt:
+                state = PacmanState::Hurt;
+                score -= 200;
+                updateScore();
+                break;
+        
+            // This shouldn't happen.
+            // No external switch can trigger pacman from hurt to chasing.
+            case PacmanState::Chasing: break;
+        }
+        
+        updateAnimation();
+        return;
+    }
+
+    // If pacman is currently hurt, check for the hurt timer.
+    if (state == PacmanState::Hurt) {
+        if (hurt_timer > 0) return;
+        state = PacmanState::Chasing;
+        next_state = state;
+        resetTimer();
+        updateAnimation();
+        return;
+    }
 }
 
 void Pacman::updateMovementDirection(vec3pGT &_map) {
@@ -130,6 +172,7 @@ void Pacman::updateMovementDirection(vec3pGT &_map) {
         return;
     }
 
+    updateState();
     // Get the coordinates of the vector pacman is trying to enter.
     const sf::Vector2i tile_position = map_position + next_direction;
 
@@ -146,7 +189,7 @@ void Pacman::updateMovementDirection(vec3pGT &_map) {
     // If we got here, it means that the tile is walkable and it's ok
     // to change our movement direction.
     direction = next_direction;
-
+    updateTimer();
     // Update the animations to reflect the direction change.
     updateAnimation();
 
@@ -164,24 +207,32 @@ void Pacman::updateAnimation() {
         case 1: direction_name = "right"; break;
     }
 
-    texture_paths = {
-        textures_root_dir + "neutral.png",              // mouth closed
-        textures_root_dir + direction_name + "_2.png",  // mouth halfway opened
-        textures_root_dir + direction_name + "_1.png",  // mouth opened
-        textures_root_dir + direction_name + "_2.png"   // mouth halfway opened
-    };
+    if (state == PacmanState::Chasing) {
+        texture_paths = {
+            textures_root_dir + "neutral.png",              // mouth closed
+            textures_root_dir + direction_name + "_2.png",  // mouth halfway opened
+            textures_root_dir + direction_name + "_1.png",  // mouth opened
+            textures_root_dir + direction_name + "_2.png"   // mouth halfway opened
+        };
+    } else {
+        texture_paths = {
+            textures_root_dir + "neutral.png",              // mouth closed
+            EMPTY_TEXTURE,
+            textures_root_dir + direction_name + "_2.png",  // mouth halfway opened
+            EMPTY_TEXTURE,
+            textures_root_dir + direction_name + "_1.png",  // mouth opened
+            EMPTY_TEXTURE,
+            textures_root_dir + direction_name + "_2.png",  // mouth halfway opened
+            EMPTY_TEXTURE,
+        };
+        
+    }
 
     loadTextures();
 }
 
 void Pacman::update(const sf::RenderTarget *_target, vec3pGT &_map) {
     PerfLogger::getInstance()->startJob("Pacman::" + std::to_string(index) + "::update");
-
-    if (is_dead) {
-        updateSprite();
-        PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::update");
-        return;
-    }
 
     // Change the value of @next_direction based on the received event.
     pollEvents();
@@ -283,25 +334,7 @@ void Pacman::checkCollisions(const sf::RenderTarget *_target, vec3pGT &_map) {
     collideWithObjects(_map);
 }
 
-void Pacman::toDeadState() {
-    is_dead = true;
-    texture_paths = {
-        textures_root_dir + "dead_1.png",
-        textures_root_dir + "dead_2.png",
-        textures_root_dir + "dead_3.png",
-        textures_root_dir + "dead_4.png",
-        textures_root_dir + "dead_5.png",
-        textures_root_dir + "dead_6.png",
-        textures_root_dir + "dead_7.png",
-        textures_root_dir + "dead_8.png",
-        textures_root_dir + "dead_9.png",
-        textures_root_dir + "dead_10.png",
-        textures_root_dir + "dead_11.png",
-        textures_root_dir + "dead_12.png",
-        textures_root_dir + "dead_13.png",
-    };
-    loadTextures();
-}
+void Pacman::toDeadState() { next_state = PacmanState::Hurt; }
 
 void Pacman::updateScore() {
     text.setString(

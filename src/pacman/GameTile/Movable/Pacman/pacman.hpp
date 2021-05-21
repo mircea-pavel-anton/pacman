@@ -8,6 +8,8 @@
 
 class Ghost;
 
+enum PacmanState { Hurt, Chasing };
+
 class Pacman : public Movable {
   
 public:
@@ -39,7 +41,8 @@ protected:
     sf::Font font; // the font used to render
     sf::Text text; // the text object itself, that will get rendered
 
-    bool is_dead;
+    PacmanState state, next_state;
+    int hurt_timer;
 
     // ---------------- METHODS ----------------
     // Handles interactions with tiles that PacMan is currently on top of.
@@ -75,6 +78,13 @@ protected:
     // Checks if the sprite is currently colliding with any other object on
     // the game map, such as walls, pellets, fruits or ghosts.
     void collideWithObjects(vec3pGT&);
+
+    void updateState();
+    void resetTimer() { hurt_timer = HURT_DURATION; };
+    void updateTimer() {
+        if (state == PacmanState::Hurt)
+            hurt_timer--;
+    }
 
 private:
     static int counter;
