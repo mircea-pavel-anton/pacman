@@ -67,10 +67,8 @@ void Pacman::initText() {
     text.setString(
         "Player " + std::to_string(index) + "\nScore: 0"
     );
-    const float extra_offset = (X_OFFSET - text.getGlobalBounds().width ) / 2;
-    const float x_offset = X_OFFSET + TILE_SIZE * MAP_WIDTH;
     text.setPosition({
-        x_offset * (index - 1) + extra_offset,
+        (X_OFFSET + TILE_SIZE * MAP_WIDTH) * (index - 1) + 5,
         Y_OFFSET + TILE_SIZE,
     });
 }
