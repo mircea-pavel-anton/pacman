@@ -100,32 +100,41 @@ void Ghost::updateMovementDirection(vec3pGT &_map) {
     }
 
     updateState();
+    sf::Vector2i next_direction = {};
     switch (state) {
         case GhostStates::Frightened:
             // Pick the next direction randomly.
-            direction = frightened(_map);
+            next_direction = frightened(_map);
             trail_position = getMapPosition() + direction;
             break;
 
         case GhostStates::Dead:
             // Go back to the ghost house.
-            direction = chase(_map, home_position);
+            next_direction = chase(_map, home_position);
             trail_position = home_position;
             break;
 
         case GhostStates::Scatter:
             // Go to the scatter position.
-            direction = chase(_map, scatter_position);
+            next_direction = chase(_map, scatter_position);
             trail_position = scatter_position;
             break;
 
         case GhostStates::Chase:
             // Chase pacman.
-            direction = chase(_map, getChasePosition());
+            next_direction = chase(_map, getChasePosition());
             trail_position = getChasePosition();
 
             break;
     }
+    if (map_position.x > 12 && map_position.x <= 14 && map_position.y == 11) {
+        if (next_direction != Directions::Down) {
+            direction = next_direction;
+        }
+    } else {
+        direction = next_direction;
+    }
+    std::cout << name << ": " << map_position.x << ", " << map_position.y << std::endl;
     updateTimers();
 
     PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
