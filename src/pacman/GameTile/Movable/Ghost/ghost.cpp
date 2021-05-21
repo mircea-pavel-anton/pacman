@@ -17,7 +17,7 @@ Ghost &Ghost::operator=(const Ghost &_other) {
     this->Movable::operator=(_other);
     chasing = _other.chasing;
     state = _other.state;
-    scared_timer = _other.scared_timer;
+    frightened_timer = _other.frightened_timer;
     textures_root_dir = _other.textures_root_dir;
     name = _other.name;
     rng = _other.rng;
@@ -30,6 +30,7 @@ void Ghost::initVars() {
 
     chasing = {};
     rng = RNG();
+    state = next_state = GhostStates::Scatter;
     resetTimers();
 
     textures_root_dir = "res/sprites/Ghost/" + name + "/";
@@ -80,14 +81,10 @@ void Ghost::updateAnimation() {
     loadTextures();
 }
 
-void Ghost::updateTrail() {
-    trail_position = {
-        scatter_position.x * TILE_SIZE,
-        scatter_position.y * TILE_SIZE,
-    };
+void Ghost::updateTrail() {;
     trail.setPosition({
-        trail_position.x + X_OFFSET,
-        trail_position.y + Y_OFFSET,
+        trail_position.x * TILE_SIZE + X_OFFSET,
+        trail_position.y * TILE_SIZE + Y_OFFSET,
     });
 }
 
@@ -102,67 +99,34 @@ void Ghost::updateMovementDirection(vec3pGT &_map) {
         return;
     }
 
-    // There are 2 corridors in which the ghosts are not allowed to
-    // move up or down. Above the ghost house and in pacmans spawn spot.
-    if ((map_position.y == 23 || map_position.y == 11) && (map_position.x > 10 && map_position.x < 17)) {
-        if (direction == Directions::Left || direction == Directions::Right) {
-            PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
-            return;
-        }
-    }
-
-    sf::Vector2i next_direction = chase(_map, getChasePosition());
+    updateState();
     switch (state) {
         case GhostStates::Frightened:
             // Pick the next direction randomly.
             direction = frightened(_map);
-
-            // Decrese the scared countdown.
-            scared_timer--;
-
-            // When the countdown reaches 0, the ghost
-            // is no longer frightened.
-            if (scared_timer <= 0) toChaseState();
+            trail_position = getMapPosition() + direction;
             break;
 
         case GhostStates::Dead:
-            // If the ghost has been killed, then it rushes back
-            // to the ghost house
+            // Go back to the ghost house.
             direction = chase(_map, home_position);
-
-            // Once the ghost house has been reached, the ghost
-            // is then revived.
-            if (getMapPosition() == home_position) toChaseState();
+            trail_position = home_position;
             break;
 
         case GhostStates::Scatter:
-            // If the ghost has been killed, then it rushes back
-            // to the ghost house
+            // Go to the scatter position.
             direction = chase(_map, scatter_position);
-
-            // Decrese the scared countdown.
-            scatter_timer--;
-
-            // When the countdown reaches 0, the ghost
-            // is no longer scattering.
-            if (scatter_timer <= 0) toChaseState();
+            trail_position = scatter_position;
             break;
 
         case GhostStates::Chase:
-            // Under regular conditions, the ghost is in chase mode.
-            // During chase mode, a special position is chosen for 
-            // each particular ghost to chase.
+            // Chase pacman.
             direction = chase(_map, getChasePosition());
+            trail_position = getChasePosition();
 
-            // Decrese the scared countdown.
-            chase_timer--;
-
-            // When the countdown reaches 0, the ghost
-            // is no longer scattering.
-            if (chase_timer <= 0) toChaseState();
             break;
     }
-
+    updateTimers();
 
     PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
 }
@@ -172,53 +136,120 @@ void Ghost::render(sf::RenderTarget *_target) const {
     _target->draw(trail);
 }
 
-void Ghost::toDeadState() {
-    state = GhostStates::Dead;
-    speed = SPEED;
-    resetTimers();
+void Ghost::updateState() {
+    // if an external state switch occured, aka if pacman
+    // ate a power pellet or if he killed the ghost.
+    // The only states a ghost could enter due to external factors
+    // are frightened or dead. Chase and Scatter are based on internal
+    // timers.
+    if (state != next_state) {
+        switch (next_state) {
+            // The ghost can only enter the dead state from
+            // the frightened state. A ghost that is either
+            // in chase or scatter mode cannot be killed.
+            case GhostStates::Dead:
+                if (state != GhostStates::Frightened) {
+                    next_state = state; // cancel the change
+                    return; // todo idk
+                }
+                state = next_state;
+                speed = SPEED;
+                resetTimers();
 
-    // Change the animation frames.
-    textures_root_dir = "res/sprites/Ghost/dead/";
-    loadTextures();
-}
+                // Change the animation frames.
+                textures_root_dir = "res/sprites/Ghost/dead/";
+                loadTextures();
+                break;
+            
+            // The ghost can only enter the frightened state
+            // from the chase or scatter states. A dead ghost
+            // cannot enter frightened state.
+            case GhostStates::Frightened:
+                if (state == GhostStates::Dead) {
+                    next_state = state; // cancel the change
+                    return; // todo idk
+                }
+                state = next_state;
+                speed = 0.5 * SPEED;
+                resetTimers();
+                // Change the animation frames.
+                textures_root_dir = "res/sprites/Ghost/frightened/";
+                loadTextures();
+                return;
+            
+            default: break;
+        }
+    }
 
-void Ghost::toChaseState() {
-    state = GhostStates::Chase;
-    speed = SPEED;
-    resetTimers();
+    // Check for internal state switches.
+    switch (state) {
+        // If the ghost is dead, the only way out is an internal
+        // switch that gets triggered once it reaches the ghost house.
+        // Once it reached that point, it gets back into chase mode.
+        case GhostStates::Dead:
+            if (getMapPosition() != home_position) return;
+            state = next_state = GhostStates::Chase;
+            speed = SPEED;
+            resetTimers();
 
-    // This state change turns the ghost around 180 degrees.
-    direction = -direction;
+            // This state change turns the ghost around 180 degrees.
+            direction = -direction;
 
-    // Change the animation frames.
-    textures_root_dir = "res/sprites/Ghost/" + name + "/";
-    loadTextures();
-}
+            // Change the animation frames.
+            textures_root_dir = "res/sprites/Ghost/" + name + "/";
+            loadTextures();
+            return;
 
-void Ghost::toFrightenedState() {
-    state = GhostStates::Frightened;
-    speed = 0.5 * SPEED;
-    resetTimers();
-    // Change the animation frames.
-    textures_root_dir = "res/sprites/Ghost/frightened/";
-    loadTextures();
-    updateAnimation();
+        // A ghost that is in chase mode has only one internal switch,
+        // which is the chase timer running out, which would cause the
+        // ghost to enter scatter mode.
+        case GhostStates::Chase:
+            if (chase_timer > 0) return;
+            state = next_state = GhostStates::Scatter;
+            speed = SPEED;
+            resetTimers();
 
-    // This state change turns the ghost around 180 degrees.
-    direction = -direction;
-}
+            // This state change turns the ghost around 180 degrees.
+            direction = -direction;
 
-void Ghost::toScatterState() {
-    state = GhostStates::Scatter;
-    speed = SPEED;
-    resetTimers();
+            // Change the animation frames.
+            textures_root_dir = "res/sprites/Ghost/" + name + "/";
+            loadTextures();
+            return;
 
-    // This state change turns the ghost around 180 degrees.
-    direction = -direction;
+        // A ghost that is in scatter mode has only one internal switch,
+        // specifically the scatter timer. Once that reaches 0, the ghost
+        // goes back to chase mode.
+        case GhostStates::Scatter:
+            if (scatter_timer > 0) return;
+            state = next_state = GhostStates::Chase;
+            speed = SPEED;
+            resetTimers();
 
-    // Change the animation frames.
-    textures_root_dir = "res/sprites/Ghost/" + name + "/";
-    loadTextures();
+            // This state change turns the ghost around 180 degrees.
+            direction = -direction;
+
+            // Change the animation frames.
+            textures_root_dir = "res/sprites/Ghost/" + name + "/";
+            loadTextures();
+            return;
+        
+        // A ghost in frightened mode will go back to chase mode once the
+        // frightened timer has reached 0.
+        case GhostStates::Frightened:
+            if (frightened_timer > 0) return;
+            state = next_state = GhostStates::Chase;
+            speed = SPEED;
+            resetTimers();
+
+            // This state change turns the ghost around 180 degrees.
+            direction = -direction;
+
+            // Change the animation frames.
+            textures_root_dir = "res/sprites/Ghost/" + name + "/";
+            loadTextures();
+            return;
+    }
 }
 
 bool Ghost::canMove(vec3pGT &_map, const sf::Vector2i &_dir) const {
@@ -358,6 +389,7 @@ void Ghost::update(const sf::RenderTarget *_target, vec3pGT &_map) {
     _map[map_pos.y][map_pos.x].push_back(this);
 
     // Update the sprite to reflect the position change.
+    updateAnimation();
     updateSprite();
     updateTrail();
 

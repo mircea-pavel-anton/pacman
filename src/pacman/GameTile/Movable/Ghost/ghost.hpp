@@ -27,10 +27,10 @@ public:
     void addChasing(Movable *_target) { chasing.push_back(_target); }
 
     // State-Changing methods
-    void toDeadState();
-    void toFrightenedState();
-    void toChaseState();
-    void toScatterState();
+    void toDeadState() { next_state = GhostStates::Dead; };
+    void toFrightenedState() { next_state = GhostStates::Frightened; };
+    void toChaseState() { next_state = GhostStates::Chase; };
+    void toScatterState() { next_state = GhostStates::Scatter; };
 
     // Random accessors
     bool isScared() const { return state == GhostStates::Frightened; };
@@ -48,10 +48,11 @@ protected:
     RNG rng;
 
     // The state that the ghost is currently in.
-    GhostStates state;
+    GhostStates state, next_state;
 
     // A timer used to get out of the scared state after a given number of seconds.
-    int scared_timer, chase_timer, scatter_timer;
+    int frightened_timer, chase_timer, scatter_timer;
+
 
     // The coordinates of the tile the ghost will go to when killed.
     // Right in front of the ghost house.
@@ -65,7 +66,7 @@ protected:
     sf::RectangleShape trail;
 
     // The on-screen coordinates of the trail.
-    sf::Vector2f trail_position;
+    sf::Vector2i trail_position;
 
     // ---------------- METHODS ----------------
     // initialization methods
@@ -98,10 +99,25 @@ protected:
     // Checks whether or not the given direction is a valid move for the ghost.
     bool canMove(vec3pGT&, const sf::Vector2i &) const;
 
+    void updateState();
     inline void resetTimers() {
-        scared_timer = SCARED_DURATION;
+        frightened_timer = SCARED_DURATION;
         chase_timer = CHASE_DURATION;
         scatter_timer = SCATTER_DURATION;
+    }
+    void updateTimers() {
+        if (state == GhostStates::Scatter) {
+            scatter_timer--; return;
+        }
+        if (state == GhostStates::Chase) {
+            chase_timer--; return;
+        }
+        if (state == GhostStates::Frightened) {
+            frightened_timer--; return;
+        }
+        std::cout << name << " scatter timer: " << scatter_timer << std::endl;
+        std::cout << name << " chase timer: " << chase_timer << std::endl;
+        std::cout << name << " frightened timer: " << frightened_timer << std::endl;
     }
 
     // Returns the coordinates of the tile that this ghost is chasing.
