@@ -239,7 +239,7 @@ void Game::initTitle() {
 
     font = sf::Font();
 
-    if (font.loadFromFile("res/fonts/emulogic.ttf") == false) {
+    if (font.loadFromFile(FONT_FILE_PATH) == false) {
         std::cout << "ERROR: Unable to load font file." << std::endl;
         abort();
     }
