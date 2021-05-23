@@ -5,6 +5,7 @@
 
 #include "../GameTile/__barrel__.hpp"
 #include "../config.hpp"
+#include <SFML/Audio.hpp>
 
 class Game {
 
@@ -29,6 +30,7 @@ public:
 private:
     // ---------------- MEMBERS ---------------- //
     sf::RenderWindow *window;
+    sf::Music background_music;
     vec3pGT map;
     sf::Text title;
     sf::Font font;
@@ -37,6 +39,7 @@ private:
     // ---------------- METHODS ---------------- //
     void initWindow(); // intialize the RenderWindow.
     void initMap();
+    void playIntro();
     void initTitle();
 
 }; //class Game

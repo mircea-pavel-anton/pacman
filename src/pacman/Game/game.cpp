@@ -3,6 +3,7 @@
 Game::Game() {
     initMap();
     initWindow();
+    playIntro();
 }
 Game::~Game() {
     if (window != nullptr) {
@@ -254,4 +255,12 @@ void Game::initTitle() {
     });
 
     PerfLogger::getInstance()->stopJob("Game::initTitle");
+}
+
+void Game::playIntro() {
+    if (background_music.openFromFile(BACKGROUND_MUISC_FILE) == false) {
+        std::cout << "ERROR: Failed to load background music audio file!" << std::endl;
+        abort();
+    }
+    background_music.play();
 }
