@@ -3,9 +3,9 @@
 
 #include "../game_tile.hpp"
 
-class Edible : public GameTile {
-
 enum EdibleState { Active, Eaten };
+
+class Edible : public GameTile {
 
 public:
     Edible(const std::string &);
@@ -34,8 +34,6 @@ public:
 protected:
     EdibleState state;
     int score_modifier;
-
-    void initSound();
 
 };
 
