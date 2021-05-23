@@ -1,6 +1,6 @@
 #include "food.hpp"
 
-Food::Food(const sf::Vector2f &_position){
+Food::Food(const sf::Vector2f &_position) : Edible(FOOD_SOUND) {
     initVars();
     position = _position;
 

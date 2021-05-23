@@ -1,9 +1,15 @@
-#include "edible.hpp"
+ #include "edible.hpp"
 
-Edible::Edible() {
+Edible::Edible(const std::string &buffer_path) {
     textures_root_dir = "res/sprites/Edibles/";
     score_modifier = 0;
     state = EdibleState::Active;
+
+    if (buffer.loadFromFile(buffer_path) == false) {
+        std::cout << "ERROR: Failed to load " << buffer_path << std::endl;
+        abort();
+    }
+    sound.setBuffer(buffer);
 }
 Edible::Edible(const Edible &_edible) { *this = _edible; }
 Edible::~Edible() { /* nothing to do here */ }
@@ -11,6 +17,8 @@ Edible::~Edible() { /* nothing to do here */ }
 Edible &Edible::operator=(const Edible &_other) {
     this->GameTile::operator=(_other);
     score_modifier = _other.score_modifier;
+    sound = _other.sound;
+    buffer = _other.buffer;
 
     return *this;
 }
@@ -51,6 +59,9 @@ void Edible::toEatenState() {
     // load an empty sprite.
     texture_paths = { EMPTY_TEXTURE };
     state = EdibleState::Eaten;
+
+    // Play the sound the tile makes when eaten.
+    sound.play();
 
     loadTextures();
 }

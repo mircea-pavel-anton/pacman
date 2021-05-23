@@ -8,7 +8,7 @@ class Edible : public GameTile {
 enum EdibleState { Active, Eaten };
 
 public:
-    Edible();
+    Edible(const std::string &);
     Edible(const Edible &); // copy constructor
     virtual ~Edible();
     Edible &operator=(const Edible &); // assignment operator
@@ -24,12 +24,18 @@ public:
     // trigger this method to update the sprite.
     void toEatenState();
 
+    // The sound made when the edible tile is eaten.
+    sf::Sound sound;
+    sf::SoundBuffer buffer;
+
     // Gets the number of points gained by eating this tile.
     int getScoreModifier() { return score_modifier; }
     bool isEaten() { return state == EdibleState::Eaten; }
 protected:
     EdibleState state;
     int score_modifier;
+
+    void initSound();
 
 };
 
