@@ -36,6 +36,13 @@ void Ghost::initVars() {
     textures_root_dir = "res/sprites/Ghost/" + name + "/";
     // Load a default texture
     texture_paths = { EMPTY_TEXTURE };
+
+    // Load the audio file into memory.
+    if (buffer.loadFromFile(GHOST_SOUND) == false) {
+        std::cout << "ERROR: Failed to load: " << GHOST_SOUND << std::endl;
+        abort();
+    }
+    sound.setBuffer(buffer);
 }
 
 void Ghost::initTrail() {
@@ -159,8 +166,9 @@ void Ghost::updateState() {
             case GhostStates::Dead:
                 if (state != GhostStates::Frightened) {
                     next_state = state; // cancel the change
-                    return; // todo idk
+                    return;
                 }
+                sound.play(); // play sound on transition to Dead state
                 state = next_state;
                 speed = SPEED;
                 resetTimers();
@@ -176,7 +184,7 @@ void Ghost::updateState() {
             case GhostStates::Frightened:
                 if (state == GhostStates::Dead) {
                     next_state = state; // cancel the change
-                    return; // todo idk
+                    return;
                 }
                 state = next_state;
                 speed = 0.5 * SPEED;
