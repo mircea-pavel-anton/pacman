@@ -4,6 +4,7 @@
 // Common libraries used in most if not all source files
 #include "PerfLogger/performance_logger.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
 using std::vector;
@@ -18,8 +19,8 @@ static int MAP_HEIGHT = 31;      // game map height, in tiles.
 static const float TILE_SIZE = 22;     // tile size, in pixels.
 
 // Window params.
-static const int WINDOW_HEIGHT = 900;  // window height, in pixels.
-static const int WINDOW_WIDTH = 1200;  // window widthm in pixels.
+static int WINDOW_HEIGHT = 900;  // window height, in pixels.
+static int WINDOW_WIDTH = 1200;  // window widthm in pixels.
 static const int WINDOW_FRAMERATE = 60; // window framerate, in Hz.
 static const std::string WINDOW_TITLE = "Pacman";
 
@@ -37,5 +38,12 @@ const int SCATTER_DURATION = 5 * WINDOW_FRAMERATE / TILE_SIZE;
 const int HURT_DURATION = 2 * WINDOW_FRAMERATE / TILE_SIZE;
 
 static const std::string EMPTY_TEXTURE = "res/sprites/empty.png";
+static const std::string FONT_FILE_PATH = "res/fonts/emulogic.ttf";
+static const std::string BACKGROUND_MUISC_FILE = "res/audio/background_music.wav";
+static const std::string FOOD_SOUND = "res/audio/food_chomp.wav";
+static const std::string FRUIT_SOUND = "res/audio/fruit_chomp.wav";
+static const std::string PELLET_SOUND = "res/audio/power_pellet_chomp.wav";
+static const std::string GHOST_SOUND = "res/audio/ghost_chomp.wav";
+static const std::string HURT_SOUND = "res/audio/hurt.wav";
 
 #endif //CONFIG_HPP
