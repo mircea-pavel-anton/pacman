@@ -37,6 +37,13 @@ void Pacman::initVars() {
 
     // Load a default texture
     texture_paths = { EMPTY_TEXTURE };
+
+    // Load the audio file into memory.
+    if (buffer.loadFromFile(HURT_SOUND) == false) {
+        std::cout << "ERROR: Failed to load " << HURT_SOUND << std::endl;
+        abort();
+    }
+    sound.setBuffer(buffer);
 }
 
 void Pacman::pollEvents() {
@@ -54,7 +61,7 @@ void Pacman::pollEvents() {
 }
 
 void Pacman::initText() {
-    if (font.loadFromFile("res/fonts/emulogic.ttf") == false) {
+    if (font.loadFromFile(FONT_FILE_PATH) == false) {
         std::cout << "ERROR: Failed to load font file!" << std::endl;
         abort();
     }
@@ -98,32 +105,36 @@ void Pacman::interact(vec3pGT &_map) {
                     }
                 }
                 pellet->toEatenState();
+                PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
+                return;
             }
         }
 
         if (dynamic_cast<Edible*>(tile) != nullptr) {
             Edible *edible = (Edible*)tile;
-            score += edible->getScoreModifier();
-            edible->toEatenState();
-            updateScore();
+            if (edible->isEaten() == false) {
+                score += edible->getScoreModifier();
+                updateScore();
+                edible->toEatenState();
+            }
         }
 
         if (dynamic_cast<Ghost*>(tile) != nullptr) {
             Ghost *ghost = dynamic_cast<Ghost*>(tile);
-            if (ghost->isScared()) {
-                ghost->toDeadState();
+            if (ghost->isScared() && ghost->isDead() == false) {
                 score += 200;
                 updateScore();
+                ghost->toDeadState();
                 PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
                 return;
             }
-            if (ghost->isDead() == false && ghost->isScared() == false) {
+            
+            if (ghost->isScared() == false && ghost->isDead() == false) {
                 toDeadState();
                 PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
                 return;
             }
         }
-
     }
 
     PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::interact");
@@ -134,6 +145,7 @@ void Pacman::updateState() {
     if (state != next_state) {
         switch (next_state) {
             case PacmanState::Hurt:
+                sound.play(); // play sound on transition to Hurt state
                 state = PacmanState::Hurt;
                 score -= 200;
                 updateScore();
