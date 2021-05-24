@@ -5,7 +5,6 @@
 
 #include "../GameTile/__barrel__.hpp"
 #include "../Config/config.hpp"
-#include <SFML/Audio.hpp>
 
 class Game {
 
