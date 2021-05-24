@@ -130,5 +130,10 @@ void MainMenu::initSounds() {
     PerfLogger::getInstance()->stopJob("Game::initTitle");
 }
 
-
+void MainMenu::show() {
+    while (isRunning()) {
+        update();
+        render();
+    }
+}
 

@@ -12,6 +12,19 @@ public:
     MainMenu();
     ~MainMenu();
 
+    void show();
+
+private:
+    // ---------------- MEMBERS ---------------- //
+    sf::RenderWindow *window;    
+    // A pacman animation that will be displayed to the left of the title.
+    MenuAnimation *animation;
+    sf::Sound *press_start, *okey; // Sound effects.
+    MenuTitle *title;
+    MenuEntry *options[3];  // A list of all the menu entries.
+    int selection_index;    // The currently selected menu entry.
+
+    // ---------------- METHODS ---------------- //
     // Listen for events on the RenderWindow.
     void pollEvents();
 
@@ -28,17 +41,6 @@ public:
         return window->isOpen();
     }
 
-private:
-    // ---------------- MEMBERS ---------------- //
-    sf::RenderWindow *window;    
-    // A pacman animation that will be displayed to the left of the title.
-    MenuAnimation *animation;
-    sf::Sound *press_start, *okey; // Sound effects.
-    MenuTitle *title;
-    MenuEntry *options[3];  // A list of all the menu entries.
-    int selection_index;    // The currently selected menu entry.
-
-    // ---------------- METHODS ---------------- //
     void initWindow();
     void initText();
     void initSounds();
