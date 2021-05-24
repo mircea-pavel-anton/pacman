@@ -5,7 +5,6 @@ Ghost::Ghost(const std::string &_name, const sf::Vector2f &_position) {
 
     position = _position;
     name = _name;
-    textures_root_dir = "res/sprites/Ghost/" + name + "/";
     resetTimers();
 
     initSprite();
@@ -18,7 +17,6 @@ Ghost &Ghost::operator=(const Ghost &_other) {
     chasing = _other.chasing;
     state = _other.state;
     frightened_timer = _other.frightened_timer;
-    textures_root_dir = _other.textures_root_dir;
     name = _other.name;
     rng = _other.rng;
 
@@ -32,18 +30,12 @@ void Ghost::initVars() {
     rng = RNG();
     state = next_state = GhostStates::Scatter;
     resetTimers();
-    Config *config = Config::getInstance();
 
-    textures_root_dir = "res/sprites/Ghost/" + name + "/";
     // Load a default texture
-    texture_paths = { config->empty_texture };
+    texture_names = { "empty" };
 
     // Load the audio file into memory.
-    if (buffer.loadFromFile(config->sounds["ghost"]) == false) {
-        std::cout << "ERROR: Failed to load: " << config->sounds["ghost"] << std::endl;
-        abort();
-    }
-    sound.setBuffer(buffer);
+    sound = Config::getInstance()->sounds["ghost"];
 }
 
 void Ghost::initTrail() {
@@ -84,9 +76,16 @@ void Ghost::updateAnimation() {
         default: current_direction = "right"; break;
     }
 
-    texture_paths = {
-        textures_root_dir + current_direction + "_1.png",
-        textures_root_dir + current_direction + "_2.png"
+    std::string prefix = "";
+    switch (state) {
+        case GhostStates::Chase: prefix = name; break;
+        case GhostStates::Scatter: prefix = name; break;
+        case GhostStates::Frightened: prefix = "frightened"; break;
+        case GhostStates::Dead: prefix = "dead"; break;
+    }
+    texture_names = {
+        prefix + "_" + current_direction + "_1",
+        prefix + "_" + current_direction + "_2"
     };
 
     loadTextures();
@@ -177,13 +176,12 @@ void Ghost::updateState() {
                     next_state = state; // cancel the change
                     return;
                 }
-                sound.play(); // play sound on transition to Dead state
+                sound->play(); // play sound on transition to Dead state
                 state = next_state;
                 speed = Config::getInstance()->speed;
                 resetTimers();
 
                 // Change the animation frames.
-                textures_root_dir = "res/sprites/Ghost/dead/";
                 loadTextures();
                 break;
             
@@ -199,7 +197,6 @@ void Ghost::updateState() {
                 speed = 0.5 * Config::getInstance()->speed;
                 resetTimers();
                 // Change the animation frames.
-                textures_root_dir = "res/sprites/Ghost/frightened/";
                 loadTextures();
                 return;
             
@@ -222,7 +219,6 @@ void Ghost::updateState() {
             direction = -direction;
 
             // Change the animation frames.
-            textures_root_dir = "res/sprites/Ghost/" + name + "/";
             loadTextures();
             return;
 
@@ -239,7 +235,6 @@ void Ghost::updateState() {
             direction = -direction;
 
             // Change the animation frames.
-            textures_root_dir = "res/sprites/Ghost/" + name + "/";
             loadTextures();
             return;
 
@@ -256,7 +251,6 @@ void Ghost::updateState() {
             direction = -direction;
 
             // Change the animation frames.
-            textures_root_dir = "res/sprites/Ghost/" + name + "/";
             loadTextures();
             return;
         
@@ -272,7 +266,6 @@ void Ghost::updateState() {
             direction = -direction;
 
             // Change the animation frames.
-            textures_root_dir = "res/sprites/Ghost/" + name + "/";
             loadTextures();
             return;
     }

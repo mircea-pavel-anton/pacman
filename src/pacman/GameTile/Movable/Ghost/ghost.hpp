@@ -54,8 +54,7 @@ protected:
     int frightened_timer, chase_timer, scatter_timer;
 
     // A sound that is played whenever a ghost is killed.
-    sf::SoundBuffer buffer;
-    sf::Sound sound;
+    sf::Sound *sound;
 
     // The coordinates of the tile the ghost will go to when killed.
     // Right in front of the ghost house.

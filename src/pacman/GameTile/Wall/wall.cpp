@@ -7,8 +7,7 @@ Wall::Wall(const sf::Vector2f &_position, const char &_type) {
     // Food is not animated.
     // It has the same texture every frame.
     type = _type;
-    textures_root_dir = "res/sprites/Walls/";
-    texture_paths = { texture_map[_type] };
+    texture_names = { std::string(1, _type) };
 
     initSprite();
 }

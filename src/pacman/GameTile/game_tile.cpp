@@ -25,20 +25,16 @@ void GameTile::loadTextures() {
     if (textures.empty() == false) textures.clear();
 
     // Load each texture into the animation vector.
-    for (std::string &path : texture_paths) {
-        sf::Texture temp = sf::Texture();
-        if (temp.loadFromFile(path) == false) {
-            std::cout << "ERROR: Failed to load texture: " << path << std::endl;
-            abort();
-        }
-        textures.push_back(temp);
+    Config *config = Config::getInstance();
+    for (std::string &name : texture_names) {
+        textures.push_back( config->textures[name] );
     }
 }
 
 void GameTile::updateSprite() {
     // Load the texture from the animation vector
     const int animation_index = (frame_counter / animation_fps) % textures.size();
-    sprite.setTexture( textures[ animation_index ] );
+    sprite.setTexture( *(textures[ animation_index ]) );
 
     // Frame counter only goes from 0 to WINDOW_FRAMERATE - 1
     frame_counter = (frame_counter + 1) % 60;
@@ -54,7 +50,7 @@ void GameTile::render(sf::RenderTarget *_target) const { _target->draw(sprite); 
 
 GameTile &GameTile::operator=(const GameTile &_other) {
     position = _other.position;
-    texture_paths = _other.texture_paths;
+    texture_names = _other.texture_names;
     textures = _other.textures;
     frame_counter = _other.frame_counter;
     sprite = _other.sprite;

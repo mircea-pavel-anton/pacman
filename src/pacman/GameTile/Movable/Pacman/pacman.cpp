@@ -33,17 +33,12 @@ void Pacman::initVars() {
     score = 0;
     state = next_state = PacmanState::Chasing;
     resetTimer();
-    textures_root_dir = "res/sprites/Pacman" + std::to_string(index) + "/";
 
     // Load a default texture
-    texture_paths = { Config::getInstance()->empty_texture };
+    texture_names = { "empty" };
 
     // Load the audio file into memory.
-    if (buffer.loadFromFile(Config::getInstance()->sounds["pacman"]) == false) {
-        std::cout << "ERROR: Failed to load " << Config::getInstance()->sounds["pacman"] << std::endl;
-        abort();
-    }
-    sound.setBuffer(buffer);
+    sound = Config::getInstance()->sounds["pacman"];
 }
 
 void Pacman::pollEvents() {
@@ -146,7 +141,7 @@ void Pacman::updateState() {
     if (state != next_state) {
         switch (next_state) {
             case PacmanState::Hurt:
-                sound.play(); // play sound on transition to Hurt state
+                sound->play(); // play sound on transition to Hurt state
                 state = PacmanState::Hurt;
                 score -= 200;
                 updateScore();
@@ -223,22 +218,22 @@ void Pacman::updateAnimation() {
     }
 
     if (state == PacmanState::Chasing) {
-        texture_paths = {
-            textures_root_dir + "neutral.png",              // mouth closed
-            textures_root_dir + direction_name + "_2.png",  // mouth halfway opened
-            textures_root_dir + direction_name + "_1.png",  // mouth opened
-            textures_root_dir + direction_name + "_2.png"   // mouth halfway opened
+        texture_names = {
+            "Pacman_" + std::to_string(index) + "_neutral",                   // mouth closed
+            "Pacman_" + std::to_string(index) + "_" + direction_name + "_2",  // mouth halfway opened
+            "Pacman_" + std::to_string(index) + "_" + direction_name + "_1",  // mouth opened
+            "Pacman_" + std::to_string(index) + "_" + direction_name + "_2"   // mouth halfway opened
         };
     } else {
-        texture_paths = {
-            textures_root_dir + "neutral.png",              // mouth closed
-            Config::getInstance()->empty_texture,
-            textures_root_dir + direction_name + "_2.png",  // mouth halfway opened
-            Config::getInstance()->empty_texture,
-            textures_root_dir + direction_name + "_1.png",  // mouth opened
-            Config::getInstance()->empty_texture,
-            textures_root_dir + direction_name + "_2.png",  // mouth halfway opened
-            Config::getInstance()->empty_texture,
+        texture_names = {
+            "Pacman_" + std::to_string(index) + "_neutral",                   // mouth closed
+            "empty",
+            "Pacman_" + std::to_string(index) + "_" + direction_name + "_2",  // mouth halfway opened
+            "empty",
+            "Pacman_" + std::to_string(index) + "_" + direction_name + "_1",  // mouth opened
+            "empty",
+            "Pacman_" + std::to_string(index) + "_" + direction_name + "_2"   // mouth halfway opened
+            "empty",
         };
         
     }

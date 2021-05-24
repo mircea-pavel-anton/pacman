@@ -2,21 +2,25 @@
 
 Game::Game() {
     initSounds();
-    background_music.play();
+    background_music->play();
 
     initMap();
     initWindow();
 }
 Game::~Game() {
     // Play "Thank you" sound, and wait for it to finish before proceeding.
-    ty_sound.play();
-    while (ty_sound.getStatus() == sf::Sound::Status::Playing) {
+    ty_sound->play();
+    while (ty_sound->getStatus() == sf::Sound::Status::Playing) {
         sf::sleep(sf::milliseconds(100.f));
     }
 
     // stop background music
-    background_music.stop();
+    background_music->stop();
 
+    // Delete the config instance.
+    delete Config::getInstance();
+
+    // Delete the window.
     if (window != nullptr) {
         delete window;
     }
@@ -255,29 +259,14 @@ void Game::initTitle() {
 
 void Game::initSounds() {
     Config *config = Config::getInstance();
-    if (press_start_buffer.loadFromFile(config->sounds["start"]) == false) {
-        std::cout << "ERROR: Failed to load " << config->sounds["start"] << std::endl;
-        abort();
-    }
-    if (game_over_buffer.loadFromFile(config->sounds["game_over"]) == false) {
-        std::cout << "ERROR: Failed to load " << config->sounds["game_over"] << std::endl;
-        abort();
-    }
-    if (ty_buffer.loadFromFile(config->sounds["thank_you"]) == false) {
-        std::cout << "ERROR: Failed to load " << config->sounds["thank_you"] << std::endl;
-        abort();
-    }
-    if (background_music.openFromFile(config->sounds["background_music"]) == false) {
-        std::cout << "ERROR: Failed to load background music audio file!" << std::endl;
-        abort();
-    }
+
+    // Get a copy of the sound objects pointers.
+    press_start_sound = config->sounds["start"];
+    game_over_sound = config->sounds["game_over"];
+    ty_sound = config->sounds["thank_you"];
+    background_music = config->sounds["background_music"];
 
     // Turn down the volume of the background track
-    background_music.setVolume(50.f);
-
-    // Load buffers into sound objects.
-    press_start_sound.setBuffer(press_start_buffer);
-    game_over_sound.setBuffer(game_over_buffer);
-    ty_sound.setBuffer(ty_buffer);
+    background_music->setVolume(50.f);
 }
 

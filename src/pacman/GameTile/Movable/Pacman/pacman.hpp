@@ -45,8 +45,7 @@ protected:
     int hurt_timer;
 
     // A sound that will be played when pacman gets hurt.
-    sf::SoundBuffer buffer;
-    sf::Sound sound;
+    sf::Sound *sound;
 
     // ---------------- METHODS ----------------
     // Handles interactions with tiles that PacMan is currently on top of.

@@ -1,6 +1,6 @@
 #include "fruit.hpp"
 
-Fruit::Fruit(const sf::Vector2f &_position) : Edible(Config::getInstance()->sounds["fruit"]) {
+Fruit::Fruit(const sf::Vector2f &_position) : Edible("fruit") {
     initVars();
     
     position = _position;
@@ -9,8 +9,8 @@ Fruit::Fruit(const sf::Vector2f &_position) : Edible(Config::getInstance()->soun
     // They have the same texture every frame.
     std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist(0, fruit_textures.size()-1);
-    texture_paths = { fruit_textures.at(dist(rng)) };
+    std::uniform_int_distribution<std::mt19937::result_type> dist(1, 6);
+    texture_names = { "fruit_" + std::to_string(dist(rng)) };
 
     score_modifier = 100;
 

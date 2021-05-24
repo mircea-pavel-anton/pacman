@@ -3,7 +3,7 @@
 // Initialize counter.
 int Food::counter = 0;
 
-Food::Food(const sf::Vector2f &_position) : Edible(Config::getInstance()->sounds["food"]) {
+Food::Food(const sf::Vector2f &_position) : Edible("food") {
     initVars();
     position = _position;
 
@@ -12,7 +12,7 @@ Food::Food(const sf::Vector2f &_position) : Edible(Config::getInstance()->sounds
 
     // Food is not animated.
     // It has the same texture every frame.
-    texture_paths = { textures_root_dir + "food.png" };
+    texture_names = { "food" };
     score_modifier = 5;
 
     initSprite();

@@ -30,9 +30,7 @@ public:
 private:
     // ---------------- MEMBERS ---------------- //
     sf::RenderWindow *window;
-    sf::Music background_music;
-    sf::SoundBuffer press_start_buffer, game_over_buffer, ty_buffer;
-    sf::Sound press_start_sound, game_over_sound, ty_sound;
+    sf::Sound *press_start_sound, *game_over_sound, *ty_sound, *background_music;
     vec3pGT map;
     sf::Text title;
     sf::Font font;

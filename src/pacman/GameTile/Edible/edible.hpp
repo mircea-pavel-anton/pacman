@@ -25,8 +25,7 @@ public:
     virtual void toEatenState();
 
     // The sound made when the edible tile is eaten.
-    sf::Sound sound;
-    sf::SoundBuffer buffer;
+    sf::Sound *sound;
 
     // Gets the number of points gained by eating this tile.
     int getScoreModifier() { return score_modifier; }

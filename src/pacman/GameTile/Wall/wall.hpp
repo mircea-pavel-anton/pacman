@@ -22,23 +22,6 @@ public:
 
 private:
     char type;
-    std::map<const char, const std::string> texture_map = {
-        // Regular walls, found inside the map
-        { '1', "res/sprites/Walls/left-top.png" },
-        { '2', "res/sprites/Walls/horizontal.png" },
-        { '3', "res/sprites/Walls/right-top.png" },
-        { '4', "res/sprites/Walls/vertical.png" },
-        { '5', "res/sprites/Walls/left-bottom.png" },
-        { '6', "res/sprites/Walls/right-bottom.png" },
-
-        // Double walls, used as map and ghost-hous borders
-        { '!', "res/sprites/Walls/double-top-left.png" },
-        { '@', "res/sprites/Walls/double-horizontal.png" },
-        { '#', "res/sprites/Walls/double-top-right.png" },
-        { '$', "res/sprites/Walls/double-vertical.png" },
-        { '%', "res/sprites/Walls/double-bottom-left.png" },
-        { '^', "res/sprites/Walls/double-bottom-right.png" },
-    };
 
 }; //class Wall
 

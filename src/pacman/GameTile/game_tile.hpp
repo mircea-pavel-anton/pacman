@@ -40,17 +40,13 @@ protected:
     // On-Screen Coordinates.
     // X and Y coordinates at which the tile will be rendered on the window
     sf::Vector2f position;
-    
-    // The path to the root directory in which the textures for a
-    // particular game tile are found.
-    std::string textures_root_dir;
 
     // Vector containing the paths to the texture files
     // associated to each animation frame.
-    std::vector< std::string > texture_paths;
+    std::vector< std::string > texture_names;
 
     // A vector that will get loaded with the textures given in @texture_paths.
-    std::vector< sf::Texture > textures;
+    std::vector< sf::Texture* > textures;
 
     // A simple counter that keeps track of the current frame index,
     // from 0 to WINDOW_FRAMERATE - 1.
