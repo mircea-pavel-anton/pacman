@@ -3,7 +3,7 @@
 
 #include "../Config/config.hpp"
 #include "MenuEntry/menu_entry.hpp"
-#include "MenuTitle/menu_title.hpp"
+#include "../WindowTitle/window_title.hpp"
 #include "MenuAnimation/menu_animation.hpp"
 
 class MainMenu {
@@ -20,7 +20,7 @@ private:
     // A pacman animation that will be displayed to the left of the title.
     MenuAnimation *animation;
     sf::Sound *press_start, *okey; // Sound effects.
-    MenuTitle *title;
+    WindowTitle *title;
     MenuEntry *options[3];  // A list of all the menu entries.
     int selection_index;    // The currently selected menu entry.
 
