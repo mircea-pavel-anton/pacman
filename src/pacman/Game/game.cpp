@@ -265,5 +265,10 @@ void Game::initSounds() {
     PerfLogger::getInstance()->stopJob("Game::initSounds");
 }
 
-
+void Game::run() {
+    while (isRunning()) {
+        update();
+        render();
+    }
+}
 

@@ -13,6 +13,17 @@ public:
     Game();
     ~Game();
 
+    void run();
+
+private:
+    // ---------------- MEMBERS ---------------- //
+    sf::RenderWindow *window;
+    sf::Sound *ty_sound, *background_music;
+    vec3pGT map;
+    sf::Text title;
+    bool pause = false;
+
+    // ---------------- METHODS ---------------- //
     // Listen for events on the RenderWindow.
     void pollEvents();
 
@@ -27,15 +38,6 @@ public:
     // the game is currently running.
     bool isRunning() const;
 
-private:
-    // ---------------- MEMBERS ---------------- //
-    sf::RenderWindow *window;
-    sf::Sound *ty_sound, *background_music;
-    vec3pGT map;
-    sf::Text title;
-    bool pause = false;
-
-    // ---------------- METHODS ---------------- //
     void initWindow(); // intialize the RenderWindow.
     void initMap();
     vector<vector<char>> readMap();
