@@ -36,11 +36,11 @@ void Pacman::initVars() {
     textures_root_dir = "res/sprites/Pacman" + std::to_string(index) + "/";
 
     // Load a default texture
-    texture_paths = { EMPTY_TEXTURE };
+    texture_paths = { Config::getInstance()->empty_texture };
 
     // Load the audio file into memory.
-    if (buffer.loadFromFile(HURT_SOUND) == false) {
-        std::cout << "ERROR: Failed to load " << HURT_SOUND << std::endl;
+    if (buffer.loadFromFile(Config::getInstance()->sounds["pacman"]) == false) {
+        std::cout << "ERROR: Failed to load " << Config::getInstance()->sounds["pacman"] << std::endl;
         abort();
     }
     sound.setBuffer(buffer);
@@ -61,7 +61,8 @@ void Pacman::pollEvents() {
 }
 
 void Pacman::initText() {
-    if (font.loadFromFile(FONT_FILE_PATH) == false) {
+    Config *config = Config::getInstance();
+    if (font.loadFromFile(config->font_file) == false) {
         std::cout << "ERROR: Failed to load font file!" << std::endl;
         abort();
     }
@@ -75,8 +76,8 @@ void Pacman::initText() {
         "Player " + std::to_string(index) + "\nScore: 0"
     );
     text.setPosition({
-        (X_OFFSET + TILE_SIZE * MAP_WIDTH) * (index - 1) + 5,
-        Y_OFFSET + TILE_SIZE,
+        (config->offset.x + config->tile_size * config->map_size.x) * (index - 1) + 5,
+        config->offset.y + config->tile_size,
     });
 }
 
@@ -177,7 +178,11 @@ void Pacman::updateMovementDirection(vec3pGT &_map) {
     const sf::Vector2i map_position = getMapPosition();
 
     // Pacman can only change directions when fully inside a tile.
-    if (position.x != map_position.x * TILE_SIZE || position.y != map_position.y * TILE_SIZE) {
+    const sf::Vector2f closest_position = {
+        map_position.x * Config::getInstance()->tile_size,
+        map_position.y * Config::getInstance()->tile_size,
+    };
+    if (position != closest_position) {
         PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::updateMovementDirection");
         return;
     }
@@ -227,13 +232,13 @@ void Pacman::updateAnimation() {
     } else {
         texture_paths = {
             textures_root_dir + "neutral.png",              // mouth closed
-            EMPTY_TEXTURE,
+            Config::getInstance()->empty_texture,
             textures_root_dir + direction_name + "_2.png",  // mouth halfway opened
-            EMPTY_TEXTURE,
+            Config::getInstance()->empty_texture,
             textures_root_dir + direction_name + "_1.png",  // mouth opened
-            EMPTY_TEXTURE,
+            Config::getInstance()->empty_texture,
             textures_root_dir + direction_name + "_2.png",  // mouth halfway opened
-            EMPTY_TEXTURE,
+            Config::getInstance()->empty_texture,
         };
         
     }
@@ -327,9 +332,10 @@ void Pacman::collideWithObjects(vec3pGT &_map) {
     for (GameTile *tile : vector) {
         if (tile != nullptr) {
             if (tile->isWalkable() == false || dynamic_cast<Pacman*>(tile) != nullptr) {
+                const int tile_size = Config::getInstance()->tile_size;
                 position = {
-                    round(position.x / TILE_SIZE) * TILE_SIZE,
-                    round(position.y / TILE_SIZE) * TILE_SIZE
+                    round(position.x / tile_size) * tile_size,
+                    round(position.y / tile_size) * tile_size,
                 };
                 PerfLogger::getInstance()->stopJob("Pacman::" + std::to_string(index) + "::collideWithObjects");
                 return;

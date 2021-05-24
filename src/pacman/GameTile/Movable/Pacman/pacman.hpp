@@ -2,7 +2,7 @@
 #define PACMAN_HPP
 
 #include "../movable.hpp"
-#include "../../../config.hpp"
+#include "../../../Config/config.hpp"
 #include "../../Edible/__barrel__.hpp"
 #include "../Ghost/ghost.hpp"
 
@@ -84,7 +84,7 @@ protected:
     void collideWithObjects(vec3pGT&);
 
     void updateState();
-    void resetTimer() { hurt_timer = HURT_DURATION; };
+    void resetTimer() { hurt_timer = Config::getInstance()->hurt_timer; };
     void updateTimer() {
         if (state == PacmanState::Hurt)
             hurt_timer--;

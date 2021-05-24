@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "../GameTile/__barrel__.hpp"
-#include "../config.hpp"
+#include "../Config/config.hpp"
 #include <SFML/Audio.hpp>
 
 class Game {

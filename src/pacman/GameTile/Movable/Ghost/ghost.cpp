@@ -32,21 +32,25 @@ void Ghost::initVars() {
     rng = RNG();
     state = next_state = GhostStates::Scatter;
     resetTimers();
+    Config *config = Config::getInstance();
 
     textures_root_dir = "res/sprites/Ghost/" + name + "/";
     // Load a default texture
-    texture_paths = { EMPTY_TEXTURE };
+    texture_paths = { config->empty_texture };
 
     // Load the audio file into memory.
-    if (buffer.loadFromFile(GHOST_SOUND) == false) {
-        std::cout << "ERROR: Failed to load: " << GHOST_SOUND << std::endl;
+    if (buffer.loadFromFile(config->sounds["ghost"]) == false) {
+        std::cout << "ERROR: Failed to load: " << config->sounds["ghost"] << std::endl;
         abort();
     }
     sound.setBuffer(buffer);
 }
 
 void Ghost::initTrail() {
-    trail.setSize({TILE_SIZE, TILE_SIZE});
+    trail.setSize({
+        Config::getInstance()->tile_size,
+        Config::getInstance()->tile_size
+    });
     trail.setFillColor(sf::Color::Transparent);
     trail.setOutlineThickness(2.f);
 
@@ -89,19 +93,25 @@ void Ghost::updateAnimation() {
 }
 
 void Ghost::updateTrail() {;
+    Config *config = Config::getInstance();
     trail.setPosition({
-        trail_position.x * TILE_SIZE + X_OFFSET,
-        trail_position.y * TILE_SIZE + Y_OFFSET,
+        trail_position.x * config->tile_size + config->offset.x,
+        trail_position.y * config->tile_size + config->offset.y,
     });
 }
 
 void Ghost::updateMovementDirection(vec3pGT &_map) {
     PerfLogger::getInstance()->startJob("Ghost::" + name + "::updateMovementDirection");
 
+    const sf::Vector2i map_position = getMapPosition();
+
     // Only calculate a new movement direction once the ghost has
     // fully entered into a new tile.
-    const sf::Vector2i map_position = getMapPosition();
-    if (position.x != map_position.x * TILE_SIZE || position.y != map_position.y * TILE_SIZE) {
+    const sf::Vector2f closest_position = {
+        map_position.x * Config::getInstance()->tile_size,
+        map_position.y * Config::getInstance()->tile_size,
+    };
+    if (position != closest_position) {
         PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
         return;
     }
@@ -169,7 +179,7 @@ void Ghost::updateState() {
                 }
                 sound.play(); // play sound on transition to Dead state
                 state = next_state;
-                speed = SPEED;
+                speed = Config::getInstance()->speed;
                 resetTimers();
 
                 // Change the animation frames.
@@ -186,7 +196,7 @@ void Ghost::updateState() {
                     return;
                 }
                 state = next_state;
-                speed = 0.5 * SPEED;
+                speed = 0.5 * Config::getInstance()->speed;
                 resetTimers();
                 // Change the animation frames.
                 textures_root_dir = "res/sprites/Ghost/frightened/";
@@ -205,7 +215,7 @@ void Ghost::updateState() {
         case GhostStates::Dead:
             if (getMapPosition() != home_position) return;
             state = next_state = GhostStates::Chase;
-            speed = SPEED;
+            speed = Config::getInstance()->speed;
             resetTimers();
 
             // This state change turns the ghost around 180 degrees.
@@ -222,7 +232,7 @@ void Ghost::updateState() {
         case GhostStates::Chase:
             if (chase_timer > 0) return;
             state = next_state = GhostStates::Scatter;
-            speed = SPEED;
+            speed = Config::getInstance()->speed;
             resetTimers();
 
             // This state change turns the ghost around 180 degrees.
@@ -239,7 +249,7 @@ void Ghost::updateState() {
         case GhostStates::Scatter:
             if (scatter_timer > 0) return;
             state = next_state = GhostStates::Chase;
-            speed = SPEED;
+            speed = Config::getInstance()->speed;
             resetTimers();
 
             // This state change turns the ghost around 180 degrees.
@@ -255,7 +265,7 @@ void Ghost::updateState() {
         case GhostStates::Frightened:
             if (frightened_timer > 0) return;
             state = next_state = GhostStates::Chase;
-            speed = SPEED;
+            speed = Config::getInstance()->speed;
             resetTimers();
 
             // This state change turns the ghost around 180 degrees.

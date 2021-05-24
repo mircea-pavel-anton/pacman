@@ -1,7 +1,7 @@
 #ifndef GAME_TILE_HPP
 #define GAME_TILE_HPP
 
-#include "../config.hpp"
+#include "../Config/config.hpp"
 
 class GameTile {
 
@@ -28,8 +28,8 @@ public:
     // Convert on-screen coordinates to game-map coordinates
     inline sf::Vector2i getMapPosition() const {
       return sf::Vector2i{
-          static_cast<int>((position.x) / TILE_SIZE),
-          static_cast<int>((position.y) / TILE_SIZE)
+          static_cast<int>((position.x) / Config::getInstance()->tile_size),
+          static_cast<int>((position.y) / Config::getInstance()->tile_size)
       };
     };
 protected:

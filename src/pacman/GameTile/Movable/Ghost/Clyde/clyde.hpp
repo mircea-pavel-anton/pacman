@@ -7,7 +7,7 @@ class Clyde : public Ghost {
 
 public:
     Clyde(const sf::Vector2f &_position) : Ghost("Clyde", _position) {
-        scatter_position = {0, MAP_HEIGHT};
+        scatter_position = {0, Config::getInstance()->map_size.y};
     };
 
 protected:

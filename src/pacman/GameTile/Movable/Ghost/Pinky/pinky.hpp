@@ -38,8 +38,8 @@ protected:
         sf::Vector2i target_tile = target->getMapPosition() + 4 * target->getDirection();
         // if (target_tile.x < 0.f) target_tile.x = 0.f;
         // if (target_tile.y < 0.f) target_tile.y = 0.f;
-        // if (target_tile.x > MAP_WIDTH) target_tile.y = MAP_WIDTH;
-        // if (target_tile.y > MAP_HEIGHT) target_tile.y = MAP_HEIGHT;
+        // if (target_tile.x > map_size.x) target_tile.y = map_size.x;
+        // if (target_tile.y > map_size.y) target_tile.y = map_size.y;
         return target_tile;
     }
 };

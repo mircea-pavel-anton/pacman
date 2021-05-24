@@ -107,16 +107,17 @@ bool Game::isRunning() const {
 void Game::initWindow() {
     PerfLogger::getInstance()->startJob("Game::initWindow");
 
-    WINDOW_WIDTH = MAP_WIDTH * TILE_SIZE + X_OFFSET * 2;
-    WINDOW_HEIGHT = MAP_HEIGHT * TILE_SIZE + Y_OFFSET * 2;
+    Config *config = Config::getInstance();
+    config->window_size.x = config->map_size.x * config->tile_size + config->offset.x * 2;
+    config->window_size.y = config->map_size.y * config->tile_size + config->offset.y * 2;
 
     // Create a 4:3 non-resizeable window.
-    const sf::VideoMode videoMode = sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT);
+    const sf::VideoMode videoMode = sf::VideoMode(config->window_size.x, config->window_size.y);
     const sf::Uint32 style = sf::Style::Close | sf::Style::Titlebar;
 
     // Limit the frame-rate to 60fps and enable V-Sync.
-    window = new sf::RenderWindow(videoMode, WINDOW_TITLE, style);
-    window->setFramerateLimit(WINDOW_FRAMERATE);
+    window = new sf::RenderWindow(videoMode, config->window_title, style);
+    window->setFramerateLimit(config->window_framerate);
     window->setVerticalSyncEnabled(true);
 
     initTitle();
@@ -152,8 +153,8 @@ vector<vector<char>> Game::readMap() {
     }
 
     // Set map sizes.
-    MAP_WIDTH = line_length;
-    MAP_HEIGHT = line_count;
+    Config::getInstance()->map_size.x = line_length;
+    Config::getInstance()->map_size.y = line_count;
 
     PerfLogger::getInstance()->stopJob("Game::readMap");
     return char_map;
@@ -171,7 +172,10 @@ void Game::initMap() {
         vec2pGT temp = {};
         
         for (char &c : line) {
-            sf::Vector2f position = { i * TILE_SIZE, j * TILE_SIZE };
+            sf::Vector2f position = {
+                i * Config::getInstance()->tile_size,
+                j * Config::getInstance()->tile_size,
+            };
             GameTile *tile = nullptr;
 
             if (std::string("123456!@#$%^").find(c) != std::string::npos ) {
@@ -228,40 +232,42 @@ void Game::initMap() {
 void Game::initTitle() {
     PerfLogger::getInstance()->startJob("Game::initTitle");
 
+    Config *config = Config::getInstance();
     font = sf::Font();
 
-    if (font.loadFromFile(FONT_FILE_PATH) == false) {
+    if (font.loadFromFile(config->font_file) == false) {
         std::cout << "ERROR: Unable to load font file." << std::endl;
         abort();
     }
 
     title.setFont(font);
-    title.setString(WINDOW_TITLE);
+    title.setString(config->window_title);
     title.setCharacterSize(26.f);
     title.setLetterSpacing(1.25);
     title.setFillColor(sf::Color::Yellow);
     title.setPosition({
-        (WINDOW_WIDTH - title.getGlobalBounds().width ) /2,
-        (Y_OFFSET - title.getGlobalBounds().height ) / 2,
+        (config->window_size.x - title.getGlobalBounds().width ) /2,
+        (config->offset.y - title.getGlobalBounds().height ) / 2,
     });
 
     PerfLogger::getInstance()->stopJob("Game::initTitle");
 }
 
 void Game::initSounds() {
-    if (press_start_buffer.loadFromFile(START_SOUND) == false) {
-        std::cout << "ERROR: Failed to load " << START_SOUND << std::endl;
+    Config *config = Config::getInstance();
+    if (press_start_buffer.loadFromFile(config->sounds["start"]) == false) {
+        std::cout << "ERROR: Failed to load " << config->sounds["start"] << std::endl;
         abort();
     }
-    if (game_over_buffer.loadFromFile(GAME_OVER_SOUND) == false) {
-        std::cout << "ERROR: Failed to load " << GAME_OVER_SOUND << std::endl;
+    if (game_over_buffer.loadFromFile(config->sounds["game_over"]) == false) {
+        std::cout << "ERROR: Failed to load " << config->sounds["game_over"] << std::endl;
         abort();
     }
-    if (ty_buffer.loadFromFile(TY_SOUND) == false) {
-        std::cout << "ERROR: Failed to load " << TY_SOUND << std::endl;
+    if (ty_buffer.loadFromFile(config->sounds["thank_you"]) == false) {
+        std::cout << "ERROR: Failed to load " << config->sounds["thank_you"] << std::endl;
         abort();
     }
-    if (background_music.openFromFile(BACKGROUND_MUISC_FILE) == false) {
+    if (background_music.openFromFile(config->sounds["background_music"]) == false) {
         std::cout << "ERROR: Failed to load background music audio file!" << std::endl;
         abort();
     }

@@ -3,7 +3,7 @@
 // Initialize counter.
 int Food::counter = 0;
 
-Food::Food(const sf::Vector2f &_position) : Edible(FOOD_SOUND) {
+Food::Food(const sf::Vector2f &_position) : Edible(Config::getInstance()->sounds["food"]) {
     initVars();
     position = _position;
 

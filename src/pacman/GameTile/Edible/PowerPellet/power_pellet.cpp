@@ -1,6 +1,6 @@
 #include "power_pellet.hpp"
 
-PowerPellet::PowerPellet(const sf::Vector2f &_position) : Edible(PELLET_SOUND) {
+PowerPellet::PowerPellet(const sf::Vector2f &_position) : Edible(Config::getInstance()->sounds["pellet"]) {
     initVars();
     position = _position;
 

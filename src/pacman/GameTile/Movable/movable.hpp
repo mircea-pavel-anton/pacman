@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-#include "../../config.hpp"
+#include "../../Config/config.hpp"
 #include "../game_tile.hpp"
 
 namespace Directions {

@@ -45,8 +45,8 @@ void GameTile::updateSprite() {
 
     // Update on-screen position
     sprite.setPosition({
-        position.x + X_OFFSET,
-        position.y + Y_OFFSET,
+        position.x + Config::getInstance()->offset.x,
+        position.y + Config::getInstance()->offset.y,
     });
 }
 

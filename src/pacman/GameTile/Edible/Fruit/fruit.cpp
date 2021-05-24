@@ -1,6 +1,6 @@
 #include "fruit.hpp"
 
-Fruit::Fruit(const sf::Vector2f &_position) : Edible(FRUIT_SOUND) {
+Fruit::Fruit(const sf::Vector2f &_position) : Edible(Config::getInstance()->sounds["fruit"]) {
     initVars();
     
     position = _position;

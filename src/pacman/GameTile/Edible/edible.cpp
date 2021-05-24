@@ -57,7 +57,7 @@ void Edible::toEatenState() {
 
     // Once eaten, it should no longer display anything, so we
     // load an empty sprite.
-    texture_paths = { EMPTY_TEXTURE };
+    texture_paths = { Config::getInstance()->empty_texture };
     state = EdibleState::Eaten;
 
     // Play the sound the tile makes when eaten.

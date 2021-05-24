@@ -104,9 +104,9 @@ protected:
 
     void updateState();
     inline void resetTimers() {
-        frightened_timer = SCARED_DURATION;
-        chase_timer = CHASE_DURATION;
-        scatter_timer = SCATTER_DURATION;
+        frightened_timer = Config::getInstance()->frightened_timer;
+        chase_timer = Config::getInstance()->chase_timer;
+        scatter_timer = Config::getInstance()->scatter_timer;
     }
     void updateTimers() {
         if (state == GhostStates::Scatter) {

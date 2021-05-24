@@ -15,5 +15,5 @@ Movable &Movable::operator=(const Movable &_other) {
 void Movable::initVars() {
     GameTile::initVars();
     direction = Directions::None;
-    speed = SPEED;
+    speed = Config::getInstance()->speed;
 }

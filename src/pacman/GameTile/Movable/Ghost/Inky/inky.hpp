@@ -7,7 +7,7 @@ class Inky : public Ghost {
 
 public:
     Inky(const sf::Vector2f &_position) : Ghost("Inky", _position) {
-        scatter_position = {MAP_WIDTH, MAP_HEIGHT};
+        scatter_position = {Config::getInstance()->map_size.x, Config::getInstance()->map_size.y};
     };
 
 protected:

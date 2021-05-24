@@ -7,7 +7,7 @@ class Blinky : public Ghost {
 
 public:
     Blinky(const sf::Vector2f &_position) : Ghost("Blinky", _position) {
-        scatter_position = {MAP_WIDTH, 0};
+        scatter_position = {Config::getInstance()->map_size.x, 0};
     };
 
 protected:
