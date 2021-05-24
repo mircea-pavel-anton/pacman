@@ -26,7 +26,7 @@ protected:
             delta = target->getMapPosition() - getMapPosition();
             distance = delta.x * delta.x + delta.y * delta.y;
         } else{
-            for (auto &t : chasing) {
+            for (Movable *t : chasing) {
                 delta = t->getMapPosition() - getMapPosition();
                 int t_distance = delta.x * delta.x + delta.y * delta.y;
                 if (distance > t_distance) {
@@ -40,7 +40,7 @@ protected:
         // wil be chasing after it.
         // Once he gets within 8 tiles of it, he will run back to
         // his spawn point.
-        if (distance >= 64) return chasing.front()->getMapPosition();
+        if (distance >= 64) return target->getMapPosition();
         return scatter_position;
     }
 };
