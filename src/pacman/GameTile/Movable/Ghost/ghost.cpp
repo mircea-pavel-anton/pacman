@@ -28,7 +28,7 @@ void Ghost::initVars() {
 
     chasing = {};
     rng = RNG();
-    state = next_state = GhostStates::Scatter;
+    state = next_state = GhostStates::Escape;
     resetTimers();
 
     // Load a default texture
@@ -78,10 +78,9 @@ void Ghost::updateAnimation() {
 
     std::string prefix = "";
     switch (state) {
-        case GhostStates::Chase: prefix = name; break;
-        case GhostStates::Scatter: prefix = name; break;
         case GhostStates::Frightened: prefix = "frightened"; break;
         case GhostStates::Dead: prefix = "dead"; break;
+        default: prefix = name; break;
     }
     texture_names = {
         prefix + "_" + current_direction + "_1",
@@ -91,12 +90,40 @@ void Ghost::updateAnimation() {
     loadTextures();
 }
 
+bool Ghost::isInsideGhostHouse() {
+    const sf::Vector2i map_position = getMapPosition();
+    return (map_position.x <= 16 && map_position.x >= 11 && map_position.y <= 15 && map_position.y >= 13);
+}
+
+bool Ghost::isInFrontOfGhostHouse() {
+    const sf::Vector2i map_position = getMapPosition();
+    return (map_position.x > 12 && map_position.x <= 14 && map_position.y == 11);
+}
+
 void Ghost::updateTrail() {;
     Config *config = Config::getInstance();
     trail.setPosition({
         trail_position.x * config->tile_size + config->offset.x,
         trail_position.y * config->tile_size + config->offset.y,
     });
+}
+
+void Ghost::resetTimers() {
+    frightened_timer = Config::getInstance()->frightened_timer;
+    chase_timer = Config::getInstance()->chase_timer;
+    scatter_timer = Config::getInstance()->scatter_timer;
+}
+
+void Ghost::updateTimers() {
+    if (state == GhostStates::Scatter) {
+        scatter_timer--; return;
+    }
+    if (state == GhostStates::Chase) {
+        chase_timer--; return;
+    }
+    if (state == GhostStates::Frightened) {
+        frightened_timer--; return;
+    }
 }
 
 void Ghost::updateMovementDirection(vec3pGT &_map) {
@@ -115,7 +142,10 @@ void Ghost::updateMovementDirection(vec3pGT &_map) {
         return;
     }
 
+    // Ensure state is up-to-date.
     updateState();
+
+    // Calculate the next direction based on the current state.
     sf::Vector2i next_direction = {};
     switch (state) {
         case GhostStates::Frightened:
@@ -142,14 +172,23 @@ void Ghost::updateMovementDirection(vec3pGT &_map) {
             trail_position = getChasePosition();
 
             break;
+        
+        case GhostStates::Escape:
+            // Escape the ghost house.
+            next_direction = chase(_map, escape_position);
+            trail_position = escape_position;
+
+            break;
     }
-    if (map_position.x > 12 && map_position.x <= 14 && map_position.y == 11) {
-        if (next_direction != Directions::Down) {
-            direction = next_direction;
-        }
-    } else {
-        direction = next_direction;
+
+    // If the ghost is trying to enter the ghost house, cancel the decision.
+    if (isInFrontOfGhostHouse() && state != GhostStates::Dead && next_direction == Directions::Down) {
+        next_direction = direction;
     }
+
+    // Update movement direction.
+    direction = next_direction;
+
     updateTimers();
 
     PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
@@ -178,7 +217,7 @@ void Ghost::updateState() {
                 }
                 sound->play(); // play sound on transition to Dead state
                 state = next_state;
-                speed = Config::getInstance()->speed;
+                speed = Config::getInstance()->speed * 2;
                 resetTimers();
 
                 // Change the animation frames.
@@ -186,7 +225,7 @@ void Ghost::updateState() {
                 break;
             
             // The ghost can only enter the frightened state
-            // from the chase or scatter states. A dead ghost
+            // from the chase, scatter or escape states. A dead ghost
             // cannot enter frightened state.
             case GhostStates::Frightened:
                 if (state == GhostStates::Dead) {
@@ -206,17 +245,24 @@ void Ghost::updateState() {
 
     // Check for internal state switches.
     switch (state) {
+        case GhostStates::Escape:
+            if (getMapPosition() != escape_position) return;
+            state = next_state = GhostStates::Scatter;
+            speed = Config::getInstance()->speed;
+            resetTimers();
+
+            // Change the animation frames.
+            loadTextures();
+            return;
+
         // If the ghost is dead, the only way out is an internal
         // switch that gets triggered once it reaches the ghost house.
         // Once it reached that point, it gets back into chase mode.
         case GhostStates::Dead:
             if (getMapPosition() != home_position) return;
-            state = next_state = GhostStates::Chase;
+            state = next_state = GhostStates::Escape;
             speed = Config::getInstance()->speed;
             resetTimers();
-
-            // This state change turns the ghost around 180 degrees.
-            direction = -direction;
 
             // Change the animation frames.
             loadTextures();
@@ -231,9 +277,6 @@ void Ghost::updateState() {
             speed = Config::getInstance()->speed;
             resetTimers();
 
-            // This state change turns the ghost around 180 degrees.
-            direction = -direction;
-
             // Change the animation frames.
             loadTextures();
             return;
@@ -247,9 +290,6 @@ void Ghost::updateState() {
             speed = Config::getInstance()->speed;
             resetTimers();
 
-            // This state change turns the ghost around 180 degrees.
-            direction = -direction;
-
             // Change the animation frames.
             loadTextures();
             return;
@@ -261,9 +301,6 @@ void Ghost::updateState() {
             state = next_state = GhostStates::Chase;
             speed = Config::getInstance()->speed;
             resetTimers();
-
-            // This state change turns the ghost around 180 degrees.
-            direction = -direction;
 
             // Change the animation frames.
             loadTextures();

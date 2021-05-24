@@ -7,7 +7,7 @@
 
 class Pacman;
 
-enum GhostStates { Frightened, Dead, Chase, Scatter };
+enum GhostStates { Frightened, Dead, Chase, Scatter, Escape };
 
 class Ghost : public Movable {
 
@@ -58,7 +58,7 @@ protected:
 
     // The coordinates of the tile the ghost will go to when killed.
     // Right in front of the ghost house.
-    const sf::Vector2i home_position = {13, 11};
+    const sf::Vector2i home_position = {15, 13}, escape_position = {11, 11};
     sf::Vector2i scatter_position;
     
     // The name of the ghost.
@@ -101,23 +101,16 @@ protected:
     // Checks whether or not the given direction is a valid move for the ghost.
     bool canMove(vec3pGT&, const sf::Vector2i &) const;
 
+    // Check both internal and external state-switching triggers.
     void updateState();
-    inline void resetTimers() {
-        frightened_timer = Config::getInstance()->frightened_timer;
-        chase_timer = Config::getInstance()->chase_timer;
-        scatter_timer = Config::getInstance()->scatter_timer;
-    }
-    void updateTimers() {
-        if (state == GhostStates::Scatter) {
-            scatter_timer--; return;
-        }
-        if (state == GhostStates::Chase) {
-            chase_timer--; return;
-        }
-        if (state == GhostStates::Frightened) {
-            frightened_timer--; return;
-        }
-    }
+
+    // Timer related methods.
+    void resetTimers();
+    void updateTimers();
+
+    bool isInsideGhostHouse();
+    bool isInFrontOfGhostHouse();
+
 
     // Returns the coordinates of the tile that this ghost is chasing.
     virtual sf::Vector2i getChasePosition() = 0;
