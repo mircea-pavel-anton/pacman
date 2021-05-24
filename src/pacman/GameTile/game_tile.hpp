@@ -31,10 +31,7 @@ public:
         int x = static_cast<int>(position.x / tile_size);
         int y = static_cast<int>(position.y / tile_size);
 
-        if (position.x - x * tile_size > tile_size / 4) x++;
-        if (position.y - y * tile_size > tile_size / 4) y++;
-
-      return {x, y};
+        return {x, y};
     };
 protected:
     // ---------------- MEMBERS ---------------- //
