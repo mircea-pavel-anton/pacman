@@ -141,7 +141,6 @@ void Ghost::updateMovementDirection(vec3pGT &_map) {
     } else {
         direction = next_direction;
     }
-    std::cout << name << ": " << map_position.x << ", " << map_position.y << std::endl;
     updateTimers();
 
     PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
