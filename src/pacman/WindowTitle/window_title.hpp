@@ -1,13 +1,13 @@
-#ifndef MENU_TITLE_HPP
-#define MENU_TITLE_HPP
+#ifndef WINDOW_TITLE_HPP
+#define WINDOW_TITLE_HPP
 
-#include "../../Config/config.hpp"
+#include "../Config/config.hpp"
 
-class MenuTitle {
+class WindowTitle {
 
 public:
-    MenuTitle(const std::string&, const sf::Vector2f&);
-    ~MenuTitle();
+    WindowTitle(const std::string&, const sf::Vector2f&);
+    ~WindowTitle();
 
     // Does absolutely nothing. Nada.
     void update();
@@ -20,6 +20,6 @@ private:
     std::string content;// the actual text content of the title
     sf::Text text;      // the render-able object
 
-}; //MenuTitle
+}; //WindowTitle
 
-#endif //MENU_TITLE_HPP
+#endif //WINDOW_TITLE_HPP

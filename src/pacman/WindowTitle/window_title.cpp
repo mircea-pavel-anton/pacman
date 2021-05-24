@@ -1,6 +1,6 @@
-#include "menu_title.hpp"
+#include "window_title.hpp"
 
-MenuTitle::MenuTitle(const std::string &_content, const sf::Vector2f &_position) {
+WindowTitle::WindowTitle(const std::string &_content, const sf::Vector2f &_position) {
     content = _content;
     text = sf::Text();
 
@@ -12,13 +12,13 @@ MenuTitle::MenuTitle(const std::string &_content, const sf::Vector2f &_position)
     text.setPosition(_position);
 
 }
-MenuTitle::~MenuTitle() { /* nothing to do here */ }
+WindowTitle::~WindowTitle() { /* nothing to do here */ }
 
-void MenuTitle::render(sf::RenderTarget *_target) const {
+void WindowTitle::render(sf::RenderTarget *_target) const {
     _target->draw(text);
 }
 
-void MenuTitle::update() { /* Nothing to do here */ }
+void WindowTitle::update() { /* Nothing to do here */ }
 
 
 
