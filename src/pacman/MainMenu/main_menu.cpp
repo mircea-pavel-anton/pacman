@@ -111,7 +111,7 @@ void MainMenu::initWindow() {
 void MainMenu::initText() {
     PerfLogger::getInstance()->startJob("MainMenu::initText");
 
-    title = new MenuTitle(Config::getInstance()->window_title, {260.f, 150.f});
+    title = new WindowTitle(Config::getInstance()->window_title, {260.f, 150.f});
     options[0] = new MenuEntry("Start Singleplayer", {200.f, 260.f});
     options[1] = new MenuEntry("Start Multiplayer", {200.f, 300.f});
     options[2] = new MenuEntry("Exit", {200.f, 340.f});
