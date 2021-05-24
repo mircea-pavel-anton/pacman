@@ -48,8 +48,9 @@ public:
 
     std::map<const string, const string> maps = {
         { "single-player", "res/maps/single-player.map" },
-        { "dual-player", "res/maps/dual-player.map" },
+        { "dual-player", "res/maps/multi-player.map" },
     };
+    string selected_map = "";
 
     std::map<const string, sf::Sound*> sounds;
     std::map<const string, sf::Texture *> textures;
@@ -75,9 +76,10 @@ private:
         { "pellet", "res/audio/power_pellet_chomp.wav" },
         { "ghost", "res/audio/ghost_chomp.wav" },
         { "pacman", "res/audio/hurt.wav" },
-        { "start", "res/audio/press_start.wav" },
+        { "press_start", "res/audio/press_start.wav" },
         { "game_over", "res/audio/game_over.wav" },
         { "thank_you", "res/audio/thank_you.wav" },
+        { "okey_dokey", "res/audio/okey_dokey.wav" },
     };
     const std::string font_file = "res/fonts/emulogic.ttf";
     std::map<const string, const string> texture_files = {
