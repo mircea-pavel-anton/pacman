@@ -38,7 +38,6 @@ protected:
     int score;
 
     // Used to render the score onto the screen.
-    sf::Font font; // the font used to render
     sf::Text text; // the text object itself, that will get rendered
 
     PacmanState state, next_state;

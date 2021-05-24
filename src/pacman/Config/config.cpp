@@ -3,6 +3,29 @@
 Config *Config::instance = nullptr;
 
 Config::Config() {
+    loadSounds();
+    loadTextures();
+    loadFonts();
+}
+Config::~Config() {
+    // Delete all sounds.
+    for (auto &entry : sounds) delete entry.second;
+
+    // Delete all sound buffers.
+    for (auto &entry : buffers) delete entry.second;
+
+    // Delete all textures.
+    for (auto &entry : textures) delete entry.second;
+
+    delete font;
+}
+
+Config *Config::getInstance() {
+    if (instance == nullptr) instance = new Config();
+    return instance;
+}
+
+void Config::loadSounds() {
     for (auto &file : sound_files) {
         sf::SoundBuffer *buffer = new sf::SoundBuffer();
         if (buffer->loadFromFile(file.second) == false) {
@@ -14,7 +37,9 @@ Config::Config() {
         buffers.emplace(file.first, buffer);
         sounds.emplace(file.first, sound);
     }
+}
 
+void Config::loadTextures() {
     for (auto &file : texture_files) {
         sf::Texture *texture = new sf::Texture();
 
@@ -26,21 +51,12 @@ Config::Config() {
         textures.emplace(file.first, texture);
     }
 }
-Config::~Config() {
-    for (auto &entry : sounds) {
-        delete entry.second;
-    }
 
-    for (auto &entry : buffers) {
-        delete entry.second;
-    }
+void Config::loadFonts() {
+    font = new sf::Font();
 
-    for (auto &entry : textures) {
-        delete entry.second;
+    if (font->loadFromFile(font_file) == false) {
+        std::cout << "ERROR: Failed to loead " << font_file << std::endl;
+        abort();
     }
-}
-
-Config *Config::getInstance() {
-    if (instance == nullptr) instance = new Config();
-    return instance;
 }

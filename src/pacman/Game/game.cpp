@@ -237,14 +237,7 @@ void Game::initTitle() {
     PerfLogger::getInstance()->startJob("Game::initTitle");
 
     Config *config = Config::getInstance();
-    font = sf::Font();
-
-    if (font.loadFromFile(config->font_file) == false) {
-        std::cout << "ERROR: Unable to load font file." << std::endl;
-        abort();
-    }
-
-    title.setFont(font);
+    title.setFont( *(config->getInstance()->font) );
     title.setString(config->window_title);
     title.setCharacterSize(26.f);
     title.setLetterSpacing(1.25);

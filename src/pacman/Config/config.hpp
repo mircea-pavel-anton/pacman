@@ -44,7 +44,7 @@ public:
     const int scatter_timer = 10 * window_framerate / tile_size;
     const int hurt_timer = 2 * window_framerate / tile_size;
 
-    const std::string font_file = "res/fonts/emulogic.ttf";
+    sf::Font *font;
 
     std::map<const string, const string> maps = {
         { "single-player", "res/maps/single-player.map" },
@@ -56,9 +56,18 @@ public:
 
 private:
     static Config *instance;
+
+    // Private constructor.
     Config();
 
+    // Initialization methods for resource maps.
+    void loadSounds();
+    void loadTextures();
+    void loadFonts();
+
     std::map<const string, sf::SoundBuffer*> buffers;
+
+    // Resource file maps.
     std::map<const string, const string> sound_files = {
         { "background_music", "res/audio/background_music.wav" },
         { "food", "res/audio/food_chomp.wav" },
@@ -70,7 +79,7 @@ private:
         { "game_over", "res/audio/game_over.wav" },
         { "thank_you", "res/audio/thank_you.wav" },
     };
-
+    const std::string font_file = "res/fonts/emulogic.ttf";
     std::map<const string, const string> texture_files = {
         { "empty", "res/sprites/empty.png" },
 

@@ -33,7 +33,6 @@ private:
     sf::Sound *press_start_sound, *game_over_sound, *ty_sound, *background_music;
     vec3pGT map;
     sf::Text title;
-    sf::Font font;
     bool pause = false;
 
     // ---------------- METHODS ---------------- //

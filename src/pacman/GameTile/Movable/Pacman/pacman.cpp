@@ -17,7 +17,6 @@ Pacman &Pacman::operator=(const Pacman &_other) {
     this->Movable::operator=(_other);
     next_direction = _other.next_direction;
     score = _other.score;
-    font = _other.font;
     text = _other.text;
 
     return *this;
@@ -56,13 +55,8 @@ void Pacman::pollEvents() {
 }
 
 void Pacman::initText() {
-    Config *config = Config::getInstance();
-    if (font.loadFromFile(config->font_file) == false) {
-        std::cout << "ERROR: Failed to load font file!" << std::endl;
-        abort();
-    }
-    
-    text.setFont(font);
+    Config *config = Config::getInstance();    
+    text.setFont(*(config->font));
     text.setCharacterSize(20.f);
     text.setFillColor(sf::Color::Yellow);
     text.setStyle(sf::Text::Regular);
