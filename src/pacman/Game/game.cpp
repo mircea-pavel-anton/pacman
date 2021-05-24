@@ -135,7 +135,7 @@ void Game::initWindow() {
 vector<vector<char>> Game::readMap() {
     PerfLogger::getInstance()->startJob("Game::readMap");
 
-    std::ifstream file("res/maps/multi-player.map", std::ios::binary);
+    std::ifstream file(Config::getInstance()->selected_map, std::ios::binary);
     std::string line= "";
     unsigned long int line_count = 0, line_length = 0;
     vector<vector<char>> char_map = {};
@@ -251,15 +251,19 @@ void Game::initTitle() {
 }
 
 void Game::initSounds() {
+    PerfLogger::getInstance()->startJob("Game::initSounds");
+ 
     Config *config = Config::getInstance();
 
     // Get a copy of the sound objects pointers.
-    press_start_sound = config->sounds["start"];
-    game_over_sound = config->sounds["game_over"];
     ty_sound = config->sounds["thank_you"];
     background_music = config->sounds["background_music"];
 
     // Turn down the volume of the background track
     background_music->setVolume(50.f);
+ 
+    PerfLogger::getInstance()->stopJob("Game::initSounds");
 }
+
+
 

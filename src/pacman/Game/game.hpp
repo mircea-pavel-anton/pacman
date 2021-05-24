@@ -30,7 +30,7 @@ public:
 private:
     // ---------------- MEMBERS ---------------- //
     sf::RenderWindow *window;
-    sf::Sound *press_start_sound, *game_over_sound, *ty_sound, *background_music;
+    sf::Sound *ty_sound, *background_music;
     vec3pGT map;
     sf::Text title;
     bool pause = false;
