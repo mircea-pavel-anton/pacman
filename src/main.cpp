@@ -1,12 +1,12 @@
 #include "pacman/Game/game.hpp"
+#include "pacman/MainMenu/main_menu.hpp"
 
 int main(int argc, char **argv) {
-    Game game = Game();
+    MainMenu().show();
 
-    while (game.isRunning()) {
-        game.update();
-        game.render();
-    }
+    sf::sleep(sf::milliseconds(500));
+
+    Game().run();
 
     return 0;
 }
