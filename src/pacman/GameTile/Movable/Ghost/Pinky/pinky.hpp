@@ -12,8 +12,11 @@ public:
 
 protected:
     sf::Vector2i getChasePosition() override {
+        PERFLOGGER_START_JOB("Ghost::" + name + "::getChasePosition");
+
         if (chasing.empty()) {
             std::cout << "ERROR: " + name + " has no target!" << std::endl;
+            PERFLOGGER_STOP_JOB("Ghost::" + name + "::getChasePosition");
             return home_position;
         }
 
@@ -40,6 +43,7 @@ protected:
         // if (target_tile.y < 0.f) target_tile.y = 0.f;
         // if (target_tile.x > map_size.x) target_tile.y = map_size.x;
         // if (target_tile.y > map_size.y) target_tile.y = map_size.y;
+        PERFLOGGER_STOP_JOB("Ghost::" + name + "::getChasePosition");
         return target_tile;
     }
 };

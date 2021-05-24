@@ -19,33 +19,23 @@ Edible &Edible::operator=(const Edible &_other) {
 
 void Edible::update(const sf::RenderTarget *, vec3pGT &_map) {
     switch (score_modifier) {
-        case 0: // Power Pellet
-            PerfLogger::getInstance()->startJob("PowerPellet::update");
-            break;
-        case 5: // Food
-            PerfLogger::getInstance()->startJob("Food::update");
-            break;
-        case 100: // Fruit
-            PerfLogger::getInstance()->startJob("Fruit::update");
-            break;
+        case   0: PERFLOGGER_START_JOB("PowerPellet::update"); break;
+        case   5: PERFLOGGER_START_JOB("Food::update"); break;
+        case 100: PERFLOGGER_START_JOB("Fruit::update"); break;
     }
 
     updateSprite();
 
     switch (score_modifier) {
-        case 0: // Power Pellet
-            PerfLogger::getInstance()->stopJob("PowerPellet::update");
-            break;
-        case 5: // Food
-            PerfLogger::getInstance()->stopJob("Food::update");
-            break;
-        case 100: // Fruit
-            PerfLogger::getInstance()->stopJob("Fruit::update");
-            break;
+        case   0: PERFLOGGER_STOP_JOB("PowerPellet::update"); break;
+        case   5: PERFLOGGER_STOP_JOB("Food::update"); break;
+        case 100: PERFLOGGER_STOP_JOB("Fruit::update"); break;
     }
 };
 
 void Edible::toEatenState() {
+    PERFLOGGER_START_JOB("Edible::toEatenState");
+
     // Once eaten, no more points can be gained from this tile.
     score_modifier = 0;
 
@@ -58,4 +48,6 @@ void Edible::toEatenState() {
     sound->play();
 
     loadTextures();
+
+    PERFLOGGER_STOP_JOB("Edible::toEatenState");
 }

@@ -35,11 +35,11 @@ Game::~Game() {
     }
 
     // Write all the collected metrics to a CSV file.
-    PerfLogger::getInstance()->commit();
+    PERFLOGGER_COMMIT_METRICS();
 }
 
 void Game::pollEvents() {
-    PerfLogger::getInstance()->startJob("Game::pollEvents");
+    PERFLOGGER_START_JOB("Game::pollEvents");
 
     sf::Event event;
 
@@ -55,13 +55,14 @@ void Game::pollEvents() {
         }
     }
 
-    PerfLogger::getInstance()->stopJob("Game::pollEvents");
+    PERFLOGGER_STOP_JOB("Game::pollEvents");
 }
 
 void Game::update() {
+    PERFLOGGER_START_JOB("Game::Update");
+
     pollEvents();
     if (!game_over) {
-        PerfLogger::getInstance()->startJob("Game::Update");
 
         // Call the update method on every map tile.
         for (vec2pGT &vec2 : map) {
@@ -76,14 +77,15 @@ void Game::update() {
 
         if (Food::counter <= 0) game_over = true;;
 
-        PerfLogger::getInstance()->stopJob("Game::Update");
     } else {
         sf::sleep(sf::milliseconds(200));
     }
+
+    PERFLOGGER_STOP_JOB("Game::Update");
 }
 
 void Game::render() const {
-    PerfLogger::getInstance()->startJob("Game::Render");
+    PERFLOGGER_START_JOB("Game::Render");
 
     // Clear the old frame from the window.
     window->clear();
@@ -103,7 +105,7 @@ void Game::render() const {
     // Display the newly rendered frame onto the window.
     window->display();
 
-    PerfLogger::getInstance()->stopJob("Game::Render");
+    PERFLOGGER_STOP_JOB("Game::Render");
 }
 
 bool Game::isRunning() const {
@@ -112,7 +114,7 @@ bool Game::isRunning() const {
 }
 
 void Game::initWindow() {
-    PerfLogger::getInstance()->startJob("Game::initWindow");
+    PERFLOGGER_START_JOB("Game::initWindow");
 
     Config *config = Config::getInstance();
     config->window_size.x = config->map_size.x * config->tile_size + config->offset.x * 2;
@@ -132,11 +134,11 @@ void Game::initWindow() {
     // Show the window.
     window->setVisible(true);
 
-    PerfLogger::getInstance()->stopJob("Game::initWindow");
+    PERFLOGGER_STOP_JOB("Game::initWindow");
 }
 
 vector<vector<char>> Game::readMap() {
-    PerfLogger::getInstance()->startJob("Game::readMap");
+    PERFLOGGER_START_JOB("Game::readMap");
 
     std::ifstream file(Config::getInstance()->selected_map, std::ios::binary);
     std::string line= "";
@@ -163,12 +165,12 @@ vector<vector<char>> Game::readMap() {
     Config::getInstance()->map_size.x = line_length;
     Config::getInstance()->map_size.y = line_count;
 
-    PerfLogger::getInstance()->stopJob("Game::readMap");
+    PERFLOGGER_STOP_JOB("Game::readMap");
     return char_map;
 }
 
 void Game::initMap() {
-    PerfLogger::getInstance()->startJob("Game::initMap");
+    PERFLOGGER_START_JOB("Game::initMap");
 
     vector<vector<char>> char_map = readMap();
     std::vector<Ghost*> ghosts[2];
@@ -233,11 +235,11 @@ void Game::initMap() {
         }
     }
 
-    PerfLogger::getInstance()->stopJob("Game::initMap");
+    PERFLOGGER_STOP_JOB("Game::initMap");
 }
 
 void Game::initTitles() {
-    PerfLogger::getInstance()->startJob("Game::initTitle");
+    PERFLOGGER_START_JOB("Game::initTitle");
 
     Config *config = Config::getInstance();
     
@@ -253,11 +255,11 @@ void Game::initTitles() {
     };
     game_over_title = new WindowTitle("Game Over", go_title_position);
 
-    PerfLogger::getInstance()->stopJob("Game::initTitle");
+    PERFLOGGER_STOP_JOB("Game::initTitle");
 }
 
 void Game::initSounds() {
-    PerfLogger::getInstance()->startJob("Game::initSounds");
+    PERFLOGGER_START_JOB("Game::initSounds");
  
     Config *config = Config::getInstance();
 
@@ -268,7 +270,7 @@ void Game::initSounds() {
     // Turn down the volume of the background track
     background_music->setVolume(50.f);
  
-    PerfLogger::getInstance()->stopJob("Game::initSounds");
+    PERFLOGGER_STOP_JOB("Game::initSounds");
 }
 
 void Game::run() {

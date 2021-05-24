@@ -12,8 +12,11 @@ public:
 
 protected:
     sf::Vector2i getChasePosition() override {
+        PERFLOGGER_START_JOB("Ghost::" + name + "::getChasePosition");
+
         if (chasing.empty()) {
             std::cout << "ERROR: " + name + " has no target!" << std::endl;
+            PERFLOGGER_STOP_JOB("Ghost::" + name + "::getChasePosition");
             return home_position;
         }
 
@@ -40,6 +43,7 @@ protected:
         // wil be chasing after it.
         // Once he gets within 8 tiles of it, he will run back to
         // his spawn point.
+        PERFLOGGER_STOP_JOB("Ghost::" + name + "::getChasePosition");
         if (distance >= 64) return target->getMapPosition();
         return scatter_position;
     }

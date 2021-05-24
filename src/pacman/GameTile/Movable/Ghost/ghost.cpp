@@ -24,6 +24,8 @@ Ghost &Ghost::operator=(const Ghost &_other) {
 }
 
 void Ghost::initVars() {
+    PERFLOGGER_START_JOB("Ghost::" + name + "::initVars");
+
     Movable::initVars();
 
     chasing = {};
@@ -36,9 +38,13 @@ void Ghost::initVars() {
 
     // Load the audio file into memory.
     sound = Config::getInstance()->sounds["ghost"];
+
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::initVars");
 }
 
 void Ghost::initTrail() {
+    PERFLOGGER_START_JOB("Ghost::" + name + "::initTrail");
+
     trail.setSize({
         Config::getInstance()->tile_size,
         Config::getInstance()->tile_size
@@ -63,9 +69,13 @@ void Ghost::initTrail() {
     }
 
     trail.setOutlineColor(trail_color);
+
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::initTrail");
 }
 
 void Ghost::updateAnimation() {
+    PERFLOGGER_START_JOB("Ghost::" + name + "::updateAnimation");
+    
     std::string current_direction = "";
     
     switch (direction.x + direction.y * 10) {
@@ -88,6 +98,8 @@ void Ghost::updateAnimation() {
     };
 
     loadTextures();
+
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateAnimation");
 }
 
 bool Ghost::isInsideGhostHouse() {
@@ -101,33 +113,39 @@ bool Ghost::isInFrontOfGhostHouse() {
 }
 
 void Ghost::updateTrail() {;
+    PERFLOGGER_START_JOB("Ghost::" + name + "::updateTrail");
+    
     Config *config = Config::getInstance();
     trail.setPosition({
         trail_position.x * config->tile_size + config->offset.x,
         trail_position.y * config->tile_size + config->offset.y,
     });
+
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateTrail");
 }
 
 void Ghost::resetTimers() {
+    PERFLOGGER_START_JOB("Ghost::" + name + "::resetTimers");
+
     frightened_timer = Config::getInstance()->frightened_timer;
     chase_timer = Config::getInstance()->chase_timer;
     scatter_timer = Config::getInstance()->scatter_timer;
+
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::resetTimers");
 }
 
 void Ghost::updateTimers() {
-    if (state == GhostStates::Scatter) {
-        scatter_timer--; return;
-    }
-    if (state == GhostStates::Chase) {
-        chase_timer--; return;
-    }
-    if (state == GhostStates::Frightened) {
-        frightened_timer--; return;
-    }
+    PERFLOGGER_START_JOB("Ghost::" + name + "::updateTimers");
+
+    if (state == GhostStates::Scatter) scatter_timer--;
+    if (state == GhostStates::Chase) chase_timer--;
+    if (state == GhostStates::Frightened) frightened_timer--;
+
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateTimers");
 }
 
 void Ghost::updateMovementDirection(vec3pGT &_map) {
-    PerfLogger::getInstance()->startJob("Ghost::" + name + "::updateMovementDirection");
+    PERFLOGGER_START_JOB("Ghost::" + name + "::updateMovementDirection");
 
     const sf::Vector2i map_position = getMapPosition();
 
@@ -138,7 +156,7 @@ void Ghost::updateMovementDirection(vec3pGT &_map) {
         map_position.y * Config::getInstance()->tile_size,
     };
     if (position != closest_position) {
-        PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
+        PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateMovementDirection");
         return;
     }
 
@@ -191,15 +209,24 @@ void Ghost::updateMovementDirection(vec3pGT &_map) {
 
     updateTimers();
 
-    PerfLogger::getInstance()->stopJob("Ghost::" + name + "::updateMovementDirection");
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateMovementDirection");
 }
 
 void Ghost::render(sf::RenderTarget *_target) const {
+    PERFLOGGER_START_JOB("Ghost::" + name + "::render");
+
     _target->draw(sprite);
-    _target->draw(trail);
+
+    #ifdef DEBUG
+        _target->draw(trail);
+    #endif
+
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::render");
 }
 
 void Ghost::updateState() {
+    PERFLOGGER_START_JOB("Ghost::" + name + "::updateState");
+
     // if an external state switch occured, aka if pacman
     // ate a power pellet or if he killed the ghost.
     // The only states a ghost could enter due to external factors
@@ -213,7 +240,7 @@ void Ghost::updateState() {
             case GhostStates::Dead:
                 if (state != GhostStates::Frightened) {
                     next_state = state; // cancel the change
-                    return;
+                    break;
                 }
                 sound->play(); // play sound on transition to Dead state
                 state = next_state;
@@ -230,14 +257,14 @@ void Ghost::updateState() {
             case GhostStates::Frightened:
                 if (state == GhostStates::Dead) {
                     next_state = state; // cancel the change
-                    return;
+                    break;
                 }
                 state = next_state;
                 speed = 0.5 * Config::getInstance()->speed;
                 resetTimers();
                 // Change the animation frames.
                 loadTextures();
-                return;
+                break;
             
             default: break;
         }
@@ -246,74 +273,76 @@ void Ghost::updateState() {
     // Check for internal state switches.
     switch (state) {
         case GhostStates::Escape:
-            if (getMapPosition() != escape_position) return;
+            if (getMapPosition() != escape_position) break;
             state = next_state = GhostStates::Scatter;
             speed = Config::getInstance()->speed;
             resetTimers();
 
             // Change the animation frames.
             loadTextures();
-            return;
+            break;
 
         // If the ghost is dead, the only way out is an internal
         // switch that gets triggered once it reaches the ghost house.
         // Once it reached that point, it gets back into chase mode.
         case GhostStates::Dead:
-            if (getMapPosition() != home_position) return;
+            if (getMapPosition() != home_position) break;
             state = next_state = GhostStates::Escape;
             speed = Config::getInstance()->speed;
             resetTimers();
 
             // Change the animation frames.
             loadTextures();
-            return;
+            break;
 
         // A ghost that is in chase mode has only one internal switch,
         // which is the chase timer running out, which would cause the
         // ghost to enter scatter mode.
         case GhostStates::Chase:
-            if (chase_timer > 0) return;
+            if (chase_timer > 0) break;
             state = next_state = GhostStates::Scatter;
             speed = Config::getInstance()->speed;
             resetTimers();
 
             // Change the animation frames.
             loadTextures();
-            return;
+            break;
 
         // A ghost that is in scatter mode has only one internal switch,
         // specifically the scatter timer. Once that reaches 0, the ghost
         // goes back to chase mode.
         case GhostStates::Scatter:
-            if (scatter_timer > 0) return;
+            if (scatter_timer > 0) break;
             state = next_state = GhostStates::Chase;
             speed = Config::getInstance()->speed;
             resetTimers();
 
             // Change the animation frames.
             loadTextures();
-            return;
+            break;
         
         // A ghost in frightened mode will go back to chase mode once the
         // frightened timer has reached 0.
         case GhostStates::Frightened:
-            if (frightened_timer > 0) return;
+            if (frightened_timer > 0) break;
             state = next_state = GhostStates::Chase;
             speed = Config::getInstance()->speed;
             resetTimers();
 
             // Change the animation frames.
             loadTextures();
-            return;
+            break;
     }
+
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateState");
 }
 
 bool Ghost::canMove(vec3pGT &_map, const sf::Vector2i &_dir) const {
-    PerfLogger::getInstance()->startJob("Ghost::" + name + "::canMove");
+    PERFLOGGER_START_JOB("Ghost::" + name + "::canMove");
 
     // Ghosts cannot turn around 180 degrees
     if (direction == -_dir) {
-        PerfLogger::getInstance()->stopJob("Ghost::" + name + "::canMove");
+        PERFLOGGER_STOP_JOB("Ghost::" + name + "::canMove");
         return false;
     }
 
@@ -324,16 +353,16 @@ bool Ghost::canMove(vec3pGT &_map, const sf::Vector2i &_dir) const {
     vec1pGT &vector = _map[new_position.y][new_position.x];
     for (GameTile *tile : vector) {
         if (tile != nullptr && tile->isWalkable() == false) {
-            PerfLogger::getInstance()->stopJob("Ghost::" + name + "::canMove");
+            PERFLOGGER_STOP_JOB("Ghost::" + name + "::canMove");
             return false;
         }
     }
-    PerfLogger::getInstance()->stopJob("Ghost::" + name + "::canMove");
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::canMove");
     return true;
 }
 
 sf::Vector2i Ghost::frightened(vec3pGT &_map) {
-    PerfLogger::getInstance()->startJob("Ghost::" + name + "::frightened");
+    PERFLOGGER_START_JOB("Ghost::" + name + "::frightened");
 
     // When frightened, a ghost will randomly pick a new direction
     // at every tile.
@@ -349,22 +378,22 @@ sf::Vector2i Ghost::frightened(vec3pGT &_map) {
     if (canMove(_map, Directions::Right)) available_directions.push_back(Directions::Right);
 
     if (available_directions.empty()) {
-        PerfLogger::getInstance()->stopJob("Ghost::" + name + "::frightened");
+        PERFLOGGER_STOP_JOB("Ghost::" + name + "::frightened");
         return Directions::None;
     }
 
-    PerfLogger::getInstance()->stopJob("Ghost::" + name + "::frightened");
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::frightened");
 
     // Return the random direction from the vector
     return available_directions.at(rng.get(0, available_directions.size() - 1));
 }
 
 int Ghost::rankMove(vec3pGT &_map, const sf::Vector2i &_dest, const sf::Vector2i &_dir) const {
-    PerfLogger::getInstance()->startJob("Ghost::" + name + "::rankMove");
+    PERFLOGGER_START_JOB("Ghost::" + name + "::rankMove");
 
     // Ghosts cannot turn around 180 degrees.
     if (direction == -_dir) {
-        PerfLogger::getInstance()->stopJob("Ghost::" + name + "::rankMove");
+        PERFLOGGER_STOP_JOB("Ghost::" + name + "::rankMove");
         return 9999;
     }
 
@@ -374,7 +403,7 @@ int Ghost::rankMove(vec3pGT &_map, const sf::Vector2i &_dest, const sf::Vector2i
     vec1pGT &vector = _map[new_position.y][new_position.x];
     for (GameTile *tile : vector) {
         if (tile != nullptr && tile->isWalkable() == false) {
-            PerfLogger::getInstance()->stopJob("Ghost::" + name + "::rankMove");
+            PERFLOGGER_STOP_JOB("Ghost::" + name + "::rankMove");
             return 9999;
         }
     }
@@ -383,12 +412,12 @@ int Ghost::rankMove(vec3pGT &_map, const sf::Vector2i &_dest, const sf::Vector2i
     const int deltaX = _dest.x - new_position.x;
     const int deltaY = _dest.y - new_position.y;
 
-    PerfLogger::getInstance()->stopJob("Ghost::" + name + "::rankMove");
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::rankMove");
     return (deltaX * deltaX) + (deltaY * deltaY);
 }
 
 sf::Vector2i Ghost::chase(vec3pGT &_map, const sf::Vector2i &_destination) const {
-    PerfLogger::getInstance()->startJob("Ghost::" + name + "::chase");
+    PERFLOGGER_START_JOB("Ghost::" + name + "::chase");
 
     // When chasing, a ghost will pick the available tile that gets
     // it the closest to its destination.
@@ -421,12 +450,12 @@ sf::Vector2i Ghost::chase(vec3pGT &_map, const sf::Vector2i &_destination) const
 
     // Return the direction that gets the ghost closest to the
     // destination tile.
-    PerfLogger::getInstance()->stopJob("Ghost::" + name + "::chase");
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::chase");
     return best_direction;
 }
 
 void Ghost::update(const sf::RenderTarget *_target, vec3pGT &_map) {
-    PerfLogger::getInstance()->startJob("Ghost::" + name + "::update");
+    PERFLOGGER_START_JOB("Ghost::" + name + "::update");
 
     // Replace the Ghost tile with the tile that was previously there.
     sf::Vector2i map_pos = getMapPosition();
@@ -449,5 +478,5 @@ void Ghost::update(const sf::RenderTarget *_target, vec3pGT &_map) {
     updateSprite();
     updateTrail();
 
-    PerfLogger::getInstance()->stopJob("Ghost::" + name + "::update");
+    PERFLOGGER_STOP_JOB("Ghost::" + name + "::update");
 }

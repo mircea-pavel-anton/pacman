@@ -21,7 +21,7 @@ MainMenu::~MainMenu() {
 }
 
 void MainMenu::pollEvents() {
-    PerfLogger::getInstance()->startJob("MainMenu::pollEvents");
+    PERFLOGGER_START_JOB("MainMenu::pollEvents");
 
     sf::Event event;
     while (window->pollEvent(event)) {
@@ -56,11 +56,11 @@ void MainMenu::pollEvents() {
         }
     }
  
-    PerfLogger::getInstance()->stopJob("MainMenu::pollEvents");
+    PERFLOGGER_STOP_JOB("MainMenu::pollEvents");
 }
 
 void MainMenu::update() {
-    PerfLogger::getInstance()->startJob("MainMenu::update");
+    PERFLOGGER_START_JOB("MainMenu::update");
 
     options[selection_index]->setActive(false);
     pollEvents();
@@ -70,11 +70,11 @@ void MainMenu::update() {
     for (MenuEntry *entry : options) entry->update();
     animation->update();
 
-    PerfLogger::getInstance()->stopJob("MainMenu::update");
+    PERFLOGGER_STOP_JOB("MainMenu::update");
 }
 
 void MainMenu::render() const {
-    PerfLogger::getInstance()->startJob("MainMenu::Render");
+    PERFLOGGER_START_JOB("MainMenu::Render");
 
     window->clear();
 
@@ -85,11 +85,11 @@ void MainMenu::render() const {
 
     window->display();
 
-    PerfLogger::getInstance()->stopJob("MainMenu::Render");
+    PERFLOGGER_STOP_JOB("MainMenu::Render");
 }
 
 void MainMenu::initWindow() {
-    PerfLogger::getInstance()->startJob("MainMenu::initWindow");
+    PERFLOGGER_START_JOB("MainMenu::initWindow");
 
     Config *config = Config::getInstance();
     // Create a 4:3 non-resizeable window.
@@ -104,30 +104,30 @@ void MainMenu::initWindow() {
     // Show the window.
     window->setVisible(true);
 
-    PerfLogger::getInstance()->stopJob("MainMenu::initWindow");
+    PERFLOGGER_STOP_JOB("MainMenu::initWindow");
 
 }
 
 void MainMenu::initText() {
-    PerfLogger::getInstance()->startJob("MainMenu::initText");
+    PERFLOGGER_START_JOB("MainMenu::initText");
 
     title = new WindowTitle(Config::getInstance()->window_title, {260.f, 150.f});
     options[0] = new MenuEntry("Start Singleplayer", {200.f, 260.f});
     options[1] = new MenuEntry("Start Multiplayer", {200.f, 300.f});
     options[2] = new MenuEntry("Exit", {200.f, 340.f});
 
-    PerfLogger::getInstance()->stopJob("MainMenu::initText");
+    PERFLOGGER_STOP_JOB("MainMenu::initText");
 }
 
 void MainMenu::initSounds() {
-    PerfLogger::getInstance()->startJob("Game::initTitle");
+    PERFLOGGER_START_JOB("Game::initTitle");
     
     Config *config = Config::getInstance();
     // Get a copy of the sound objects pointers.
     press_start = config->sounds["press_start"];
     okey = config->sounds["okey_dokey"];
 
-    PerfLogger::getInstance()->stopJob("Game::initTitle");
+    PERFLOGGER_STOP_JOB("Game::initTitle");
 }
 
 void MainMenu::show() {
