@@ -48,11 +48,10 @@ void Game::pollEvents() {
         if (event.type == sf::Event::Closed) {
             window->close();
         }
-        
-        if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Space) {
-                pause = !pause;
-            }
+
+        // Once the game is over, allow the user to exit on any key press.
+        if (game_over && event.type == sf::Event::KeyPressed) {
+            window->close();
         }
     }
 
@@ -61,7 +60,7 @@ void Game::pollEvents() {
 
 void Game::update() {
     pollEvents();
-    if (!pause) {
+    if (!game_over) {
         PerfLogger::getInstance()->startJob("Game::Update");
 
         // Call the update method on every map tile.
@@ -75,32 +74,36 @@ void Game::update() {
             }
         }
 
+        if (Food::counter <= 0) game_over = true;;
+
         PerfLogger::getInstance()->stopJob("Game::Update");
+    } else {
+        sf::sleep(sf::milliseconds(200));
     }
 }
 
 void Game::render() const {
-    if (!pause) {
-        PerfLogger::getInstance()->startJob("Game::Render");
+    PerfLogger::getInstance()->startJob("Game::Render");
 
-        // Clear the old frame from the window.
-        window->clear();
+    // Clear the old frame from the window.
+    window->clear();
 
-        window->draw(title); // Render the title at the top of the screen.
-        // Render every game tile.
-        for (const vec2pGT &vec2 : map) {
-            for (const vec1pGT &vec1 : vec2) {
-                for (GameTile *tile : vec1) {
-                    if (tile != nullptr) tile->render(window);
-                }
+    title->render(window); // Render the title at the top of the screen.
+    // Render every game tile.
+    for (const vec2pGT &vec2 : map) {
+        for (const vec1pGT &vec1 : vec2) {
+            for (GameTile *tile : vec1) {
+                if (tile != nullptr) tile->render(window);
             }
         }
-
-        // Display the newly rendered frame onto the window.
-        window->display();
-
-        PerfLogger::getInstance()->stopJob("Game::Render");
     }
+
+    if (game_over) game_over_title->render(window);
+
+    // Display the newly rendered frame onto the window.
+    window->display();
+
+    PerfLogger::getInstance()->stopJob("Game::Render");
 }
 
 bool Game::isRunning() const {
@@ -124,7 +127,7 @@ void Game::initWindow() {
     window->setFramerateLimit(config->window_framerate);
     window->setVerticalSyncEnabled(true);
 
-    initTitle();
+    initTitles();
 
     // Show the window.
     window->setVisible(true);
@@ -233,19 +236,22 @@ void Game::initMap() {
     PerfLogger::getInstance()->stopJob("Game::initMap");
 }
 
-void Game::initTitle() {
+void Game::initTitles() {
     PerfLogger::getInstance()->startJob("Game::initTitle");
 
     Config *config = Config::getInstance();
-    title.setFont( *(config->getInstance()->font) );
-    title.setString(config->window_title);
-    title.setCharacterSize(26.f);
-    title.setLetterSpacing(1.25);
-    title.setFillColor(sf::Color::Yellow);
-    title.setPosition({
-        (config->window_size.x - title.getGlobalBounds().width ) /2,
-        (config->offset.y - title.getGlobalBounds().height ) / 2,
-    });
+    
+    const sf::Vector2f title_position = {
+        static_cast<float>(config->window_size.x) / 2 - 100,
+        static_cast<float>(config->offset.y) / 2 - 15,
+    };
+    title = new WindowTitle(Config::getInstance()->window_title, title_position);
+
+    const sf::Vector2f go_title_position = {
+        static_cast<float>(config->window_size.x) / 2 - 135,
+        static_cast<float>(config->window_size.y) / 2 - 40,
+    };
+    game_over_title = new WindowTitle("Game Over", go_title_position);
 
     PerfLogger::getInstance()->stopJob("Game::initTitle");
 }

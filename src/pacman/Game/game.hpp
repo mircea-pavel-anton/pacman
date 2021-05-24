@@ -1,10 +1,9 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <vector>
-
 #include "../GameTile/__barrel__.hpp"
 #include "../Config/config.hpp"
+#include "../WindowTitle/window_title.hpp"
 
 class Game {
 
@@ -19,8 +18,8 @@ private:
     sf::RenderWindow *window;
     sf::Sound *ty_sound, *background_music;
     vec3pGT map;
-    sf::Text title;
-    bool pause = false;
+    WindowTitle *title, *game_over_title;
+    bool game_over = false;
 
     // ---------------- METHODS ---------------- //
     // Listen for events on the RenderWindow.
@@ -40,7 +39,7 @@ private:
     void initWindow(); // intialize the RenderWindow.
     void initMap();
     vector<vector<char>> readMap();
-    void initTitle();
+    void initTitles();
     void initSounds();
 
 }; //class Game
