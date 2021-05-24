@@ -2,10 +2,20 @@
 
 Game::Game() {
     initMap();
+    initSounds();
     initWindow();
-    playIntro();
+    background_music.play();
 }
 Game::~Game() {
+    // Play "Thank you" sound, and wait for it to finish before proceeding.
+    ty_sound.play();
+    while (ty_sound.getStatus() == sf::Sound::Status::Playing) {
+        sf::sleep(sf::milliseconds(100.f));
+    }
+
+    // stop background music
+    background_music.stop();
+
     if (window != nullptr) {
         delete window;
     }
@@ -257,10 +267,30 @@ void Game::initTitle() {
     PerfLogger::getInstance()->stopJob("Game::initTitle");
 }
 
-void Game::playIntro() {
+void Game::initSounds() {
+    if (press_start_buffer.loadFromFile(START_SOUND) == false) {
+        std::cout << "ERROR: Failed to load " << START_SOUND << std::endl;
+        abort();
+    }
+    if (game_over_buffer.loadFromFile(GAME_OVER_SOUND) == false) {
+        std::cout << "ERROR: Failed to load " << GAME_OVER_SOUND << std::endl;
+        abort();
+    }
+    if (ty_buffer.loadFromFile(TY_SOUND) == false) {
+        std::cout << "ERROR: Failed to load " << TY_SOUND << std::endl;
+        abort();
+    }
     if (background_music.openFromFile(BACKGROUND_MUISC_FILE) == false) {
         std::cout << "ERROR: Failed to load background music audio file!" << std::endl;
         abort();
     }
-    background_music.play();
+
+    // Turn down the volume of the background track
+    background_music.setVolume(50.f);
+
+    // Load buffers into sound objects.
+    press_start_sound.setBuffer(press_start_buffer);
+    game_over_sound.setBuffer(game_over_buffer);
+    ty_sound.setBuffer(ty_buffer);
 }
+

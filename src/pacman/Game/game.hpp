@@ -31,6 +31,8 @@ private:
     // ---------------- MEMBERS ---------------- //
     sf::RenderWindow *window;
     sf::Music background_music;
+    sf::SoundBuffer press_start_buffer, game_over_buffer, ty_buffer;
+    sf::Sound press_start_sound, game_over_sound, ty_sound;
     vec3pGT map;
     sf::Text title;
     sf::Font font;
@@ -39,8 +41,8 @@ private:
     // ---------------- METHODS ---------------- //
     void initWindow(); // intialize the RenderWindow.
     void initMap();
-    void playIntro();
     void initTitle();
+    void initSounds();
 
 }; //class Game
 

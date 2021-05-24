@@ -45,5 +45,8 @@ static const std::string FRUIT_SOUND = "res/audio/fruit_chomp.wav";
 static const std::string PELLET_SOUND = "res/audio/power_pellet_chomp.wav";
 static const std::string GHOST_SOUND = "res/audio/ghost_chomp.wav";
 static const std::string HURT_SOUND = "res/audio/hurt.wav";
+static const std::string START_SOUND = "res/audio/press_start.wav";
+static const std::string GAME_OVER_SOUND = "res/audio/game_over.wav";
+static const std::string TY_SOUND = "res/audio/thank_you.wav";
 
 #endif //CONFIG_HPP
