@@ -8,7 +8,9 @@ class Food : public Edible {
 
 public:
     Food(const sf::Vector2f &);
+    void toEatenState() override;
 
+    static int counter;
 }; //Food
 
 #endif //FOOD_HPP

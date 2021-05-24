@@ -22,7 +22,7 @@ public:
 
     // Once pacman walks on top of an edible tile, it should
     // trigger this method to update the sprite.
-    void toEatenState();
+    virtual void toEatenState();
 
     // The sound made when the edible tile is eaten.
     sf::Sound sound;
