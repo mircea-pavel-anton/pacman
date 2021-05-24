@@ -39,10 +39,10 @@ public:
     const float speed = 1;
 
     // Default durations for ghost states.
-    const int frightened_timer = 5 * window_framerate / tile_size;
-    const int chase_timer = 30 * window_framerate / tile_size;
-    const int scatter_timer = 10 * window_framerate / tile_size;
-    const int hurt_timer = 2 * window_framerate / tile_size;
+    const int frightened_timer = 3 * window_framerate / tile_size;
+    const int chase_timer = 35 * window_framerate / tile_size;
+    const int scatter_timer = 6 * window_framerate / tile_size;
+    const int hurt_timer = 3 * window_framerate / tile_size;
 
     sf::Font *font;
 
