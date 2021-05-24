@@ -26,11 +26,15 @@ public:
     sf::Vector2f getPosition() const { return position; }
 
     // Convert on-screen coordinates to game-map coordinates
-    inline sf::Vector2i getMapPosition() const {
-      return sf::Vector2i{
-          static_cast<int>((position.x) / Config::getInstance()->tile_size),
-          static_cast<int>((position.y) / Config::getInstance()->tile_size)
-      };
+    virtual inline sf::Vector2i getMapPosition() const {
+        const float tile_size = Config::getInstance()->tile_size;
+        int x = static_cast<int>(position.x / tile_size);
+        int y = static_cast<int>(position.y / tile_size);
+
+        if (position.x - x * tile_size > tile_size / 4) x++;
+        if (position.y - y * tile_size > tile_size / 4) y++;
+
+      return {x, y};
     };
 protected:
     // ---------------- MEMBERS ---------------- //
