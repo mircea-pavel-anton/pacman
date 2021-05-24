@@ -1,10 +1,11 @@
 #include "game.hpp"
 
 Game::Game() {
-    initMap();
     initSounds();
-    initWindow();
     background_music.play();
+
+    initMap();
+    initWindow();
 }
 Game::~Game() {
     // Play "Thank you" sound, and wait for it to finish before proceeding.
@@ -106,6 +107,9 @@ bool Game::isRunning() const {
 void Game::initWindow() {
     PerfLogger::getInstance()->startJob("Game::initWindow");
 
+    WINDOW_WIDTH = MAP_WIDTH * TILE_SIZE + X_OFFSET * 2;
+    WINDOW_HEIGHT = MAP_HEIGHT * TILE_SIZE + Y_OFFSET * 2;
+
     // Create a 4:3 non-resizeable window.
     const sf::VideoMode videoMode = sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT);
     const sf::Uint32 style = sf::Style::Close | sf::Style::Titlebar;
@@ -123,119 +127,96 @@ void Game::initWindow() {
     PerfLogger::getInstance()->stopJob("Game::initWindow");
 }
 
-void Game::initMap() {
-    PerfLogger::getInstance()->startJob("Game::initMap");
+vector<vector<char>> Game::readMap() {
+    PerfLogger::getInstance()->startJob("Game::readMap");
 
-    std::ifstream file("res/maps/default.map", std::ios::binary);
+    std::ifstream file("res/maps/multi-player.map", std::ios::binary);
     std::string line= "";
-    int line_count = 0;
-    std::vector<Ghost*> ghosts1, ghosts2;
-    std::vector<Pacman*> pacmans;
+    unsigned long int line_count = 0, line_length = 0;
+    vector<vector<char>> char_map = {};
 
     if (!file.is_open()) {
         std::cout << "ERROR: Cannot find map file" << std::endl;
         abort();
     }
 
-    while (std::getline(file, line)) {        
-        vec2pGT temp = {};
-        for (long unsigned int i = 0; i < line.size(); i++) {
-            const sf::Vector2f pos = {
-                i * TILE_SIZE,           // x axis coordinate
-                line_count * TILE_SIZE   // y axis coordinate
-            };
+    while (std::getline(file, line)) {
+        if (line.size() > line_length) line_length = line.size();
 
-            GameTile *tile = nullptr;
-            switch (line.at(i)) {
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '!':
-                case '@':
-                case '#':
-                case '$':
-                case '%':
-                case '^':
-                    tile = new Wall(pos, line.at(i));
-                    break;
-                case '*':
-                    tile = new Food(pos);
-                    break;
-                case '0':
-                    tile = new PowerPellet(pos);
-                    break;
-                case 'f':
-                    tile = new Fruit(pos);
-                    break;
-                case 'O':
-                    tile = new Pacman(pos);
-                    pacmans.push_back((Pacman*)(tile));
-                    break;
-                case 'o':
-                    tile = new Pacman(pos);
-                    pacmans.push_back((Pacman*)(tile));
-                    break;
-                case 'b':
-                    tile = new Blinky(pos);
-                    ghosts1.push_back((Blinky*)(tile));
-                    break;
-                case 'B':
-                    tile = new Blinky(pos);
-                    ghosts2.push_back((Blinky*)(tile));
-                    break;
-                case 'c':
-                    tile = new Clyde(pos);
-                    ghosts1.push_back((Clyde*)(tile));
-                    break;
-                case 'C':
-                    tile = new Clyde(pos);
-                    ghosts2.push_back((Clyde*)(tile));
-                    break;
-                case 'p':
-                    tile = new Pinky(pos);
-                    ghosts1.push_back((Pinky*)(tile));
-                    break;
-                case 'P':
-                    tile = new Pinky(pos);
-                    ghosts2.push_back((Pinky*)(tile));
-                    break;
-                case 'i':
-                    tile = new Inky(pos);
-                    ghosts1.push_back((Inky*)(tile));
-                    break;
-                case 'I':
-                    tile = new Inky(pos);
-                    ghosts2.push_back((Inky*)(tile));
-                    break;
-                default: 
-                    tile = nullptr;
-            }
-            temp.push_back( {tile} );
+        vector<char> temp = {};
+        for (long unsigned int i = 0; i < line.size(); i++) {
+            temp.push_back(line[i]);
         }
-        map.push_back(temp);
+        char_map.push_back( temp );
         line_count++;
     }
-    for (auto g : ghosts1) {
-        if (g != nullptr && pacmans.front() != nullptr) {
-            g->addChasing(pacmans.front());
-            if (g->getName() == "Inky") {
-                for (auto b : ghosts1) {
-                    if (b->getName() == "Blinky")
-                        g->addChasing(b);
+
+    // Set map sizes.
+    MAP_WIDTH = line_length;
+    MAP_HEIGHT = line_count;
+
+    PerfLogger::getInstance()->stopJob("Game::readMap");
+    return char_map;
+}
+
+void Game::initMap() {
+    PerfLogger::getInstance()->startJob("Game::initMap");
+
+    vector<vector<char>> char_map = readMap();
+    std::vector<Ghost*> ghosts[2];
+    Pacman* pacmans[2];
+
+    int i = 0, j = 0;
+    for (auto &line : char_map) {
+        vec2pGT temp = {};
+        
+        for (char &c : line) {
+            sf::Vector2f position = { i * TILE_SIZE, j * TILE_SIZE };
+            GameTile *tile = nullptr;
+
+            if (std::string("123456!@#$%^").find(c) != std::string::npos ) {
+                tile = new Wall(position, c);
+            } else if (c == '*') {
+                tile = new Food(position);
+            } else if (c == '0') {
+                tile = new PowerPellet(position);
+            } else if (c == 'f') {
+                tile = new Fruit(position);
+            } else {
+                int index = islower(c) == 0 ? 1 : 0;
+                if (c == 'O' || c == 'o') {
+                    tile = new Pacman(position);
+                    pacmans[index] = (Pacman*)tile;
+                } else if (c == 'B' || c == 'b') {
+                    tile = new Blinky(position);
+                    ghosts[index].push_back((Ghost*)tile);
+                } else if (c == 'C' || c == 'c') {
+                    tile = new Clyde(position);
+                    ghosts[index].push_back((Ghost*)tile);
+                } else if (c == 'I' || c == 'i') {
+                    tile = new Inky(position);
+                    ghosts[index].push_back((Ghost*)tile);
+                } else if (c == 'P' || c == 'p') {
+                    tile = new Pinky(position);
+                    ghosts[index].push_back((Ghost*)tile);
                 }
             }
+            temp.push_back( {tile} );
+            i++;
         }
+        j++; i = 0;
+        map.push_back(temp);
     }
-    for (auto g : ghosts2) {
-        if (g != nullptr && pacmans.front() != nullptr && pacmans.front() != pacmans.back()) {
-             g->addChasing(pacmans.back());
+
+    for (int i = 0; i < 2; i++) {
+        for (Ghost *g : ghosts[i]) {
+            g->addChasing(pacmans[i]);
+
             if (g->getName() == "Inky") {
-                for (auto b : ghosts1) {
-                    if (b->getName() == "Blinky")
+                for (Ghost *b : ghosts[i]) {
+                    if (b->getName() == "Blinky") {
                         g->addChasing(b);
+                    }
                 }
             }
         }

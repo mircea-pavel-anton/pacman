@@ -41,6 +41,7 @@ private:
     // ---------------- METHODS ---------------- //
     void initWindow(); // intialize the RenderWindow.
     void initMap();
+    vector<vector<char>> readMap();
     void initTitle();
     void initSounds();
 
