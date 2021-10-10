@@ -1,5 +1,10 @@
 # Pacman-MP
 
+![GitHub](https://img.shields.io/github/license/mikeanth-dev/pacman?style=for-the-badge)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/mikeanth-dev/pacman?style=for-the-badge)
+![GitHub top language](https://img.shields.io/github/languages/top/mikeanth-dev/pacman?style=for-the-badge)
+![Build status](https://img.shields.io/gitlab/pipeline/mikeanth-dev/pacman/master?style=for-the-badge)
+
 A PacMan clone written in C++ using SFML, with local multiplayer support.
 
 ## How it works
