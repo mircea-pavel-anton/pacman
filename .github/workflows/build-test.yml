@@ -1,19 +1,65 @@
-name: C/C++ Build CI
+---
+name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - main
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
+      - main
+      - develop
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
+  build-on-amd64:
+    runs-on: ubuntu-20.04
+    name: Build release binary on amd64
 
     steps:
     - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: sudo apt update && sudo apt install libsfml-dev
+
+    - name: Install deps
+      run: |
+        sudo apt-get update
+        sudo apt-get install libsfml-dev
+
     - name: Build
       run: make build-release
+
+  build-on-other:
+    runs-on: ubuntu-18.04
+    name: Build release binary on ${{ matrix.arch }} ${{ matrix.distro }}
+
+    strategy:
+      matrix:
+        include:
+          - arch: armv6
+            distro: alpine_latest
+          - arch: armv7
+            distro: alpine_latest
+          - arch: aarch64
+            distro: alpine_latest
+          - arch: s390x
+            distro: alpine_latest
+          - arch: ppc64le
+            distro: alpine_latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.1.1
+
+      - name: Build on ${{ matrix.arch }} ${{ matrix.distro }}
+        uses: uraimo/run-on-arch-action@v2.1.1
+        id: runcmd
+        with:
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.distro }}
+
+          install: |
+            apk add --update make
+            apk add --update g++
+            apk add --update sfml-dev
+
+          run: make build-release
