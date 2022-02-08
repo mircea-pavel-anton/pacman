@@ -22,7 +22,7 @@ jobs:
     - name: Build
       run: |
         make build-release
-        cp pacman pacmanMP-ubuntu2004_amd64
+        cp build/release/bin/pacman pacmanMP-ubuntu2004_amd64
 
     - name: Add compiled binary to release
       uses: AButler/upload-release-assets@v2.0
@@ -73,8 +73,8 @@ jobs:
             apk add --update sfml-dev
 
           run: |
-            sudo apt-get update
-            sudo apt-get install libsfml-dev
+            make build-release
+            cp build/release/bin/pacman /artifacts/${artifact_name}
 
       - name: Add compiled binary to release
         uses: AButler/upload-release-assets@v2.0
