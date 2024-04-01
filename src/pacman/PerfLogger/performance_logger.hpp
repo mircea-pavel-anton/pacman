@@ -1,44 +1,48 @@
 #ifndef PERFORMANCE_LOGGER_HPP
 #define PERFORMANCE_LOGGER_HPP
 
-#include <map>
-#include <vector>
-#include <string>
-#include <fstream>
-#include <memory>
 #include <chrono>
+#include <fstream>
 #include <iostream>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
 #ifdef DEBUG
-   // #define 
-  //  #define 
-    #define PERFLOGGER_COMMIT_METRICS() PerfLogger::getInstance()->commit();
+// #define
+//  #define
+#define PERFLOGGER_COMMIT_METRICS() PerfLogger::getInstance()->commit();
 #else
-    //#define 
-   // #define 
-    #define PERFLOGGER_COMMIT_METRICS(job_name) do {} while(false);
+// #define
+// #define
+#define PERFLOGGER_COMMIT_METRICS(job_name) \
+  do {                                      \
+  } while (false);
 #endif
 class PerfLogger {
+ public:
+  ~PerfLogger();
 
-public:
-    ~PerfLogger();
-    
-    static PerfLogger *getInstance();
+  static PerfLogger *getInstance();
 
-    PerfLogger(const PerfLogger&) = delete;
-    PerfLogger& operator=(const PerfLogger&) = delete;
+  PerfLogger(const PerfLogger &) = delete;
+  PerfLogger &operator=(const PerfLogger &) = delete;
 
-    void commit();
-    void startJob(const std::string &);
-    void stopJob(const std::string &);
-private:
-    static PerfLogger *instance;
+  void commit();
+  void startJob(const std::string &);
+  void stopJob(const std::string &);
 
-    PerfLogger();
+ private:
+  static PerfLogger *instance;
 
-    std::map<const std::string, std::chrono::time_point<std::chrono::high_resolution_clock>> start_times;
-    std::map<const std::string, std::vector<int64_t>> durations;
+  PerfLogger();
 
-}; //PerfLogger
+  std::map<const std::string,
+           std::chrono::time_point<std::chrono::high_resolution_clock>>
+      start_times;
+  std::map<const std::string, std::vector<int64_t>> durations;
 
-#endif //PERFORMANCE_LOGGER_HPP
+};  // PerfLogger
+
+#endif  // PERFORMANCE_LOGGER_HPP

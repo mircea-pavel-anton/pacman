@@ -4,22 +4,21 @@
 #include "../Config/config.hpp"
 
 class WindowTitle {
+ public:
+  WindowTitle(const std::string&, const sf::Vector2f&);
+  ~WindowTitle();
 
-public:
-    WindowTitle(const std::string&, const sf::Vector2f&);
-    ~WindowTitle();
+  // Does absolutely nothing. Nada.
+  void update();
 
-    // Does absolutely nothing. Nada.
-    void update();
+  // Draws the title onto the given target.
+  void render(sf::RenderTarget*) const;
 
-    // Draws the title onto the given target.
-    void render(sf::RenderTarget*) const;
+ private:
+  // ---------------- MEMBERS ---------------- //
+  std::string content;  // the actual text content of the title
+  sf::Text text;        // the render-able object
 
-private:
-    // ---------------- MEMBERS ---------------- //
-    std::string content;// the actual text content of the title
-    sf::Text text;      // the render-able object
+};  // WindowTitle
 
-}; //WindowTitle
-
-#endif //WINDOW_TITLE_HPP
+#endif  // WINDOW_TITLE_HPP
