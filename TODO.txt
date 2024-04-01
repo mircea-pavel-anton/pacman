@@ -1,0 +1,6 @@
+- CMAKE LIST
+- clang-format google
+- troubleshooting
+- requirements for Win, Mac, Linux
+- ADD folder apple_cmake
+- Create icon

@@ -12,16 +12,16 @@ public:
 
 protected:
     sf::Vector2i getChasePosition() override {
-        PERFLOGGER_START_JOB("Ghost::" + name + "::getChasePosition");
+        
 
         if (chasing.size() < 2) {
             std::cout << "ERROR: Inky doesn't have enough targets!" << std::endl;
-            PERFLOGGER_STOP_JOB("Ghost::" + name + "::getChasePosition");
+            
             return Directions::None;
         }
         if (chasing.front() == chasing.back()) {
             std::cout << "ERROR: Inky needs 2 different targets!" << std::endl;
-            PERFLOGGER_STOP_JOB("Ghost::" + name + "::getChasePosition");
+            
             return Directions::None;
         }
         Pacman *pacman;
@@ -37,7 +37,7 @@ protected:
 
         sf::Vector2i point = pacman->getMapPosition() + 2 * pacman->getDirection();
         sf::Vector2i delta = ghost->getMapPosition() - point;
-        PERFLOGGER_STOP_JOB("Ghost::" + name + "::getChasePosition");
+        
         return point - delta;
     }
 };

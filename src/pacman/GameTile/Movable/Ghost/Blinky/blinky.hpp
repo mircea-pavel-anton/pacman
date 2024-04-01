@@ -12,11 +12,11 @@ public:
 
 protected:
     sf::Vector2i getChasePosition() override {
-        PERFLOGGER_START_JOB("Ghost::" + name + "::getChasePosition");
+        
 
         if (chasing.empty()) {
             std::cout << "ERROR: " + name + " has no target!" << std::endl;
-            PERFLOGGER_STOP_JOB("Ghost::" + name + "::getChasePosition");
+            
             return home_position;
         }
 
@@ -38,7 +38,7 @@ protected:
         }
         
         // Blinky always chases his target directly.
-        PERFLOGGER_STOP_JOB("Ghost::" + name + "::getChasePosition");
+        
         return target->getMapPosition();
     }
 };

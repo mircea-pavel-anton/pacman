@@ -32,7 +32,7 @@ void GameTile::loadTextures() {
 }
 
 void GameTile::updateSprite() {
-    PERFLOGGER_START_JOB("GameTile::updateSprite");
+    
 
     // Load the texture from the animation vector
     const int animation_index = (frame_counter / animation_fps) % textures.size();
@@ -47,13 +47,13 @@ void GameTile::updateSprite() {
         position.y + Config::getInstance()->offset.y,
     });
 
-    PERFLOGGER_STOP_JOB("GameTile::updateSprite");
+    
 }
 
 void GameTile::render(sf::RenderTarget *_target) const {
-    PERFLOGGER_START_JOB("GameTile::render");
+    
     _target->draw(sprite);
-    PERFLOGGER_STOP_JOB("GameTile::render");
+    
 }
 
 GameTile &GameTile::operator=(const GameTile &_other) {

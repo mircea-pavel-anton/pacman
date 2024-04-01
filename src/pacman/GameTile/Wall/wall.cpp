@@ -20,7 +20,7 @@ Wall &Wall::operator=(const Wall &_other) {
 }
 
 void Wall::update(const sf::RenderTarget *_target, vec3pGT &_map) {
-    PERFLOGGER_START_JOB("Wall::" + std::to_string(type) + "::update");
+    
     updateSprite();
-    PERFLOGGER_STOP_JOB("Wall::" + std::to_string(type) + "::update");
+    
 }

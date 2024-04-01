@@ -4,7 +4,7 @@
 #include "../GameTile/__barrel__.hpp"
 #include "../Config/config.hpp"
 #include "../WindowTitle/window_title.hpp"
-
+#include <fstream>
 class Game {
 
 public:

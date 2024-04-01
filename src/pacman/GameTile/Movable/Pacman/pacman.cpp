@@ -23,7 +23,7 @@ Pacman &Pacman::operator=(const Pacman &_other) {
 }
 
 void Pacman::initVars() {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::initVars");
+    
 
     Movable::initVars();
 
@@ -41,11 +41,11 @@ void Pacman::initVars() {
     // Load the audio file into memory.
     sound = Config::getInstance()->sounds["pacman"];
 
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::initVars");
+    
 }
 
 void Pacman::pollEvents() {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::pollEvents");
+    
 
     if (index == 1) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) next_direction = Directions::Up;
@@ -59,11 +59,11 @@ void Pacman::pollEvents() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) next_direction = Directions::Right;
     }
 
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::pollEvents");
+    
 }
 
 void Pacman::initText() {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::initText");
+    
 
     Config *config = Config::getInstance();    
     text.setFont(*(config->font));
@@ -79,15 +79,15 @@ void Pacman::initText() {
         config->offset.y + config->tile_size,
     });
 
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::initText");
+    
 }
 
 void Pacman::interact(vec3pGT &_map) {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::interact");
+    
 
     // When pacman is hurt, he can't interact with the map.
     if (state == PacmanState::Hurt) {
-        PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::interact");
+        
         return;
     }
 
@@ -107,7 +107,7 @@ void Pacman::interact(vec3pGT &_map) {
                     }
                 }
                 pellet->toEatenState();
-                PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::interact");
+                
                 return;
             }
         }
@@ -118,7 +118,7 @@ void Pacman::interact(vec3pGT &_map) {
                 score += edible->getScoreModifier();
                 updateScore();
                 edible->toEatenState();
-                PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::interact");
+                
                 return;
             }
         }
@@ -129,23 +129,23 @@ void Pacman::interact(vec3pGT &_map) {
                 score += 200;
                 updateScore();
                 ghost->toDeadState();
-                PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::interact");
+                
                 return;
             }
             
             if (ghost->isScared() == false && ghost->isDead() == false) {
                 toDeadState();
-                PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::interact");
+                
                 return;
             }
         }
     }
 
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::interact");
+    
 }
 
 void Pacman::updateState() {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::updateState");
+    
 
     // if an external state switch occured, aka if pacman was hurt by a ghost
     if (state != next_state) {
@@ -163,7 +163,7 @@ void Pacman::updateState() {
         }
         
         updateAnimation();
-        PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::updateState");
+        
         return;
     }
 
@@ -174,14 +174,14 @@ void Pacman::updateState() {
         next_state = state;
         resetTimer();
         updateAnimation();
-        PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::updateState");
+        
         return;
     }
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::updateState");
+    
 }
 
 void Pacman::updateMovementDirection(vec3pGT &_map) {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::updateMovementDirection");
+    
 
     const sf::Vector2i map_position = getMapPosition();
 
@@ -191,7 +191,7 @@ void Pacman::updateMovementDirection(vec3pGT &_map) {
         map_position.y * Config::getInstance()->tile_size,
     };
     if (position != closest_position) {
-        PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::updateMovementDirection");
+        
         return;
     }
 
@@ -204,7 +204,7 @@ void Pacman::updateMovementDirection(vec3pGT &_map) {
     vec1pGT &vector = _map[tile_position.y][tile_position.x];
     for (GameTile *tile : vector) {
         if (tile != nullptr && tile->isWalkable() == false) {
-            PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::updateMovementDirection");
+            
             return;
         }
     }
@@ -216,11 +216,11 @@ void Pacman::updateMovementDirection(vec3pGT &_map) {
     // Update the animations to reflect the direction change.
     updateAnimation();
 
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::updateMovementDirection");
+    
 }
 
 void Pacman::updateAnimation() {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::updateAnimation");
+    
 
     std::string direction_name = "";
 
@@ -255,11 +255,11 @@ void Pacman::updateAnimation() {
 
     loadTextures();
 
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::updateAnimation");
+    
 }
 
 void Pacman::update(const sf::RenderTarget *_target, vec3pGT &_map) {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::update");
+    
 
     // Change the value of @next_direction based on the received event.
     pollEvents();
@@ -290,20 +290,20 @@ void Pacman::update(const sf::RenderTarget *_target, vec3pGT &_map) {
     // Update the sprite to reflect the position change.
     updateSprite();
 
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::update");
+    
 }
 
 void Pacman::render(sf::RenderTarget *_target) const {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::render");
+    
  
     _target->draw(sprite);
     _target->draw(text);
  
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::render");
+    
 }
 
 void Pacman::checkWindowCollisions(const sf::RenderTarget *_target) {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::checkWindowCollisions");
+    
 
     const sf::Vector2u window_size = _target->getSize();
     const sf::Vector2f size = {
@@ -325,11 +325,11 @@ void Pacman::checkWindowCollisions(const sf::RenderTarget *_target) {
         position.y = window_size.y - size.y;
     }
 
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::checkWindowCollisions");
+    
 }
 
 void Pacman::collideWithObjects(vec3pGT &_map) {
-    PERFLOGGER_START_JOB("Pacman::" + std::to_string(index) + "::collideWithObjects");
+    
 
     // Get the coordinates for the next tile.
     const sf::Vector2i delta = {
@@ -349,12 +349,12 @@ void Pacman::collideWithObjects(vec3pGT &_map) {
                     round(position.x / tile_size) * tile_size,
                     round(position.y / tile_size) * tile_size,
                 };
-                PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::collideWithObjects");
+                
                 return;
             }
         }
     }
-    PERFLOGGER_STOP_JOB("Pacman::" + std::to_string(index) + "::collideWithObjects");
+    
 }
 
 void Pacman::checkCollisions(const sf::RenderTarget *_target, vec3pGT &_map) {

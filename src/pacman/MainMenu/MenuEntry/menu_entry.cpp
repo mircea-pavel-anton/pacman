@@ -7,7 +7,7 @@ MenuEntry::MenuEntry(const std::string &_content, const sf::Vector2f &_position)
 
     text.setFont( *(Config::getInstance()->font) );
     text.setString(_content);
-    text.setCharacterSize(22.f);
+    text.setCharacterSize(22);
     text.setLetterSpacing(1.25);
     text.setFillColor(sf::Color::Yellow);
     text.setPosition(_position);
