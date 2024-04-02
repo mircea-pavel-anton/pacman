@@ -11,14 +11,14 @@ A PacMan clone written in C++ using SFML, with local multiplayer support.
 
 - C++17 (or newer) compiler.
 - Pre-built [SFML 2.6.x](https://www.sfml-dev.org/download/sfml/2.6.1/) binaries. (Must match your Compiler and OS)
-- [CMake 3.20+](https://cmake.org/download/) or newer (native installer)
+- [CMake 3.20+](https://cmake.org/download/) or newer (add it to PATH)
 
 ### For Windows
 
 - MS Visual Studio 2019 or newer (NOT vscode), with default "**Desktop C++ Development**" workload.
 - Please download "Visual C++ 64bit" edition of SFML; ignore others.
 - Move your unzipped `SFML-2.6.x` folder to its own home, example: `C:/SFML/SFML-2.6.1`
-- Finally edit [CmakeLists.txt](CMakeLists.txt) line 13, change value SMFL_HOME to the directory you installed SFML.
+- Make sure to edit [CmakeLists.txt](CMakeLists.txt) line 13, change value SMFL_HOME to the directory you installed SFML.
 
 ### For MacOS
 
@@ -34,6 +34,8 @@ A PacMan clone written in C++ using SFML, with local multiplayer support.
 - Alternatively, it's recommended to build SFML from source, see official docs.
 
 ## How it works
+
+- Please see [BUILDING.md](BUILDING.md) for instructions
 
 |             Player 1             |             Player 2             |             Blinky             |            Pinky             |            Inky            |            Clyde             |
 | :------------------------------: | :------------------------------: | :----------------------------: | :--------------------------: | :------------------------: | :--------------------------: |
