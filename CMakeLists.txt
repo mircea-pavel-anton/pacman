@@ -13,7 +13,7 @@ endif()
 # edit me ON WINDOWS
 SET(SFML_HOME "C:/SFML/SFML-2.6.1")
 
-file(GLOB_RECURSE GAME_SRC "src/*.cpp" "src/*.hpp")
+file(GLOB_RECURSE GAME_SRC "src/*.cpp" "src/*.hpp" "src/*.mm")
 set(SFML_DIR ${SFML_HOME}/lib/cmake/SFML)
 
 find_package(SFML 2.5 REQUIRED COMPONENTS "graphics" "window" "audio" "system")

@@ -64,5 +64,5 @@ xcuserdata/
 .Spotlight-V100
 .TemporaryItems
 .Trashes
-**/.DS_Store
 *.xcodeproj/*
+.DS_Store

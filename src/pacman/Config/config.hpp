@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "../../ResourcePath.hpp"
 
 using std::string;
 using std::vector;

@@ -28,7 +28,7 @@ Config *Config::getInstance() {
 void Config::loadSounds() {
   for (auto &file : sound_files) {
     sf::SoundBuffer *buffer = new sf::SoundBuffer();
-    if (buffer->loadFromFile(file.second) == false) {
+    if (!buffer->loadFromFile(pac::getResourcePath(file.second))) {
       std::cerr << "ERROR: Failed to load " << file.second << std::endl;
       perror("cannot load file");
       // abort();
@@ -44,7 +44,7 @@ void Config::loadTextures() {
   for (auto &file : texture_files) {
     sf::Texture *texture = new sf::Texture();
 
-    if (texture->loadFromFile(file.second) == false) {
+    if (!texture->loadFromFile(pac::getResourcePath(file.second))) {
       std::cerr << "ERROR: Failed to load " << file.second << std::endl;
       perror("cannot load file");
       // abort();
@@ -57,7 +57,7 @@ void Config::loadTextures() {
 void Config::loadFonts() {
   font = new sf::Font();
 
-  if (font->loadFromFile(font_file) == false) {
+  if (!font->loadFromFile(pac::getResourcePath(font_file))) {
     std::cerr << "ERROR: Failed to loead " << font_file << std::endl;
     perror("cannot load file");
     // abort();
