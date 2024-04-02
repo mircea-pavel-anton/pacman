@@ -7,10 +7,13 @@ set_source_files_properties(${application_icon}
 # images
 file(GLOB_RECURSE my_images "${CMAKE_SOURCE_DIR}/res/*")
 foreach(FILE ${my_images})
-  file(RELATIVE_PATH NEW_FILE "${CMAKE_SOURCE_DIR}/" ${FILE})
-  get_filename_component(NEW_FILE_PATH ${NEW_FILE} DIRECTORY)
-  set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION
-                                                 "Resources/${NEW_FILE_PATH}")
+  get_filename_component(FILENAME ${FILE} NAME)
+  if(NOT FILENAME STREQUAL ".DS_Store")
+    # skip .DS_STORE
+    file(RELATIVE_PATH NEW_FILE "${CMAKE_SOURCE_DIR}/" ${FILE})
+    get_filename_component(NEW_FILE_PATH ${NEW_FILE} DIRECTORY)
+    set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${NEW_FILE_PATH}")
+  endif()
 endforeach()
 
 add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE
@@ -21,7 +24,8 @@ set_target_properties(
   PROPERTIES BUNDLE TRUE
              XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ""
              XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED "NO"
-             XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks"
+             XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS
+             "@executable_path/../Frameworks"
              MACOSX_BUNDLE_BUNDLE_NAME "${CMAKE_PROJECT_NAME}"
              MACOSX_BUNDLE_GUI_IDENTIFIER "com.mirceanton.${CMAKE_PROJECT_NAME}"
              MACOSX_BUNDLE_COPYRIGHT "(c) 2022, mirceanton"

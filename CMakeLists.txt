@@ -17,7 +17,7 @@ file(GLOB_RECURSE GAME_SRC "src/*.cpp" "src/*.hpp")
 set(SFML_DIR ${SFML_HOME}/lib/cmake/SFML)
 
 find_package(SFML 2.5 REQUIRED COMPONENTS "graphics" "window" "audio" "system")
-find_package(OpenGL REQUIRED)
+find_package(OpenGL REQUIRED) 
 
 if(WIN32)
   add_executable(pacman WIN32 ${GAME_SRC} ${CMAKE_SOURCE_DIR}/res/win-icon.rc)
@@ -31,7 +31,7 @@ else()
 endif()
 
 # link all required libraries
-target_link_libraries(pacman PRIVATE  sfml-graphics sfml-window sfml-audio sfml-system)
+target_link_libraries(pacman PRIVATE sfml-graphics sfml-window sfml-audio sfml-system)
 
 # include SFML headers
 include_directories(${SFML_HOME}/include)
@@ -40,7 +40,7 @@ include_directories(${SFML_HOME}/include)
 if(MSVC)
   target_compile_options(pacman PRIVATE /W4)
 else()
-  target_compile_options(pacman PRIVATE -Wall)
+  target_compile_options(pacman PRIVATE -Wall) 
 endif()
 
 # COPY resources folder to destination

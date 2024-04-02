@@ -7,7 +7,7 @@
 
 class Pacman;
 
-enum GhostStates { Frightened, Dead, Chase, Scatter, Escape };
+enum class GhostStates { Frightened, Dead, Chase, Scatter, Escape };
 
 class Ghost : public Movable {
  public:
