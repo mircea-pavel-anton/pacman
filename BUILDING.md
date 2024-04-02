@@ -5,6 +5,7 @@
 CMake Extension installed as part of "Desktop C++ Dev Workload"
 2. From top toolbar, change mode to **Release**, and click **Build** > **Build All**.
 3. Done. That's it. Your .EXE will be in `{project_dir}/out/Release/bin`
+4. If the game fails to start, make sure `openal32.dll` is present right beside your executable. If not, copy it from SFML folder `/bin/openal32.dll`
  
 ## On MacOS & Linux
 1. Open this project directory in your terminal.
