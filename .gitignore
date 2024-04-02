@@ -65,4 +65,4 @@ xcuserdata/
 .TemporaryItems
 .Trashes
 *.xcodeproj/*
-.DS_Store
+*.DS_Store
