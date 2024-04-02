@@ -7,10 +7,9 @@
 #include "../edible.hpp"
 
 class Fruit : public Edible {
+ public:
+  Fruit(const sf::Vector2f &);
 
-public:
-    Fruit(const sf::Vector2f &);
+};  // Fruit
 
-}; //Fruit
-
-#endif //FRUIT_HPP
+#endif  // FRUIT_HPP

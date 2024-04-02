@@ -6,10 +6,9 @@
 #include "../edible.hpp"
 
 class PowerPellet : public Edible {
+ public:
+  PowerPellet(const sf::Vector2f &);
 
-  public:
-    PowerPellet(const sf::Vector2f &);
+};  // class PowerPellet
 
-}; //class PowerPellet
-
-#endif //POWER_PELLET_HPP
+#endif  // POWER_PELLET_HPP
