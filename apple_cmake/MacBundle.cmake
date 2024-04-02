@@ -1,8 +1,3 @@
-# icon
-set(MACOSX_BUNDLE_ICON_FILE "macos_icon.icns")
-set(application_icon "${CMAKE_SOURCE_DIR}/res/icons/apple_pacman.icns")
-set_source_files_properties(${application_icon}
-                            PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
 # all assets inside 'res/'
 list(APPEND ASSET_FILES "")
@@ -16,9 +11,16 @@ foreach(FILE ${my_images})
     get_filename_component(REL_DIR ${NEW_FILE} DIRECTORY)
     get_filename_component(END_FILE ${NEW_FILE} NAME)
     list(APPEND ASSET_FILES "${REL_DIR}/${END_FILE}")
-    set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${REL_DIR}/${END_NAME}")
+   set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${REL_DIR}/${END_NAME}")
   endif()
 endforeach()
+
+# icon 
+set(MACOSX_BUNDLE_ICON_FILE "macos_icon.icns")
+set(application_icon "${CMAKE_SOURCE_DIR}/res/${MACOSX_BUNDLE_ICON_FILE}")
+set_source_files_properties(${application_icon}
+                            PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+
 
 add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE
                ${GAME_SRC} ${application_icon} ${ASSET_FILES})

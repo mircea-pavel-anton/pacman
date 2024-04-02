@@ -4,7 +4,7 @@
 
 std::string pac::getResourcePath(const std::string &relativePath)
 {
-    return "resources/" + relativePath;
+    return "res/" + relativePath;
 }
 
 #endif

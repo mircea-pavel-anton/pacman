@@ -125,7 +125,7 @@ void Game::initWindow() {
 }
 
 vector<vector<char>> Game::readMap() {
-  std::ifstream file(Config::getInstance()->selected_map, std::ios::binary);
+  std::ifstream file(pac::getResourcePath(Config::getInstance()->selected_map), std::ios::binary);
   std::string line = "";
   unsigned long int line_count = 0, line_length = 0;
   vector<vector<char>> char_map = {};

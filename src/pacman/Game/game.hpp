@@ -6,6 +6,8 @@
 #include "../Config/config.hpp"
 #include "../GameTile/__barrel__.hpp"
 #include "../WindowTitle/window_title.hpp"
+#include "../../ResourcePath.hpp"
+
 class Game {
  public:
   Game();

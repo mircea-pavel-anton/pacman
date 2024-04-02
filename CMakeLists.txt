@@ -10,7 +10,7 @@ if(WIN32)
   set(SFML_STATIC_LIBRARIES TRUE)
 endif()
 
-# edit me ON WINDOWS
+# TODO edit me ON WINDOWS
 SET(SFML_HOME "C:/SFML/SFML-2.6.1") 
 
 file(GLOB_RECURSE GAME_SRC "src/*.cpp" "src/*.hpp" "src/*.mm")
@@ -43,7 +43,7 @@ else()
   target_compile_options(pacman PRIVATE -Wall) 
 endif()
 
-# COPY resources folder to destination
+# COPY resources folder to destination (WINDOWS, LINUX)
 if(NOT APPLE)
   add_custom_command(
     TARGET pacman
