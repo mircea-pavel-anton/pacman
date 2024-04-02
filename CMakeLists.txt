@@ -11,7 +11,7 @@ if(WIN32)
 endif()
 
 # edit me ON WINDOWS
-SET(SFML_HOME "C:/SFML/SFML-2.6.1")
+SET(SFML_HOME "C:/SFML/SFML-2.6.1") 
 
 file(GLOB_RECURSE GAME_SRC "src/*.cpp" "src/*.hpp" "src/*.mm")
 set(SFML_DIR ${SFML_HOME}/lib/cmake/SFML)

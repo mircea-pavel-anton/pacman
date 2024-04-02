@@ -1,30 +1,27 @@
 # icon
 set(MACOSX_BUNDLE_ICON_FILE "macos_icon.icns")
-set(application_icon "${CMAKE_SOURCE_DIR}/res/${MACOSX_BUNDLE_ICON_FILE}")
+set(application_icon "${CMAKE_SOURCE_DIR}/res/icons/apple_pacman.icns")
 set_source_files_properties(${application_icon}
                             PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
-# images
-# file(GLOB_RECURSE my_images "${CMAKE_SOURCE_DIR}/res/*")
-# foreach(FILE ${my_images})
-# #  message(STATUS ${FILE})
-#   get_filename_component(FILENAME ${FILE} NAME)
-#   if(NOT FILENAME STREQUAL ".DS_Store")
-#     # skip .DS_STORE
-#     file(RELATIVE_PATH NEW_FILE "${CMAKE_SOURCE_DIR}/" ${FILE})
-#     get_filename_component(REL_DIR ${NEW_FILE} DIRECTORY)
-#     get_filename_component(END_FILE ${NEW_FILE} NAME)
-#      if(DIR)
-#             file(MAKE_DIRECTORY "${DEST}/${DIR}")
-#         endif()
-#      message(STATUS "RELATIVE DIR ${REL_DIR} END_FILE ${END_FILE}" )
-#     set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${REL_DIR}/${END_NAME}")
-#   endif()
-# endforeach()
-
+# all assets inside 'res/'
+list(APPEND ASSET_FILES "")
+file(GLOB_RECURSE my_images "${CMAKE_SOURCE_DIR}/res/*")
+foreach(FILE ${my_images})
+  # message(STATUS ${FILE})
+  get_filename_component(FILENAME ${FILE} NAME)
+  if(NOT FILENAME STREQUAL ".DS_Store")
+    # skip .DS_STORE
+    file(RELATIVE_PATH NEW_FILE "${CMAKE_SOURCE_DIR}/" ${FILE})
+    get_filename_component(REL_DIR ${NEW_FILE} DIRECTORY)
+    get_filename_component(END_FILE ${NEW_FILE} NAME)
+    list(APPEND ASSET_FILES "${REL_DIR}/${END_FILE}")
+    set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${REL_DIR}/${END_NAME}")
+  endif()
+endforeach()
 
 add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE
-               ${GAME_SRC} ${application_icon} ${CMAKE_SOURCE_DIR}/res/)
+               ${GAME_SRC} ${application_icon} ${ASSET_FILES})
 
 set_target_properties(
   ${CMAKE_PROJECT_NAME}
@@ -38,4 +35,4 @@ set_target_properties(
              MACOSX_BUNDLE_COPYRIGHT "(c) 2022, mirceanton"
              MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
              MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
-           RESOURCE ${CMAKE_SOURCE_DIR}/res/ )
+             RESOURCE ${ASSET_FILES})
