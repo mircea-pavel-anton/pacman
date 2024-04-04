@@ -10,14 +10,13 @@ if(WIN32)
   set(SFML_STATIC_LIBRARIES TRUE)
 endif()
 
-# TODO edit me ON WINDOWS
+# TODO change me ON Windows
 SET(SFML_HOME "C:/SFML/SFML-2.6.1") 
 
 file(GLOB_RECURSE GAME_SRC "src/*.cpp" "src/*.hpp" "src/*.mm")
 set(SFML_DIR ${SFML_HOME}/lib/cmake/SFML)
 
 find_package(SFML 2.5 REQUIRED COMPONENTS "graphics" "window" "audio" "system")
-find_package(OpenGL REQUIRED) 
 
 if(WIN32)
   add_executable(pacman WIN32 ${GAME_SRC} ${CMAKE_SOURCE_DIR}/res/win-icon.rc)

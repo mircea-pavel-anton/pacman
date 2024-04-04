@@ -15,6 +15,7 @@ Wall::Wall(const Wall &_wall) { *this = _wall; }
 Wall::~Wall() { /* nothing to do here */ }
 
 Wall &Wall::operator=(const Wall &_other) {
+    //TODO Fix infinite loop warning!
     this->operator=(_other);
     return *this;
 }
