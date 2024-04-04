@@ -11,7 +11,7 @@ foreach(FILE ${my_images})
     get_filename_component(REL_DIR ${NEW_FILE} DIRECTORY)
     get_filename_component(END_FILE ${NEW_FILE} NAME)
     list(APPEND ASSET_FILES "${REL_DIR}/${END_FILE}")
-   set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${REL_DIR}/${END_NAME}")
+   set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${REL_DIR}/${END_FILE}")
   endif()
 endforeach()
 
