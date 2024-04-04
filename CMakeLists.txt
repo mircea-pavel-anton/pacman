@@ -39,7 +39,7 @@ include_directories(${SFML_HOME}/include)
 # show warnings (depending on C++ compiler)
 if(MSVC)
   target_compile_options(pacman PRIVATE /W4)
-else()
+else() 
   target_compile_options(pacman PRIVATE -Wall) 
 endif()
 

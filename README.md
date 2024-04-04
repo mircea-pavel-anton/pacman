@@ -9,8 +9,8 @@ A PacMan clone written in C++ using SFML, with local multiplayer support.
 
 ## Requirements for Building
 
-- C++17 (or newer) compiler.
-- Pre-built [SFML 2.6.x](https://www.sfml-dev.org/download/sfml/2.6.1/) binaries. (Must match your Compiler and OS)
+- C++17 (or newer) toolset.
+- Pre-built [SFML 2.6.x](https://www.sfml-dev.org/download/sfml/2.6.1/) or newer binaries. (Must match your Compiler and OS)
 - [CMake 3.20+](https://cmake.org/download/) or newer (add it to PATH)
 
 ### For Windows
@@ -18,11 +18,11 @@ A PacMan clone written in C++ using SFML, with local multiplayer support.
 - MS Visual Studio 2019 or newer (NOT vscode), with default "**Desktop C++ Development**" workload.
 - Please download "Visual C++ 64bit" edition of SFML; ignore others.
 - Move your unzipped `SFML-2.6.x` folder to its own home, example: `C:/SFML/SFML-2.6.1`
-- Make sure to edit [CmakeLists.txt](CMakeLists.txt) line 13, change value SMFL_HOME to the directory you installed SFML.
+- Make sure to edit [CmakeLists.txt](CMakeLists.txt) line 13, change value of `SMFL_HOME` to the directory you moved SFML into.
 
 ### For MacOS
 
-- XCode latest (v14 or higher) from AppStore (with MacOS SDK)
+- XCode latest (v13 or higher) from AppStore (with MacOS SDK)
 - Apple Developer tools. After Xcode is installed, run this in your Terminal:
   ```bash
   sudo xcode-select --install
@@ -35,7 +35,7 @@ A PacMan clone written in C++ using SFML, with local multiplayer support.
 
 ## How it works
 
-- Please see [BUILDING.md](BUILDING.md) for instructions
+- Please see [BUILDING.md](BUILDING.md) for build instructions.
 
 |             Player 1             |             Player 2             |             Blinky             |            Pinky             |            Inky            |            Clyde             |
 | :------------------------------: | :------------------------------: | :----------------------------: | :--------------------------: | :------------------------: | :--------------------------: |

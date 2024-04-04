@@ -28,7 +28,7 @@ cmake --build . --config Release --target all
    sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install
   ```
 - This is how the home screen of CMake GUI looks like:
-![cmake_screenshot](res/cmake_gui.png)
+![cmake_screenshot](apple_cmake/cmake_gui.png)
 
 - Set "Source Folder" to this project root. Then set "Build Folder" to a NEW _relative_ folder `/build` or `/out`. See image above. Then click "**Configure**", 
 - In the next screen, Choose **Unix Makefiles** on Linux & Mac. Choose **Visual Studio** on Windows. Then click OK. Click Configure once more, then **Generate**.
