@@ -1,5 +1,6 @@
-## What's this for
+## What's this for?
 
-This contains cmake instructions to build MacOS GUI `.app` bundle. It embeds the icon to the app bundle.  It also copies all assets/Resources  into the bundle at build time. 
+This `MacBundle.cmake` contains CMake instruction to build MacOS GUI `.app` bundle. It also embeds the icon to the app bundle.  It also copies metadata, and all static assets into the bundle at build time. 
 
-If you installed SFML as Frameworks, You will need to manually embed the SFML frameworks using Xcode into the bundle before building for Release, if you want to share your app. Click project folder in Xcode, click **Add Build Step** > choose **Copy Files** > select all listed SFML frameworks, then Add [+]. Also you will need to find `freetype.framework` file from `/Library/Frameworks` and add it too.
+### Extra notes
+If you installed SFML as "Frameworks", instead of "dylibs", you will need to embed the SFML frameworks (using Xcode) into the App Bundle, if you want to share your app with others. Use CMake GUI to generate an **XCode** project. Open project in XCode. Click the root folder "pacman". In the top toolbar, click menu **Editor** > **Add Build Phase** > **Add Copy Files Build Phase**. Click the `[+]`, and select all SFML frameworks from `/Library/Frameworks` (audio, video, system etc.). Then **Product** > **Build** from top toolbar. Done.
