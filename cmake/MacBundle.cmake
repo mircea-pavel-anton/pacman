@@ -2,8 +2,8 @@
 list(APPEND ASSET_FILES "")
 
 # start recursing the directory tree
-file(GLOB_RECURSE my_images "${CMAKE_SOURCE_DIR}/res/*")
-foreach(FILE ${my_images})
+file(GLOB_RECURSE my_assets "${CMAKE_SOURCE_DIR}/res/*")
+foreach(FILE ${my_assets})
   get_filename_component(FILENAME ${FILE} NAME)
   if(NOT FILENAME STREQUAL ".DS_Store")
     # skip .DS_Store
@@ -22,7 +22,7 @@ set_source_files_properties(${application_icon} PROPERTIES MACOSX_PACKAGE_LOCATI
 
 # build executable as MACOSX BUNDLE                           
 add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE
-               ${GAME_SRC} ${application_icon} "${ASSET_FILES}") 
+               ${GAME_SRC} ${application_icon} ${ASSET_FILES}) 
 
 # Metadata for Apple info.plist 
 set_target_properties(
@@ -38,3 +38,4 @@ set_target_properties(
              MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
              MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
              RESOURCE ${ASSET_FILES}) 
+ 
