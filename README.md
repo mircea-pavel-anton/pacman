@@ -10,7 +10,7 @@ A PacMan clone written in C++ using SFML, with local multiplayer support.
 ## Requirements for Building
 
 - C++17 (or newer) toolset.
-- Pre-built [SFML 2.6.x](https://www.sfml-dev.org/download/sfml/2.6.1/) or newer binaries. (Must match your Compiler and OS)
+- Pre-built [SFML 2.5.x](https://www.sfml-dev.org/download/sfml/2.6.1/) or newer binaries. (Must match your Compiler and OS)
 - [CMake 3.20+](https://cmake.org/download/) or newer (add it to PATH)
 
 ### For Windows
@@ -27,14 +27,14 @@ A PacMan clone written in C++ using SFML, with local multiplayer support.
   ```bash
   sudo xcode-select --install
   ```
-- Please install SFML 2.6 on your Mac as shown in [official macOS guide](https://www.sfml-dev.org/tutorials/2.6/start-osx.php).
+- Please install SFML 2.5 on your Mac as shown in [official macOS guide](https://www.sfml-dev.org/tutorials/2.6/start-osx.php).
 
 ### For Linux
 
-- Use your OS package manager to download SFML 2.5 or newer.
-- Alternatively, it's recommended to build SFML from source, see official docs.
+- Use your OS package manager (`apt-get` or `yum`) to install SFML 2.5 or newer.
+- Alternatively, you may build SFML from source, see [official docs SFML](https://www.sfml-dev.org/tutorials/2.6/start-linux.php).
 
-## Building
+## Building Instructions
 
 - Please see [BUILDING.md](BUILDING.md) for build instructions.
 
