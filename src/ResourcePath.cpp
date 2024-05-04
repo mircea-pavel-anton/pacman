@@ -4,7 +4,8 @@
 
 std::string pac::getResourcePath(const std::string &relativePath)
 {
-    return "res/" + relativePath;
+    // all paths in config.hpp are already ABSOLUTE!
+    return relativePath;
 }
 
 #endif
