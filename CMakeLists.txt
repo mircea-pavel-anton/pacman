@@ -11,7 +11,7 @@ if(WIN32)
 endif()
 
 # TODO change me ON Windows
-SET(SFML_HOME "C:/SFML/SFML-2.6.1") 
+SET(SFML_HOME "C:/SFML/SFML-2.6.1")  
 
 file(GLOB_RECURSE GAME_SRC "src/*.cpp" "src/*.hpp" "src/*.mm")
 set(SFML_DIR ${SFML_HOME}/lib/cmake/SFML)
@@ -33,7 +33,7 @@ endif()
 target_link_libraries(pacman PRIVATE sfml-graphics sfml-window sfml-audio sfml-system)
 
 # include SFML headers
-include_directories(${SFML_HOME}/include)
+include_directories(${SFML_HOME}/include) 
 
 # show warnings (depending on C++ compiler)
 if(MSVC)
