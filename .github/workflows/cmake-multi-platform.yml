@@ -58,7 +58,7 @@ jobs:
   
     - name: Download SFML for Ubuntu
       if:  matrix.os == 'ubuntu-latest'
-      run: apt-get install -y libsfml-dev
+      run: sudo apt-get install -y libsfml-dev
     
     - name: Download SFML for Windows
       if:  matrix.os == 'windows-latest'
