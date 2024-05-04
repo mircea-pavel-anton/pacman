@@ -57,17 +57,17 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
   
     - name: Download SFML for Ubuntu
-    - if:  matrix.os == 'ubuntu-latest'
+      if:  matrix.os == 'ubuntu-latest'
       run: apt-get install -y libsfml-dev
     
     - name: Download SFML for Windows
-    - if:  matrix.os == 'windows-latest'
+      if:  matrix.os == 'windows-latest'
       shell: cmd
       run: |
         mkdir "C:/SFML" && curl -fSL "https://www.sfml-dev.org/files/SFML-2.6.1-windows-vc17-64-bit.zip" -o "C:/SFML/SFML-2.6.1-windows-vc17-64-bit.zip"
 
     - name: Unzip SFML for Windows
-    - if:  matrix.os == 'windows-latest'
+      if:  matrix.os == 'windows-latest'
       shell: cmd
       run: tar -xvf "C:/SFML/SFML-2.6.1-windows-vc17-64-bit.zip" -C "C:/SFML/"
 
