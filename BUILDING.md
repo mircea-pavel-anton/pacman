@@ -2,8 +2,7 @@
 
 ## On Windows
 
-1. Just open this project folder in Visual Studio 2019 (or newer), with
-   CMake plugin installed.
+1. Just open this project folder in Visual Studio 2019 (or newer), with CMake extension installed.
 2. From top toolbar, change mode to **Release**, and click **Build** > **Build All**.
 3. Done. That's it. Your game .EXE will be in `{project_dir}/out/Release/bin`
 4. If the game fails to start, make sure `openal32.dll` is present in **same folder** with your .EXE. If not, copy it from SFML directory `${SFML_HOME}/bin/openal32.dll`
@@ -11,7 +10,7 @@
 ## On MacOS & Linux
 
 1. Open this project directory in your terminal.
-2. Ensure CMake 3.20 or higher is installed. Run `cmake --version`
+2. Ensure CMake 3.20 or higher is installed. Verify with `cmake --version`
 3. Once installed, run the following commands:
 
 ```bash
@@ -22,7 +21,7 @@ cmake --build . --config Release --target all
 
 ```
 
-4. Your executable (.app bundle for MacOS) and binary for Linux will be found in `{project_dir}/build/bin`
+4. Your executable (`.app` bundle for MacOS) and binary for Linux will be found in `{project_dir}/build/bin`
 
 ## Using CMake GUI (all destkop platforms)
 
