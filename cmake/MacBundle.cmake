@@ -22,7 +22,7 @@ set_source_files_properties(${application_icon} PROPERTIES MACOSX_PACKAGE_LOCATI
 
 # build executable as MACOSX BUNDLE                           
 add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE
-               ${GAME_SRC} ${application_icon} ${ASSET_FILES}) 
+               ${GAME_SRC} "${CMAKE_PROJECT_DIR}/src/ResourcePath.mm" ${application_icon} ${ASSET_FILES}) 
 
 # Metadata for Apple info.plist 
 set_target_properties(
