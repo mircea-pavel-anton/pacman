@@ -11,6 +11,7 @@ on:
 env:
   # global build variables
   SFML_DIR: "C:/SFML/SFML-2.6.1"
+  BUILD_DIR: ${{ github.workspace }}/build
 
 jobs:
   build:
@@ -50,12 +51,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set reusable strings
-      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
-      id: strings
-      shell: bash
-      run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+    # - name: Set reusable strings
+    #   Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+    #   id: strings
+    #   shell: bash
+    #   run: |
+    #     echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
   
     - name: Set Up SFML on Ubuntu
       if:  matrix.os == 'ubuntu-latest'
@@ -83,10 +84,10 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_type }}
 
     - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      working-directory: ${{ env.BUILD_DIR }}
       # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest --build-config ${{ matrix.build_type }}
