@@ -27,7 +27,7 @@ A PacMan clone written in C++ using SFML, with local multiplayer support.
   ```bash
   sudo xcode-select --install
   ```
-- Please install SFML 2.5 on your Mac as shown in [official macOS guide](https://www.sfml-dev.org/tutorials/2.6/start-osx.php).
+- Please install SFML 2.5 or newer on your Mac as shown in [official macOS guide](https://www.sfml-dev.org/tutorials/2.6/start-osx.php).
 
 ### For Linux
 
