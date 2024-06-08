@@ -61,8 +61,8 @@ jobs:
     - name: Set Up SFML on Ubuntu
       if:  matrix.os == 'ubuntu-latest'
       run: |
-        sudo mkdir -p '/var/sfml' && curl -fsSL "https://www.sfml-dev.org/files/SFML-2.6.1-linux-gcc-64-bit.tar.gz" -o "/var/sfml/SFML-2.6.1-linux-gcc-64-bit.tar.gz";
-        tar -xvf /var/sfml/SFML-2.6.1-linux-gcc-64-bit.tar.gz -C "/var/sfml/"
+        sudo mkdir -p '/var/sfml' && sudo curl -fsSL "https://www.sfml-dev.org/files/SFML-2.6.1-linux-gcc-64-bit.tar.gz" -o "/var/sfml/SFML-2.6.1-linux-gcc-64-bit.tar.gz";
+        sudo tar -xvf /var/sfml/SFML-2.6.1-linux-gcc-64-bit.tar.gz -C "/var/sfml/"
     
     - name: Set Up SFML on Windows
       if:  matrix.os == 'windows-latest'
@@ -75,7 +75,7 @@ jobs:
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        cmake -B ${{ env.BUILD_DIR }}
         -DSFML_DIR=${{matrix.sfml_dir}}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
