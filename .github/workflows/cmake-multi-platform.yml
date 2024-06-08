@@ -9,9 +9,10 @@ on:
     branches: [ "master" ]
 
 env:
-  # global build variables
+  # global build variables (this sfml_dir is requird only for Windows, Unix is auto)
   SFML_DIR: "C:/SFML/SFML-2.6.1"
   BUILD_DIR: ${{ github.workspace }}/build
+  SFML_WIN_ZIP: SFML-2.6.1-windows-vc17-64-bit.zip
 
 jobs:
   build:
@@ -32,7 +33,6 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         build_type: [Release]
         c_compiler: [gcc, cl]
-        sfml_dir: ["/var/sfml/SFML-2.6.1", "C:/SFML/SFML-2.6.1"]
         include:
           - os: windows-latest
             c_compiler: cl
@@ -50,33 +50,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    # - name: Set reusable strings
-    #   Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
-    #   id: strings
-    #   shell: bash
-    #   run: |
-    #     echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
   
-    - name: Set Up SFML on Ubuntu
+    - name: Download SFML for Ubuntu
       if:  matrix.os == 'ubuntu-latest'
-      run: |
-        sudo mkdir -p '/var/sfml' && sudo curl -fsSL "https://www.sfml-dev.org/files/SFML-2.6.1-linux-gcc-64-bit.tar.gz" -o "/var/sfml/SFML-2.6.1-linux-gcc-64-bit.tar.gz";
-        sudo tar -xvf /var/sfml/SFML-2.6.1-linux-gcc-64-bit.tar.gz -C "/var/sfml/"
+      run: sudo apt-get install -y libsfml-dev
     
-    - name: Set Up SFML on Windows
+    - name: Download and setup SFML for Windows
       if:  matrix.os == 'windows-latest'
       shell: cmd
       run: |
-        mkdir "C:/SFML" && curl -fsSL "https://www.sfml-dev.org/files/SFML-2.6.1-windows-vc17-64-bit.zip" -o "C:/SFML/SFML-2.6.1-windows-vc17-64-bit.zip"
-        tar -xvf "C:/SFML/SFML-2.6.1-windows-vc17-64-bit.zip" -C "C:/SFML/"
+        mkdir "C:/SFML" && curl -fsSL "https://www.sfml-dev.org/files/${{ env.SFML_WIN_ZIP }}" -o "C:/SFML/${{ env.SFML_WIN_ZIP }}"
+        tar -xvf "C:/SFML/${{ env.SFML_WIN_ZIP }}" -C "C:/SFML/"
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
         cmake -B ${{ env.BUILD_DIR }}
-        -DSFML_DIR=${{matrix.sfml_dir}}
+        -DSFML_HOME=${{env.SFML_DIR}}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
