@@ -24,7 +24,7 @@ Ghost &Ghost::operator=(const Ghost &_other) {
 }
 
 void Ghost::initVars() {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::initVars");
+    
 
     Movable::initVars();
 
@@ -39,11 +39,11 @@ void Ghost::initVars() {
     // Load the audio file into memory.
     sound = Config::getInstance()->sounds["ghost"];
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::initVars");
+    
 }
 
 void Ghost::initTrail() {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::initTrail");
+    
 
     trail.setSize({
         Config::getInstance()->tile_size,
@@ -70,11 +70,11 @@ void Ghost::initTrail() {
 
     trail.setOutlineColor(trail_color);
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::initTrail");
+    
 }
 
 void Ghost::updateAnimation() {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::updateAnimation");
+    
     
     std::string current_direction = "";
     
@@ -99,7 +99,7 @@ void Ghost::updateAnimation() {
 
     loadTextures();
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateAnimation");
+    
 }
 
 bool Ghost::isInsideGhostHouse() {
@@ -113,7 +113,7 @@ bool Ghost::isInFrontOfGhostHouse() {
 }
 
 void Ghost::updateTrail() {;
-    PERFLOGGER_START_JOB("Ghost::" + name + "::updateTrail");
+    
     
     Config *config = Config::getInstance();
     trail.setPosition({
@@ -121,31 +121,31 @@ void Ghost::updateTrail() {;
         trail_position.y * config->tile_size + config->offset.y,
     });
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateTrail");
+    
 }
 
 void Ghost::resetTimers() {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::resetTimers");
+    
 
     frightened_timer = Config::getInstance()->frightened_timer;
     chase_timer = Config::getInstance()->chase_timer;
     scatter_timer = Config::getInstance()->scatter_timer;
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::resetTimers");
+    
 }
 
 void Ghost::updateTimers() {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::updateTimers");
+    
 
     if (state == GhostStates::Scatter) scatter_timer--;
     if (state == GhostStates::Chase) chase_timer--;
     if (state == GhostStates::Frightened) frightened_timer--;
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateTimers");
+    
 }
 
 void Ghost::updateMovementDirection(vec3pGT &_map) {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::updateMovementDirection");
+    
 
     const sf::Vector2i map_position = getMapPosition();
 
@@ -156,7 +156,7 @@ void Ghost::updateMovementDirection(vec3pGT &_map) {
         map_position.y * Config::getInstance()->tile_size,
     };
     if (position != closest_position) {
-        PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateMovementDirection");
+        
         return;
     }
 
@@ -209,11 +209,11 @@ void Ghost::updateMovementDirection(vec3pGT &_map) {
 
     updateTimers();
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateMovementDirection");
+    
 }
 
 void Ghost::render(sf::RenderTarget *_target) const {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::render");
+    
 
     _target->draw(sprite);
 
@@ -221,11 +221,11 @@ void Ghost::render(sf::RenderTarget *_target) const {
         _target->draw(trail);
     #endif
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::render");
+    
 }
 
 void Ghost::updateState() {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::updateState");
+    
 
     // if an external state switch occured, aka if pacman
     // ate a power pellet or if he killed the ghost.
@@ -334,15 +334,15 @@ void Ghost::updateState() {
             break;
     }
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::updateState");
+    
 }
 
 bool Ghost::canMove(vec3pGT &_map, const sf::Vector2i &_dir) const {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::canMove");
+    
 
     // Ghosts cannot turn around 180 degrees
     if (direction == -_dir) {
-        PERFLOGGER_STOP_JOB("Ghost::" + name + "::canMove");
+        
         return false;
     }
 
@@ -353,16 +353,16 @@ bool Ghost::canMove(vec3pGT &_map, const sf::Vector2i &_dir) const {
     vec1pGT &vector = _map[new_position.y][new_position.x];
     for (GameTile *tile : vector) {
         if (tile != nullptr && tile->isWalkable() == false) {
-            PERFLOGGER_STOP_JOB("Ghost::" + name + "::canMove");
+            
             return false;
         }
     }
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::canMove");
+    
     return true;
 }
 
 sf::Vector2i Ghost::frightened(vec3pGT &_map) {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::frightened");
+    
 
     // When frightened, a ghost will randomly pick a new direction
     // at every tile.
@@ -378,22 +378,22 @@ sf::Vector2i Ghost::frightened(vec3pGT &_map) {
     if (canMove(_map, Directions::Right)) available_directions.push_back(Directions::Right);
 
     if (available_directions.empty()) {
-        PERFLOGGER_STOP_JOB("Ghost::" + name + "::frightened");
+        
         return Directions::None;
     }
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::frightened");
+    
 
     // Return the random direction from the vector
     return available_directions.at(rng.get(0, available_directions.size() - 1));
 }
 
 int Ghost::rankMove(vec3pGT &_map, const sf::Vector2i &_dest, const sf::Vector2i &_dir) const {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::rankMove");
+    
 
     // Ghosts cannot turn around 180 degrees.
     if (direction == -_dir) {
-        PERFLOGGER_STOP_JOB("Ghost::" + name + "::rankMove");
+        
         return 9999;
     }
 
@@ -403,7 +403,7 @@ int Ghost::rankMove(vec3pGT &_map, const sf::Vector2i &_dest, const sf::Vector2i
     vec1pGT &vector = _map[new_position.y][new_position.x];
     for (GameTile *tile : vector) {
         if (tile != nullptr && tile->isWalkable() == false) {
-            PERFLOGGER_STOP_JOB("Ghost::" + name + "::rankMove");
+            
             return 9999;
         }
     }
@@ -412,12 +412,12 @@ int Ghost::rankMove(vec3pGT &_map, const sf::Vector2i &_dest, const sf::Vector2i
     const int deltaX = _dest.x - new_position.x;
     const int deltaY = _dest.y - new_position.y;
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::rankMove");
+    
     return (deltaX * deltaX) + (deltaY * deltaY);
 }
 
 sf::Vector2i Ghost::chase(vec3pGT &_map, const sf::Vector2i &_destination) const {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::chase");
+    
 
     // When chasing, a ghost will pick the available tile that gets
     // it the closest to its destination.
@@ -450,12 +450,12 @@ sf::Vector2i Ghost::chase(vec3pGT &_map, const sf::Vector2i &_destination) const
 
     // Return the direction that gets the ghost closest to the
     // destination tile.
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::chase");
+    
     return best_direction;
 }
 
 void Ghost::update(const sf::RenderTarget *_target, vec3pGT &_map) {
-    PERFLOGGER_START_JOB("Ghost::" + name + "::update");
+    
 
     // Replace the Ghost tile with the tile that was previously there.
     sf::Vector2i map_pos = getMapPosition();
@@ -478,5 +478,5 @@ void Ghost::update(const sf::RenderTarget *_target, vec3pGT &_map) {
     updateSprite();
     updateTrail();
 
-    PERFLOGGER_STOP_JOB("Ghost::" + name + "::update");
+    
 }

@@ -7,6 +7,37 @@
 
 A PacMan clone written in C++ using SFML, with local multiplayer support.
 
+## Requirements for Building
+
+- C++17 (or newer) toolset.
+- Pre-built [SFML 2.5.x](https://www.sfml-dev.org/download/sfml/2.6.1/) or newer binaries. (Must match your Compiler and OS)
+- [CMake 3.20+](https://cmake.org/download/) or newer (add it to PATH)
+
+### For Windows
+
+- MS Visual Studio 2019 or newer (NOT vscode), with default "**Desktop C++ Development**" workload.
+- Please download "Visual C++ 64bit" edition of SFML; ignore others.
+- Move your unzipped `SFML-2.6.x` folder to its own home, example: `C:/SFML/SFML-2.6.1`
+- Make sure to edit [CmakeLists.txt](CMakeLists.txt) line 13, change value of `SMFL_HOME` to the directory you moved SFML into.
+
+### For MacOS
+
+- XCode latest (v13 or higher) from AppStore (with MacOS SDK)
+- Apple Developer tools. After Xcode is installed, run this in your Terminal:
+  ```bash
+  sudo xcode-select --install
+  ```
+- Please install SFML 2.5 or newer on your Mac as shown in [official macOS guide](https://www.sfml-dev.org/tutorials/2.6/start-osx.php).
+
+### For Linux
+
+- Use your OS package manager (`apt-get` or `yum`) to install SFML 2.5 or newer.
+- Alternatively, you may build SFML from source, see [official docs SFML](https://www.sfml-dev.org/tutorials/2.6/start-linux.php).
+
+## Building Instructions
+
+- Please see [BUILDING.md](BUILDING.md) for build instructions.
+
 ## How it works
 
 |             Player 1             |             Player 2             |             Blinky             |            Pinky             |            Inky            |            Clyde             |
@@ -21,14 +52,14 @@ Pacman is the only player-controllable character in the game. He is the star of 
 
 You may notice, however, that there are multiple types of "edible" tiles in the maze, such as regular pellets, which we'll call food, power pellets and fruit. Each kind of edible item has a different number of points associated to it, but not all are equally important. The game requires that pacman eats all FOOD tiles, meaning that Power Pellets and Fruits can very well remain uneaten and the game will still end if there are no more food tiles left.
 
-| Icon                              | Tile Name        | Effect                                     |
-| :-------------------------------- | :--------------- | :----------------------------------------- |
-| ![food](res/gifs/food.gif)        | Food             | Grants Pacman +5 extra points              |
-| ![pellet](res/gifs/pellet.gif)    | Power Pellet     | Grants Pacman the ability to "eat" ghosts* |
-| ![fruits](res/gifs/fruit.gif)     | Fruit            | Grants Pacman +100 extra points            |
-| ![ghost](res/gifs/frightened.gif) | Frightened Ghost | Grants Pacman +200 extra points            |
+| Icon                              | Tile Name        | Effect                                      |
+| :-------------------------------- | :--------------- | :------------------------------------------ |
+| ![food](res/gifs/food.gif)        | Food             | Grants Pacman +5 extra points               |
+| ![pellet](res/gifs/pellet.gif)    | Power Pellet     | Grants Pacman the ability to "eat" ghosts\* |
+| ![fruits](res/gifs/fruit.gif)     | Fruit            | Grants Pacman +100 extra points             |
+| ![ghost](res/gifs/frightened.gif) | Frightened Ghost | Grants Pacman +200 extra points             |
 
-> * after pacman eats a power pellet, all ghosts will enter their frightened state for a short period of time, causing them to become vulnerable. Only when in this state will Pacman be able to eat the ghosts.
+> - after pacman eats a power pellet, all ghosts will enter their frightened state for a short period of time, causing them to become vulnerable. Only when in this state will Pacman be able to eat the ghosts.
 
 When Pacman comes in contact with a ghost, he will not lose a life, as the original game would make you think. Instead, he loses 200 points and enters a hurt state for a short period of time. This hurt state grants him full invincibility from the ghosts, with the downside that he can't eat any tiles either. This mode is there solely to give him an opportunity to run away and recover from a tough situation.
 
@@ -46,16 +77,18 @@ The ghosts are controlled by an "AI" algorithm, implemented to closely resemble 
 <td>
 
 ![Ghost States](res/gifs/ghost_fsm.gif)
+
 > Credits: this image was extracted from [this youtube video](https://www.youtube.com/watch?v=ataGotQ7ir8)
+
 </td>
 <td>
 
 All ghosts are implement as a finite state machine that consists of 4 main states:
 
-* Chase
-* Scatter
-* Frightened
-* Eaten
+- Chase
+- Scatter
+- Frightened
+- Eaten
 
 </td>
 </table>
@@ -95,7 +128,7 @@ When in the frightened state, all ghosts enter an identical behaviour of pseudo-
 
 ###### Movement decision
 
-The next tile decision is now purely random (from the pool of available options*), and is picked at each new tile.
+The next tile decision is now purely random (from the pool of available options\*), and is picked at each new tile.
 
 > Note: Ghosts can not turn around 180 degrees, so the only available tiles which are taken into account are the ones directly in front, to the right and the one to the left.
 
@@ -129,7 +162,7 @@ The only way a ghost can get into the eaten state is by coming in contact with p
 
 When in chase state, all ghosts will target a specific tile in the maze, based on pacmans position, and chase it. Each ghost has a different way of getting that tile, but conceptually, they all do the same thing, which is, they try to get to that spot on the map.
 
-###### Blinky  Chase Target
+###### Blinky Chase Target
 
 Blinky will always chase down pacman directly. His target tile is the tile that pacman is currently sitting on.
 

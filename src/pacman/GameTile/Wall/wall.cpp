@@ -15,12 +15,13 @@ Wall::Wall(const Wall &_wall) { *this = _wall; }
 Wall::~Wall() { /* nothing to do here */ }
 
 Wall &Wall::operator=(const Wall &_other) {
+    //TODO Fix infinite loop warning!
     this->operator=(_other);
     return *this;
 }
 
 void Wall::update(const sf::RenderTarget *_target, vec3pGT &_map) {
-    PERFLOGGER_START_JOB("Wall::" + std::to_string(type) + "::update");
+    
     updateSprite();
-    PERFLOGGER_STOP_JOB("Wall::" + std::to_string(type) + "::update");
+    
 }

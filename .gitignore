@@ -1,3 +1,27 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+
+# Visual Studio
+.vs/
+.vscode/
+
+# Clion
+*.iml
+.idea/
+.cache/
+.fleet/
+/cmake-build-*/
+
 # Prerequisites
 *.d
 
@@ -30,9 +54,15 @@
 *.exe
 *.out
 *.app
+*.zip
+*.rar
+/*.zip
+xcuserdata/
 
-# ignore the build directory
-build
-
-# performance logger generated files
-*.csv
+# MacOS specific
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+*.xcodeproj/*
+**/.DS_Store
